@@ -26,13 +26,16 @@ Done so far:
 
 - Data pipeline: 45 years (1981-2025) of daily NASA POWER rainfall and temperature for three Andhra Pradesh locations (Anantapur, Krishna, Anakapalli)
 - Climate indicators per location: monsoon and post-monsoon rainfall, dependable rainfall, reference evapotranspiration, water balance, onset date, dry spells, hot days, and trends with significance tests
+- Rotation engine: a daily soil-water balance (FAO-56 crop coefficients) that compares three rotations per location, including the current one, across all 45 years, with a dry-year view and a soil-capacity sensitivity check
+- For each rotation: why it was suggested, the evidence, benefits, information gaps and risks for local review
 
-Not built yet: rotation scoring, the web app, translations.
+Not built yet: the web app, translations, satellite cross-checks (IMERG rainfall, SMAP soil moisture, MODIS vegetation).
 
 ## Run it
 
 ```
 python3 -m pipeline.run
+python3 -m pipeline.run_rotations
 python3 -m unittest discover -s tests
 ```
 

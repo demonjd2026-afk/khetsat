@@ -1,0 +1,442 @@
+{
+ "location": {
+  "key": "krishna",
+  "name": "Krishna",
+  "point_label": "Gudivada",
+  "lat": 16.43,
+  "lon": 80.99
+ },
+ "period": [
+  1981,
+  2025
+ ],
+ "assumptions": {
+  "soil_available_water_mm": 100.0,
+  "fallow_kc": 0.3,
+  "wrsi_failure_threshold": 50.0
+ },
+ "generated_utc": "2026-11-13T19:28:18Z",
+ "disclaimer": "Decision support only. Review with local farmers and agriculture officers before acting.",
+ "rotations": [
+  {
+   "id": "existing",
+   "label": "Rice, then fallow",
+   "existing": true,
+   "cycle_years": 1,
+   "crops": [
+    {
+     "crop": "rice",
+     "name": "Rice (paddy)",
+     "cycle_year": 1,
+     "sow": [
+      7,
+      1
+     ],
+     "season_days": 150,
+     "irrigated": true,
+     "seasons_simulated": 45,
+     "water_need_mm_mean": 605.0,
+     "season_rain_mm_mean": 865.0,
+     "wrsi_median": 100.0,
+     "wrsi_bad_year": 100.0,
+     "failed_seasons": 0,
+     "failed_years": [],
+     "irrigation_mm_mean": 36.0,
+     "parameters_verified": true
+    }
+   ],
+   "months_covered_per_year": 4.9,
+   "bare_months_per_year": 7.1,
+   "legume_share": 0.0,
+   "crop_families": [
+    "Poaceae"
+   ],
+   "failed_season_share": 0.0,
+   "irrigation_mm_per_year": 36.0,
+   "crop_water_need_mm_per_year": 605.0,
+   "components": {
+    "water_fit": 1.0,
+    "resilience": 1.0,
+    "soil": 0.206,
+    "diversity": 0.0
+   },
+   "score_equal_weights": 55.1,
+   "explanation": {
+    "why_suggested": [
+     "This is the rotation assumed to be in use now. It is the baseline the others are compared with."
+    ],
+    "evidence": [
+     "Rice (paddy) needs about 605 mm per season; rain supplies part and irrigation about 36 mm."
+    ],
+    "benefits": [],
+    "information_gaps": [
+     "Rice water need here is crop evapotranspiration only. Puddling and percolation losses in paddy fields are not counted, so real water use is higher.",
+     "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
+     "Crop season lengths come from FAO tables for other regions, not local varieties.",
+     "Market prices, input costs and yields are not included.",
+     "The current rotation and sowing dates are assumptions, not survey data."
+    ],
+    "risks_for_local_review": [
+     "Results describe a grid cell of about 50 km, not an individual field.",
+     "Pests, diseases, seed availability and labour are not modelled."
+    ]
+   },
+   "soil_sensitive": false
+  },
+  {
+   "id": "rice_greengram",
+   "label": "Rice, then green gram on leftover moisture",
+   "existing": false,
+   "cycle_years": 1,
+   "crops": [
+    {
+     "crop": "rice",
+     "name": "Rice (paddy)",
+     "cycle_year": 1,
+     "sow": [
+      7,
+      1
+     ],
+     "season_days": 150,
+     "irrigated": true,
+     "seasons_simulated": 45,
+     "water_need_mm_mean": 605.0,
+     "season_rain_mm_mean": 865.0,
+     "wrsi_median": 100.0,
+     "wrsi_bad_year": 100.0,
+     "failed_seasons": 0,
+     "failed_years": [],
+     "irrigation_mm_mean": 36.0,
+     "parameters_verified": true
+    },
+    {
+     "crop": "green_gram",
+     "name": "Green gram",
+     "cycle_year": 1,
+     "sow": [
+      12,
+      5
+     ],
+     "season_days": 100,
+     "irrigated": false,
+     "seasons_simulated": 44,
+     "water_need_mm_mean": 326.0,
+     "season_rain_mm_mean": 43.0,
+     "wrsi_median": 18.0,
+     "wrsi_bad_year": 12.0,
+     "failed_seasons": 42,
+     "failed_years": [
+      1981,
+      1982,
+      1983,
+      1984,
+      1985,
+      1986,
+      1987,
+      1988,
+      1989,
+      1990,
+      1991,
+      1992,
+      1993,
+      1994,
+      1995,
+      1996,
+      1998,
+      1999,
+      2000,
+      2001,
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+     ],
+     "irrigation_mm_mean": 0.0,
+     "parameters_verified": true
+    }
+   ],
+   "months_covered_per_year": 8.2,
+   "bare_months_per_year": 3.8,
+   "legume_share": 0.5,
+   "crop_families": [
+    "Fabaceae",
+    "Poaceae"
+   ],
+   "failed_season_share": 0.472,
+   "irrigation_mm_per_year": 36.0,
+   "crop_water_need_mm_per_year": 924.0,
+   "components": {
+    "water_fit": 0.18,
+    "resilience": 0.12,
+    "soil": 0.593,
+    "diversity": 0.5
+   },
+   "score_equal_weights": 34.8,
+   "explanation": {
+    "why_suggested": [
+     "It keeps the field covered for more of the year.",
+     "It alternates crop families."
+    ],
+    "evidence": [
+     "Rice (paddy) needs about 605 mm per season; rain supplies part and irrigation about 36 mm.",
+     "Green gram: rain and stored soil water met 18% of crop water need in a typical year and 12% in a poor year (1 in 4); 42 of 44 seasons fell below 50%."
+    ],
+    "benefits": [
+     "About 3.3 fewer bare months a year, which reduces exposure of the soil to erosion.",
+     "Adds a legume, which fixes nitrogen from the air.",
+     "Alternating crop families interrupts pests and diseases that build up under one crop."
+    ],
+    "information_gaps": [
+     "This result depends strongly on how much water the soil holds: the weakest crop gets 17% of its water need with 75 mm of soil storage and 46% with 200 mm. Local soil data is needed before relying on it.",
+     "Rice water need here is crop evapotranspiration only. Puddling and percolation losses in paddy fields are not counted, so real water use is higher.",
+     "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
+     "Crop season lengths come from FAO tables for other regions, not local varieties.",
+     "Market prices, input costs and yields are not included.",
+     "The current rotation and sowing dates are assumptions, not survey data."
+    ],
+    "risks_for_local_review": [
+     "The weakest crop does worse in poor-rain years than the current rotation (12% against 100%).",
+     "Its crops need more water over the year (924 mm against 605 mm), because the field is cropped for longer.",
+     "Results describe a grid cell of about 50 km, not an individual field.",
+     "Pests, diseases, seed availability and labour are not modelled."
+    ]
+   },
+   "soil_sensitive": true
+  },
+  {
+   "id": "rice_maize",
+   "label": "Rice, then maize",
+   "existing": false,
+   "cycle_years": 1,
+   "crops": [
+    {
+     "crop": "rice",
+     "name": "Rice (paddy)",
+     "cycle_year": 1,
+     "sow": [
+      7,
+      1
+     ],
+     "season_days": 150,
+     "irrigated": true,
+     "seasons_simulated": 45,
+     "water_need_mm_mean": 605.0,
+     "season_rain_mm_mean": 865.0,
+     "wrsi_median": 100.0,
+     "wrsi_bad_year": 100.0,
+     "failed_seasons": 0,
+     "failed_years": [],
+     "irrigation_mm_mean": 36.0,
+     "parameters_verified": true
+    },
+    {
+     "crop": "maize",
+     "name": "Maize",
+     "cycle_year": 1,
+     "sow": [
+      12,
+      5
+     ],
+     "season_days": 125,
+     "irrigated": false,
+     "seasons_simulated": 44,
+     "water_need_mm_mean": 492.0,
+     "season_rain_mm_mean": 49.0,
+     "wrsi_median": 14.0,
+     "wrsi_bad_year": 9.0,
+     "failed_seasons": 44,
+     "failed_years": [
+      1981,
+      1982,
+      1983,
+      1984,
+      1985,
+      1986,
+      1987,
+      1988,
+      1989,
+      1990,
+      1991,
+      1992,
+      1993,
+      1994,
+      1995,
+      1996,
+      1997,
+      1998,
+      1999,
+      2000,
+      2001,
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+     ],
+     "irrigation_mm_mean": 0.0,
+     "parameters_verified": true
+    }
+   ],
+   "months_covered_per_year": 9.0,
+   "bare_months_per_year": 3.0,
+   "legume_share": 0.0,
+   "crop_families": [
+    "Poaceae"
+   ],
+   "failed_season_share": 0.494,
+   "irrigation_mm_per_year": 36.0,
+   "crop_water_need_mm_per_year": 1086.0,
+   "components": {
+    "water_fit": 0.14,
+    "resilience": 0.09,
+    "soil": 0.377,
+    "diversity": 0.0
+   },
+   "score_equal_weights": 15.2,
+   "explanation": {
+    "why_suggested": [
+     "It keeps the field covered for more of the year."
+    ],
+    "evidence": [
+     "Rice (paddy) needs about 605 mm per season; rain supplies part and irrigation about 36 mm.",
+     "Maize: rain and stored soil water met 14% of crop water need in a typical year and 9% in a poor year (1 in 4); 44 of 44 seasons fell below 50%."
+    ],
+    "benefits": [
+     "About 4.1 fewer bare months a year, which reduces exposure of the soil to erosion."
+    ],
+    "information_gaps": [
+     "Rice water need here is crop evapotranspiration only. Puddling and percolation losses in paddy fields are not counted, so real water use is higher.",
+     "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
+     "Crop season lengths come from FAO tables for other regions, not local varieties.",
+     "Market prices, input costs and yields are not included.",
+     "The current rotation and sowing dates are assumptions, not survey data."
+    ],
+    "risks_for_local_review": [
+     "The weakest crop does worse in poor-rain years than the current rotation (9% against 100%).",
+     "Its crops need more water over the year (1086 mm against 605 mm), because the field is cropped for longer.",
+     "Results describe a grid cell of about 50 km, not an individual field.",
+     "Pests, diseases, seed availability and labour are not modelled."
+    ]
+   },
+   "soil_sensitive": false
+  }
+ ],
+ "soil_capacity_sensitivity": [
+  {
+   "soil_available_water_mm": 75.0,
+   "rotations": {
+    "existing": {
+     "weakest_crop_wrsi_median": 100,
+     "weakest_crop_wrsi_bad_year": 100,
+     "failed_season_share": 0.0
+    },
+    "rice_greengram": {
+     "weakest_crop_wrsi_median": 17,
+     "weakest_crop_wrsi_bad_year": 9,
+     "failed_season_share": 0.494
+    },
+    "rice_maize": {
+     "weakest_crop_wrsi_median": 12,
+     "weakest_crop_wrsi_bad_year": 7,
+     "failed_season_share": 0.494
+    }
+   }
+  },
+  {
+   "soil_available_water_mm": 100.0,
+   "rotations": {
+    "existing": {
+     "weakest_crop_wrsi_median": 100,
+     "weakest_crop_wrsi_bad_year": 100,
+     "failed_season_share": 0.0
+    },
+    "rice_greengram": {
+     "weakest_crop_wrsi_median": 18,
+     "weakest_crop_wrsi_bad_year": 12,
+     "failed_season_share": 0.472
+    },
+    "rice_maize": {
+     "weakest_crop_wrsi_median": 14,
+     "weakest_crop_wrsi_bad_year": 9,
+     "failed_season_share": 0.494
+    }
+   }
+  },
+  {
+   "soil_available_water_mm": 150.0,
+   "rotations": {
+    "existing": {
+     "weakest_crop_wrsi_median": 100,
+     "weakest_crop_wrsi_bad_year": 100,
+     "failed_season_share": 0.0
+    },
+    "rice_greengram": {
+     "weakest_crop_wrsi_median": 32,
+     "weakest_crop_wrsi_bad_year": 19,
+     "failed_season_share": 0.427
+    },
+    "rice_maize": {
+     "weakest_crop_wrsi_median": 22,
+     "weakest_crop_wrsi_bad_year": 14,
+     "failed_season_share": 0.494
+    }
+   }
+  },
+  {
+   "soil_available_water_mm": 200.0,
+   "rotations": {
+    "existing": {
+     "weakest_crop_wrsi_median": 100,
+     "weakest_crop_wrsi_bad_year": 100,
+     "failed_season_share": 0.0
+    },
+    "rice_greengram": {
+     "weakest_crop_wrsi_median": 46,
+     "weakest_crop_wrsi_bad_year": 32,
+     "failed_season_share": 0.303
+    },
+    "rice_maize": {
+     "weakest_crop_wrsi_median": 31,
+     "weakest_crop_wrsi_bad_year": 22,
+     "failed_season_share": 0.472
+    }
+   }
+  }
+ ]
+}

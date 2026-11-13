@@ -51,3 +51,10 @@ ONSET_FALSE_START_WINDOW = 30  # days after the wet spell that are checked
 ONSET_FALSE_START_DRY_DAYS = 10  # a dry spell this long cancels the onset
 HOT_DAY_C = 40.0
 DEPENDABLE_PROBABILITY = 0.75  # rainfall reached or exceeded in 3 years out of 4
+
+# Rotation water-balance assumptions (see docs/METHODS.md, "Rotation engine")
+SOIL_AVAILABLE_WATER_MM = 100.0  # plant-available water the root zone can hold
+FALLOW_KC = 0.3                  # evaporation coefficient for uncropped days
+WRSI_FAILURE = 50.0              # below this a season is counted as failed
+WRSI_SATISFACTORY = 80.0
+SOIL_SENSITIVITY_MM = [75.0, 100.0, 150.0, 200.0]  # capacities tested

@@ -1,0 +1,400 @@
+{
+ "location": {
+  "key": "anantapur",
+  "name": "Anantapur",
+  "point_label": "Anantapur town",
+  "lat": 14.68,
+  "lon": 77.6
+ },
+ "period": [
+  1981,
+  2025
+ ],
+ "assumptions": {
+  "soil_available_water_mm": 100.0,
+  "fallow_kc": 0.3,
+  "wrsi_failure_threshold": 50.0
+ },
+ "generated_utc": "2026-11-13T19:28:18Z",
+ "disclaimer": "Decision support only. Review with local farmers and agriculture officers before acting.",
+ "rotations": [
+  {
+   "id": "existing",
+   "label": "Groundnut every year",
+   "existing": true,
+   "cycle_years": 1,
+   "crops": [
+    {
+     "crop": "groundnut",
+     "name": "Groundnut",
+     "cycle_year": 1,
+     "sow": [
+      7,
+      1
+     ],
+     "season_days": 130,
+     "irrigated": false,
+     "seasons_simulated": 45,
+     "water_need_mm_mean": 511.0,
+     "season_rain_mm_mean": 402.0,
+     "wrsi_median": 71.0,
+     "wrsi_bad_year": 61.0,
+     "failed_seasons": 5,
+     "failed_years": [
+      2002,
+      2003,
+      2016,
+      2018,
+      2023
+     ],
+     "irrigation_mm_mean": 0.0,
+     "parameters_verified": true
+    }
+   ],
+   "months_covered_per_year": 4.3,
+   "bare_months_per_year": 7.7,
+   "legume_share": 1.0,
+   "crop_families": [
+    "Fabaceae"
+   ],
+   "failed_season_share": 0.111,
+   "irrigation_mm_per_year": 0.0,
+   "crop_water_need_mm_per_year": 511.0,
+   "components": {
+    "water_fit": 0.71,
+    "resilience": 0.61,
+    "soil": 0.678,
+    "diversity": 0.0
+   },
+   "score_equal_weights": 49.9,
+   "explanation": {
+    "why_suggested": [
+     "This is the rotation assumed to be in use now. It is the baseline the others are compared with."
+    ],
+    "evidence": [
+     "Groundnut: rain and stored soil water met 71% of crop water need in a typical year and 61% in a poor year (1 in 4); 5 of 45 seasons fell below 50%."
+    ],
+    "benefits": [],
+    "information_gaps": [
+     "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
+     "Crop season lengths come from FAO tables for other regions, not local varieties.",
+     "Market prices, input costs and yields are not included.",
+     "The current rotation and sowing dates are assumptions, not survey data."
+    ],
+    "risks_for_local_review": [
+     "Results describe a grid cell of about 50 km, not an individual field.",
+     "Pests, diseases, seed availability and labour are not modelled."
+    ]
+   },
+   "soil_sensitive": false
+  },
+  {
+   "id": "groundnut_millet",
+   "label": "Groundnut one year, millet the next",
+   "existing": false,
+   "cycle_years": 2,
+   "crops": [
+    {
+     "crop": "groundnut",
+     "name": "Groundnut",
+     "cycle_year": 1,
+     "sow": [
+      7,
+      1
+     ],
+     "season_days": 130,
+     "irrigated": false,
+     "seasons_simulated": 45,
+     "water_need_mm_mean": 511.0,
+     "season_rain_mm_mean": 402.0,
+     "wrsi_median": 71.0,
+     "wrsi_bad_year": 61.0,
+     "failed_seasons": 5,
+     "failed_years": [
+      2002,
+      2003,
+      2016,
+      2018,
+      2023
+     ],
+     "irrigation_mm_mean": 0.0,
+     "parameters_verified": true
+    },
+    {
+     "crop": "millet",
+     "name": "Millet",
+     "cycle_year": 2,
+     "sow": [
+      7,
+      1
+     ],
+     "season_days": 105,
+     "irrigated": false,
+     "seasons_simulated": 45,
+     "water_need_mm_mean": 371.0,
+     "season_rain_mm_mean": 340.0,
+     "wrsi_median": 76.0,
+     "wrsi_bad_year": 64.0,
+     "failed_seasons": 4,
+     "failed_years": [
+      1994,
+      2002,
+      2003,
+      2018
+     ],
+     "irrigation_mm_mean": 0.0,
+     "parameters_verified": true
+    }
+   ],
+   "months_covered_per_year": 3.9,
+   "bare_months_per_year": 8.1,
+   "legume_share": 0.5,
+   "crop_families": [
+    "Fabaceae",
+    "Poaceae"
+   ],
+   "failed_season_share": 0.1,
+   "irrigation_mm_per_year": 0.0,
+   "crop_water_need_mm_per_year": 441.0,
+   "components": {
+    "water_fit": 0.71,
+    "resilience": 0.61,
+    "soil": 0.411,
+    "diversity": 0.5
+   },
+   "score_equal_weights": 55.8,
+   "explanation": {
+    "why_suggested": [
+     "It alternates crop families.",
+     "Its crops need less water over the year."
+    ],
+    "evidence": [
+     "Groundnut: rain and stored soil water met 71% of crop water need in a typical year and 61% in a poor year (1 in 4); 5 of 45 seasons fell below 50%.",
+     "Millet: rain and stored soil water met 76% of crop water need in a typical year and 64% in a poor year (1 in 4); 4 of 45 seasons fell below 50%."
+    ],
+    "benefits": [
+     "Alternating crop families interrupts pests and diseases that build up under one crop.",
+     "Crop water need averages 441 mm a year against 511 mm for the current rotation (14% less)."
+    ],
+    "information_gaps": [
+     "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
+     "Crop season lengths come from FAO tables for other regions, not local varieties.",
+     "Market prices, input costs and yields are not included.",
+     "The current rotation and sowing dates are assumptions, not survey data."
+    ],
+    "risks_for_local_review": [
+     "Results describe a grid cell of about 50 km, not an individual field.",
+     "Pests, diseases, seed availability and labour are not modelled."
+    ]
+   },
+   "soil_sensitive": false
+  },
+  {
+   "id": "millet_chickpea",
+   "label": "Millet, then chickpea on late rains",
+   "existing": false,
+   "cycle_years": 1,
+   "crops": [
+    {
+     "crop": "millet",
+     "name": "Millet",
+     "cycle_year": 1,
+     "sow": [
+      6,
+      15
+     ],
+     "season_days": 105,
+     "irrigated": false,
+     "seasons_simulated": 45,
+     "water_need_mm_mean": 379.0,
+     "season_rain_mm_mean": 298.0,
+     "wrsi_median": 67.0,
+     "wrsi_bad_year": 56.0,
+     "failed_seasons": 9,
+     "failed_years": [
+      1984,
+      1985,
+      1987,
+      1990,
+      1994,
+      2001,
+      2002,
+      2003,
+      2018
+     ],
+     "irrigation_mm_mean": 0.0,
+     "parameters_verified": true
+    },
+    {
+     "crop": "chickpea",
+     "name": "Chickpea (Bengal gram)",
+     "cycle_year": 1,
+     "sow": [
+      10,
+      5
+     ],
+     "season_days": 105,
+     "irrigated": false,
+     "seasons_simulated": 44,
+     "water_need_mm_mean": 313.0,
+     "season_rain_mm_mean": 134.0,
+     "wrsi_median": 53.0,
+     "wrsi_bad_year": 43.0,
+     "failed_seasons": 20,
+     "failed_years": [
+      1983,
+      1984,
+      1985,
+      1986,
+      1988,
+      1989,
+      1992,
+      1995,
+      2000,
+      2001,
+      2002,
+      2003,
+      2004,
+      2011,
+      2012,
+      2013,
+      2016,
+      2017,
+      2018,
+      2023
+     ],
+     "irrigation_mm_mean": 0.0,
+     "parameters_verified": false
+    }
+   ],
+   "months_covered_per_year": 6.9,
+   "bare_months_per_year": 5.1,
+   "legume_share": 0.5,
+   "crop_families": [
+    "Fabaceae",
+    "Poaceae"
+   ],
+   "failed_season_share": 0.326,
+   "irrigation_mm_per_year": 0.0,
+   "crop_water_need_mm_per_year": 685.0,
+   "components": {
+    "water_fit": 0.53,
+    "resilience": 0.43,
+    "soil": 0.538,
+    "diversity": 0.5
+   },
+   "score_equal_weights": 50.0,
+   "explanation": {
+    "why_suggested": [
+     "It keeps the field covered for more of the year.",
+     "It alternates crop families."
+    ],
+    "evidence": [
+     "Millet: rain and stored soil water met 67% of crop water need in a typical year and 56% in a poor year (1 in 4); 9 of 45 seasons fell below 50%.",
+     "Chickpea (Bengal gram): rain and stored soil water met 53% of crop water need in a typical year and 43% in a poor year (1 in 4); 20 of 44 seasons fell below 50%."
+    ],
+    "benefits": [
+     "About 2.6 fewer bare months a year, which reduces exposure of the soil to erosion.",
+     "Alternating crop families interrupts pests and diseases that build up under one crop."
+    ],
+    "information_gaps": [
+     "This result depends strongly on how much water the soil holds: the weakest crop gets 46% of its water need with 75 mm of soil storage and 69% with 200 mm. Local soil data is needed before relying on it.",
+     "Chickpea (Bengal gram): season length is a placeholder, not from a published table.",
+     "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
+     "Crop season lengths come from FAO tables for other regions, not local varieties.",
+     "Market prices, input costs and yields are not included.",
+     "The current rotation and sowing dates are assumptions, not survey data."
+    ],
+    "risks_for_local_review": [
+     "The weakest crop does worse in poor-rain years than the current rotation (43% against 61%).",
+     "Its crops need more water over the year (685 mm against 511 mm), because the field is cropped for longer.",
+     "Results describe a grid cell of about 50 km, not an individual field.",
+     "Pests, diseases, seed availability and labour are not modelled."
+    ]
+   },
+   "soil_sensitive": true
+  }
+ ],
+ "soil_capacity_sensitivity": [
+  {
+   "soil_available_water_mm": 75.0,
+   "rotations": {
+    "existing": {
+     "weakest_crop_wrsi_median": 71,
+     "weakest_crop_wrsi_bad_year": 58,
+     "failed_season_share": 0.111
+    },
+    "groundnut_millet": {
+     "weakest_crop_wrsi_median": 71,
+     "weakest_crop_wrsi_bad_year": 58,
+     "failed_season_share": 0.1
+    },
+    "millet_chickpea": {
+     "weakest_crop_wrsi_median": 46,
+     "weakest_crop_wrsi_bad_year": 36,
+     "failed_season_share": 0.416
+    }
+   }
+  },
+  {
+   "soil_available_water_mm": 100.0,
+   "rotations": {
+    "existing": {
+     "weakest_crop_wrsi_median": 71,
+     "weakest_crop_wrsi_bad_year": 61,
+     "failed_season_share": 0.111
+    },
+    "groundnut_millet": {
+     "weakest_crop_wrsi_median": 71,
+     "weakest_crop_wrsi_bad_year": 61,
+     "failed_season_share": 0.1
+    },
+    "millet_chickpea": {
+     "weakest_crop_wrsi_median": 53,
+     "weakest_crop_wrsi_bad_year": 43,
+     "failed_season_share": 0.326
+    }
+   }
+  },
+  {
+   "soil_available_water_mm": 150.0,
+   "rotations": {
+    "existing": {
+     "weakest_crop_wrsi_median": 74,
+     "weakest_crop_wrsi_bad_year": 61,
+     "failed_season_share": 0.089
+    },
+    "groundnut_millet": {
+     "weakest_crop_wrsi_median": 74,
+     "weakest_crop_wrsi_bad_year": 61,
+     "failed_season_share": 0.089
+    },
+    "millet_chickpea": {
+     "weakest_crop_wrsi_median": 62,
+     "weakest_crop_wrsi_bad_year": 49,
+     "failed_season_share": 0.236
+    }
+   }
+  },
+  {
+   "soil_available_water_mm": 200.0,
+   "rotations": {
+    "existing": {
+     "weakest_crop_wrsi_median": 74,
+     "weakest_crop_wrsi_bad_year": 61,
+     "failed_season_share": 0.089
+    },
+    "groundnut_millet": {
+     "weakest_crop_wrsi_median": 74,
+     "weakest_crop_wrsi_bad_year": 61,
+     "failed_season_share": 0.089
+    },
+    "millet_chickpea": {
+     "weakest_crop_wrsi_median": 69,
+     "weakest_crop_wrsi_bad_year": 49,
+     "failed_season_share": 0.236
+    }
+   }
+  }
+ ]
+}

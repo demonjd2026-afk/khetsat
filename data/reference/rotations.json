@@ -1,0 +1,27 @@
+{
+  "_note": "Candidate rotations compared for each location. The 'existing' rotation and the sowing dates are working assumptions chosen for this project, not survey data. They must be confirmed against district crop statistics and local agriculture officers.",
+  "anantapur": [
+    {"id": "existing", "label": "Groundnut every year", "existing": true,
+     "cycle": [[{"crop": "groundnut", "sow": [7, 1]}]]},
+    {"id": "groundnut_millet", "label": "Groundnut one year, millet the next", "existing": false,
+     "cycle": [[{"crop": "groundnut", "sow": [7, 1]}], [{"crop": "millet", "sow": [7, 1]}]]},
+    {"id": "millet_chickpea", "label": "Millet, then chickpea on late rains", "existing": false,
+     "cycle": [[{"crop": "millet", "sow": [6, 15]}, {"crop": "chickpea", "sow": [10, 5]}]]}
+  ],
+  "krishna": [
+    {"id": "existing", "label": "Rice, then fallow", "existing": true,
+     "cycle": [[{"crop": "rice", "sow": [7, 1], "irrigated": true}]]},
+    {"id": "rice_greengram", "label": "Rice, then green gram on leftover moisture", "existing": false,
+     "cycle": [[{"crop": "rice", "sow": [7, 1], "irrigated": true}, {"crop": "green_gram", "sow": [12, 5]}]]},
+    {"id": "rice_maize", "label": "Rice, then maize", "existing": false,
+     "cycle": [[{"crop": "rice", "sow": [7, 1], "irrigated": true}, {"crop": "maize", "sow": [12, 5]}]]}
+  ],
+  "anakapalli": [
+    {"id": "existing", "label": "Rainfed rice, then fallow", "existing": true,
+     "cycle": [[{"crop": "rice", "sow": [7, 1]}]]},
+    {"id": "rice_greengram", "label": "Rainfed rice, then green gram", "existing": false,
+     "cycle": [[{"crop": "rice", "sow": [7, 1]}, {"crop": "green_gram", "sow": [12, 5]}]]},
+    {"id": "maize_greengram", "label": "Maize, then green gram", "existing": false,
+     "cycle": [[{"crop": "maize", "sow": [6, 15]}, {"crop": "green_gram", "sow": [10, 25]}]]}
+  ]
+}

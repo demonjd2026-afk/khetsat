@@ -1,0 +1,82 @@
+{
+  "_source": "FAO Irrigation and Drainage Paper 56 (Allen, Pereira, Raes, Smith, 1998), Chapter 6. Kc values from Table 12; stage lengths from Table 11. https://www.fao.org/4/x0490e/x0490e0b.htm",
+  "_rules": [
+    "Where Table 12 gives no Kc ini for a crop, the crop-group value from Table 12 is used (legumes 0.4, cereals 0.3, oil crops 0.35, fibre crops 0.35).",
+    "Where Table 12 gives a range, the midpoint is used, except where a footnote assigns the second value to dry harvest; then the dry-harvest value is used.",
+    "Stage lengths in Table 11 come from other regions. They are starting values and need review against varieties grown in Andhra Pradesh."
+  ],
+  "crops": {
+    "groundnut": {
+      "name": "Groundnut", "family": "Fabaceae", "legume": true,
+      "kc": {"ini": 0.4, "mid": 1.15, "end": 0.6},
+      "kc_note": "Table 12: mid 1.15, end 0.60; ini from legume group (0.4).",
+      "stages_days": [25, 35, 45, 25],
+      "stages_note": "Table 11: West Africa, dry season, 130 days.",
+      "verified": true
+    },
+    "green_gram": {
+      "name": "Green gram", "family": "Fabaceae", "legume": true,
+      "kc": {"ini": 0.4, "mid": 1.05, "end": 0.35},
+      "kc_note": "Table 12 'Green gram and cowpeas': mid 1.05, end 0.60-0.35 (0.35 is for dry harvest); ini from legume group.",
+      "stages_days": [20, 30, 30, 20],
+      "stages_note": "Table 11: Mediterranean, March planting (listed total 110; the stages add to 100; the stage values are used). Varieties grown in India are usually shorter; needs local review.",
+      "verified": true
+    },
+    "chickpea": {
+      "name": "Chickpea (Bengal gram)", "family": "Fabaceae", "legume": true,
+      "kc": {"ini": 0.4, "mid": 1.0, "end": 0.35},
+      "kc_note": "Table 12 'Chick pea': mid 1.00, end 0.35; ini from legume group.",
+      "stages_days": [20, 30, 35, 20],
+      "stages_note": "NOT in Table 11. Stage lengths are a placeholder (105 days) and are unverified.",
+      "verified": false
+    },
+    "millet": {
+      "name": "Millet", "family": "Poaceae", "legume": false,
+      "kc": {"ini": 0.3, "mid": 1.0, "end": 0.3},
+      "kc_note": "Table 12: mid 1.00, end 0.30; ini from cereal group (0.3).",
+      "stages_days": [15, 25, 40, 25],
+      "stages_note": "Table 11: Pakistan, June planting, 105 days.",
+      "verified": true
+    },
+    "sorghum": {
+      "name": "Sorghum (jowar)", "family": "Poaceae", "legume": false,
+      "kc": {"ini": 0.3, "mid": 1.05, "end": 0.55},
+      "kc_note": "Table 12 'Sorghum, grain': mid 1.00-1.10 (midpoint 1.05), end 0.55; ini from cereal group.",
+      "stages_days": [20, 35, 40, 30],
+      "stages_note": "Table 11: USA, Pakistan, Mediterranean, May/June planting (listed total 130; the stages add to 125; the stage values are used).",
+      "verified": true
+    },
+    "maize": {
+      "name": "Maize", "family": "Poaceae", "legume": false,
+      "kc": {"ini": 0.3, "mid": 1.2, "end": 0.35},
+      "kc_note": "Table 12 'Maize, field (grain)': mid 1.20, end 0.60-0.35 (0.35 is for harvest after field drying); ini from cereal group.",
+      "stages_days": [20, 35, 40, 30],
+      "stages_note": "Table 11: India (dry, cool), October planting, 125 days; the Nigeria (humid) June row is identical.",
+      "verified": true
+    },
+    "rice": {
+      "name": "Rice (paddy)", "family": "Poaceae", "legume": false,
+      "kc": {"ini": 1.05, "mid": 1.2, "end": 0.75},
+      "kc_note": "Table 12: ini 1.05, mid 1.20, end 0.90-0.60 (midpoint 0.75).",
+      "stages_days": [30, 30, 60, 30],
+      "stages_note": "Table 11: Tropics, 150 days.",
+      "verified": true
+    },
+    "sesame": {
+      "name": "Sesame", "family": "Pedaliaceae", "legume": false,
+      "kc": {"ini": 0.35, "mid": 1.1, "end": 0.25},
+      "kc_note": "Table 12: mid 1.10, end 0.25; ini from oil-crop group (0.35).",
+      "stages_days": [20, 30, 40, 20],
+      "stages_note": "Table 11: China, June planting (listed total 100; the stages add to 110; the stage values are used).",
+      "verified": true
+    },
+    "cotton": {
+      "name": "Cotton", "family": "Malvaceae", "legume": false,
+      "kc": {"ini": 0.35, "mid": 1.175, "end": 0.6},
+      "kc_note": "Table 12: mid 1.15-1.20 (midpoint 1.175), end 0.70-0.50 (midpoint 0.60); ini from fibre-crop group.",
+      "stages_days": [30, 50, 60, 55],
+      "stages_note": "Table 11: Egypt, Pakistan, California, March-May planting, 195 days.",
+      "verified": true
+    }
+  }
+}
