@@ -3,7 +3,8 @@
   "_rules": [
     "Where Table 12 gives no Kc ini for a crop, the crop-group value from Table 12 is used (legumes 0.4, cereals 0.3, oil crops 0.35, fibre crops 0.35).",
     "Where Table 12 gives a range, the midpoint is used, except where a footnote assigns the second value to dry harvest; then the dry-harvest value is used.",
-    "Stage lengths in Table 11 come from other regions. They are starting values and need review against varieties grown in Andhra Pradesh."
+    "Stage lengths in Table 11 come from other regions. They are starting values and need review against varieties grown in Andhra Pradesh.",
+    "'seasons' lists the seasons in which the crop is offered when a user builds a rotation for their own place: kharif (sown with the monsoon) and rabi (sown after it). This follows common practice in peninsular India, is not taken from FAO-56, and needs local review."
   ],
   "crops": {
     "groundnut": {
@@ -23,7 +24,11 @@
         25
       ],
       "stages_note": "Table 11: West Africa, dry season, 130 days.",
-      "verified": true
+      "verified": true,
+      "seasons": [
+        "kharif",
+        "rabi"
+      ]
     },
     "green_gram": {
       "name": "Green gram",
@@ -42,7 +47,11 @@
         20
       ],
       "stages_note": "Table 11: Mediterranean, March planting (listed total 110; the stages add to 100; the stage values are used). Varieties grown in India are usually shorter; needs local review.",
-      "verified": true
+      "verified": true,
+      "seasons": [
+        "kharif",
+        "rabi"
+      ]
     },
     "chickpea": {
       "name": "Chickpea (Bengal gram)",
@@ -61,7 +70,10 @@
         20
       ],
       "stages_note": "NOT in Table 11. Stage lengths are a placeholder (105 days) and are unverified.",
-      "verified": false
+      "verified": false,
+      "seasons": [
+        "rabi"
+      ]
     },
     "millet": {
       "name": "Millet",
@@ -80,7 +92,10 @@
         25
       ],
       "stages_note": "Table 11: Pakistan, June planting, 105 days.",
-      "verified": true
+      "verified": true,
+      "seasons": [
+        "kharif"
+      ]
     },
     "sorghum": {
       "name": "Sorghum (jowar)",
@@ -99,7 +114,11 @@
         30
       ],
       "stages_note": "Table 11: USA, Pakistan, Mediterranean, May/June planting (listed total 130; the stages add to 125; the stage values are used).",
-      "verified": true
+      "verified": true,
+      "seasons": [
+        "kharif",
+        "rabi"
+      ]
     },
     "maize": {
       "name": "Maize",
@@ -118,7 +137,11 @@
         30
       ],
       "stages_note": "Table 11: India (dry, cool), October planting, 125 days; the Nigeria (humid) June row is identical.",
-      "verified": true
+      "verified": true,
+      "seasons": [
+        "kharif",
+        "rabi"
+      ]
     },
     "rice": {
       "name": "Rice (paddy)",
@@ -137,7 +160,11 @@
         30
       ],
       "stages_note": "Table 11: Tropics, 150 days.",
-      "verified": true
+      "verified": true,
+      "seasons": [
+        "kharif",
+        "rabi"
+      ]
     },
     "sesame": {
       "name": "Sesame",
@@ -156,7 +183,10 @@
         20
       ],
       "stages_note": "Table 11: China, June planting (listed total 100; the stages add to 110; the stage values are used).",
-      "verified": true
+      "verified": true,
+      "seasons": [
+        "kharif"
+      ]
     },
     "cotton": {
       "name": "Cotton",
@@ -175,7 +205,10 @@
         55
       ],
       "stages_note": "Table 11: Egypt, Pakistan, California, March-May planting, 195 days.",
-      "verified": true
+      "verified": true,
+      "seasons": [
+        "kharif"
+      ]
     },
     "black_gram": {
       "name": "Black gram",
@@ -195,7 +228,11 @@
       ],
       "stages_note": "NOT in FAO-56 Table 11. Uses the green gram row as a stand-in.",
       "proxy_of": "green_gram",
-      "verified": false
+      "verified": false,
+      "seasons": [
+        "kharif",
+        "rabi"
+      ]
     }
   }
 }

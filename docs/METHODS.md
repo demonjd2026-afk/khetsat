@@ -166,6 +166,24 @@ The map in the app shows imagery served by NASA Global Imagery Browse Services (
 - The colour descriptions in the app come from inspecting the tiles. The official colour bars are not embedded.
 - Layer identifiers and dates were checked against the GIBS capabilities document on 14 November 2026.
 
+## Any place in India ("Your place")
+
+The app can analyse a place the pipeline has not been run for. The browser fetches 45 years of daily NASA POWER data for the chosen point and runs `app/engine.js`, a JavaScript port of the pipeline's indicator and rotation code.
+
+- **Same calculations.** `tests/engine_parity.js` runs the JavaScript engine on the three pipeline locations and compares 546 values (climate indicators, per-year rainfall and onset, rotation scores, water need, failed seasons, soil scenarios and explanation codes) with the Python results. All agree within rounding.
+- **The farmer's rotation is the baseline.** The user chooses a monsoon-season crop and, optionally, a crop after the monsoon, and says whether each is irrigated.
+- **Sowing dates.** The monsoon crop is sown on the place's median onset date (Sivakumar criterion), limited to between 1 June and 31 July; 1 July is used if fewer than half the years have an onset. The second crop is sown three days after the first is harvested, and not before 15 October. A pair that does not fit in one year is rejected.
+- **Alternatives.** Every valid combination of a monsoon crop with fallow or a second crop is evaluated, plus two-year alternations of the farmer's monsoon crop with each other monsoon crop (about 70 to 80 candidates). Alternatives use irrigation only in the seasons where the farmer said they have it. The first alternative shown is the best-scoring candidate with equal priorities; the second is the best-scoring one that keeps the farmer's monsoon crop. Crops with borrowed values count as the crop they borrow from, so near-duplicates are not shown.
+
+Limits specific to this mode:
+
+- **India only.** The two-season calendar assumes India's monsoon. Places outside India are refused.
+- **Crop list.** Ten crops, which suit southern and central India best. Wheat, mustard, pigeon pea and other important crops are not in the table yet.
+- **Season suitability** (which crops are offered in which season) follows common practice in peninsular India. It is not from FAO-56 and is not checked against temperature.
+- **Alternatives are chosen on water, soil cover and crop family only.** Without prices or yields, the tool may suggest a crop that is less valuable than the farmer's own. This is stated on every result.
+- **No satellite cross-check or year types** are computed for these places.
+- Sowing dates in this mode come from the onset rule; the three pipeline locations use fixed dates. Results for the same place can therefore differ slightly between the two modes.
+
 ## Verification status
 
 | Item | Status |
@@ -177,6 +195,7 @@ The map in the app shows imagery served by NASA Global Imagery Browse Services (
 | Kc curve, calendar, water balance, scoring | Unit-tested (12 tests): stage values, overlap detection, water conservation, irrigation accounting |
 | Crop table values | Read from FAO-56 Tables 11 and 12 on fao.org on 14 Nov 2026; worth a second read-through by a person |
 | k-means, terciles, eta squared | Unit-tested (6 tests) on data with known answers |
+| JavaScript engine (`app/engine.js`) | 546 parity checks against the Python pipeline, 0 mismatches (`node tests/engine_parity.js`) |
 | Rainfall totals | Cross-checked against GPM IMERG for 2001-2025 (see above). Not yet checked against India Meteorological Department gauge data |
 
 ## Known limitations

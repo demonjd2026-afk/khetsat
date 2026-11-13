@@ -34,6 +34,10 @@
     soil: 100,
     mapLayer: "ndvi",
     mapMoment: "wet",
+    form: { lat: "", lon: "", kharif: "rice", rabi: "", kharifIrrigated: false, rabiIrrigated: false },
+    busy: false,
+    formMessage: null,
+    crops: null,
     cache: {}
   };
 
@@ -93,6 +97,15 @@
   }
 
   function byId(id) { return document.getElementById(id); }
+
+  function placeName(key) {
+    if (key !== "custom") return PLACES[key].names[state.lang];
+    var data = state.cache.custom;
+    return data ? t("custom_name", { lat: data.lat.toFixed(2), lon: data.lon.toFixed(2) }) : t("your_place");
+  }
+  function pointName(key) {
+    return key === "custom" ? placeName(key) : PLACES[key].points[state.lang];
+  }
   function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); return node; }
 
   function score(components) {
@@ -140,6 +153,7 @@
 
   function load(place) {
     if (state.cache[place]) return Promise.resolve(state.cache[place]);
+    if (place === "custom") return Promise.reject(new Error("no analysis yet"));
     function get(name) {
       return fetch("data/processed/" + name + ".json").then(function (response) {
         if (!response.ok) throw new Error(name + ": " + response.status);
@@ -217,7 +231,7 @@
     });
 
     return '<svg viewBox="0 0 ' + W + " " + cursor + '" role="img" aria-label="' +
-      esc(t("strip_title", { name: PLACES[state.place].names[state.lang] })) + '">' + svg.join("") + "</svg>";
+      esc(t("strip_title", { name: placeName(state.place) })) + '">' + svg.join("") + "</svg>";
   }
 
   function yearsChart(climate) {
@@ -299,7 +313,15 @@
       map.createPane("lines").style.zIndex = 450;
       window.L.tileLayer(GIBS + "Reference_Features/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png",
         { pane: "lines", maxNativeZoom: 9, maxZoom: 9, minZoom: 5 }).addTo(map);
-      mapState = { map: map, data: null, key: "", markers: {}, loaded: false };
+      mapState = { map: map, data: null, key: "", markers: {}, loaded: false, pin: null };
+      map.on("click", function (event) {
+        if (state.place !== "custom") return;
+        state.form.lat = event.latlng.lat.toFixed(2);
+        state.form.lon = event.latlng.lng.toFixed(2);
+        state.formMessage = null;
+        renderForm();
+        renderMap();
+      });
       Object.keys(PLACES).forEach(function (key) {
         mapState.markers[key] = window.L.circleMarker([PLACES[key].lat, PLACES[key].lon], {
           radius: 9, weight: 3, color: "#ffffff", fillColor: "#2b2622", fillOpacity: 1
@@ -318,6 +340,15 @@
       window.setTimeout(function () {
         if (!mapState.loaded) byId("map-section").hidden = true;
       }, 8000);
+    }
+    var lat = Number(state.form.lat), lon = Number(state.form.lon);
+    var showPin = state.place === "custom" && state.form.lat !== "" && state.form.lon !== "" && isFinite(lat) && isFinite(lon);
+    if (mapState.pin) { mapState.map.removeLayer(mapState.pin); mapState.pin = null; }
+    if (showPin) {
+      mapState.pin = window.L.circleMarker([lat, lon], {
+        radius: 11, weight: 3, color: "#ffffff", fillColor: "#e0a106", fillOpacity: 1
+      }).addTo(mapState.map);
+      if (!mapState.map.getBounds().pad(-0.1).contains([lat, lon])) mapState.map.panTo([lat, lon]);
     }
     Object.keys(PLACES).forEach(function (place) {
       var marker = mapState.markers[place], selected = place === state.place;
@@ -351,6 +382,10 @@
         onclick: function () { state.place = key; render(); }
       }));
     });
+    places.appendChild(h("button", {
+      type: "button", "aria-current": String(state.place === "custom"), text: t("your_place"),
+      onclick: function () { state.place = "custom"; render(); }
+    }));
 
     byId("priorities-title").textContent = t("priorities_title");
     byId("priorities-intro").textContent = t("priorities_intro");
@@ -383,11 +418,17 @@
   }
 
   function renderClimate(data) {
-    var name = PLACES[state.place].names[state.lang];
+    var name = placeName(state.place);
     var summary = data.climate.summary;
     byId("strip-title").textContent = t("strip_title", { name: name });
     byId("strip-intro").textContent = t("strip_intro");
-    byId("grid-note").textContent = t("grid_note", { point: PLACES[state.place].points[state.lang] });
+    var note = t("grid_note", { point: pointName(state.place) });
+    if (data.custom) {
+      note += " " + t("custom_note", {
+        date: data.sowing.kharif[1] + " " + t("months")[data.sowing.kharif[0] - 1], n: data.candidates
+      });
+    }
+    byId("grid-note").textContent = note;
 
     var legend = clear(byId("strip-legend"));
     [["#b9c6e6", "legend_mean_rain"], ["#2f4b8f", "legend_dependable_rain"]].forEach(function (pair) {
@@ -402,7 +443,7 @@
       ["stat_monsoon", Math.round(summary.monsoon_rain_mm.mean) + " mm"],
       ["stat_dependable", Math.round(summary.monsoon_rain_mm.dependable_75) + " mm"],
       ["stat_variation", Math.round(summary.monsoon_rain_mm.cv_percent) + "%"],
-      ["stat_onset", t("stat_onset_value", {
+      ["stat_onset", summary.onset.p10_days_after_jun1 === null ? "–" : t("stat_onset_value", {
         from: dateAfterJune1(summary.onset.p10_days_after_jun1),
         to: dateAfterJune1(summary.onset.p90_days_after_jun1)
       })]
@@ -562,9 +603,126 @@
     renderSoil(data, order);
   }
 
+  // ---------- your own place ----------
+
+  var INDIA = { latMin: 6.5, latMax: 37.5, lonMin: 68, lonMax: 97.5 };
+
+  function loadCrops() {
+    if (state.crops) return Promise.resolve(state.crops);
+    return fetch("data/reference/crops.json").then(function (response) {
+      if (!response.ok) throw new Error("crops: " + response.status);
+      return response.json();
+    }).then(function (json) { state.crops = json.crops; return state.crops; });
+  }
+
+  function analyse() {
+    var lat = Number(state.form.lat), lon = Number(state.form.lon);
+    var inside = state.form.lat !== "" && state.form.lon !== "" && isFinite(lat) && isFinite(lon) &&
+      lat >= INDIA.latMin && lat <= INDIA.latMax && lon >= INDIA.lonMin && lon <= INDIA.lonMax;
+    if (!inside) { state.formMessage = { key: "form_err_bounds", bad: true }; renderForm(); return; }
+    state.busy = true;
+    state.formMessage = { key: "form_loading", bad: false };
+    renderForm();
+    var url = "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR,T2M_MAX,T2M_MIN" +
+      "&community=AG&longitude=" + lon + "&latitude=" + lat + "&start=19810101&end=20251231&format=JSON";
+    var failure = "form_err_fetch";
+    Promise.all([loadCrops(), fetch(url).then(function (response) {
+      if (!response.ok) throw new Error("NASA POWER: " + response.status);
+      return response.json();
+    })]).then(function (parts) {
+      var result = window.KhetEngine.analysePlace(parts[1], lat, parts[0], {
+        kharif: state.form.kharif, rabi: state.form.rabi || null,
+        kharifIrrigated: state.form.kharifIrrigated, rabiIrrigated: state.form.rabiIrrigated
+      });
+      if (result.error) { failure = "form_err_fit"; throw new Error(result.error); }
+      state.cache.custom = {
+        custom: true, lat: lat, lon: lon, check: null,
+        climate: result.climate, rotations: result.rotations,
+        candidates: result.candidates, sowing: result.sowing
+      };
+      state.formMessage = null;
+    }).catch(function (error) {
+      console.error(error);
+      state.formMessage = { key: failure, bad: true };
+    }).then(function () { state.busy = false; render(); });
+  }
+
+  function renderForm() {
+    var section = byId("place-form");
+    section.hidden = state.place !== "custom";
+    if (section.hidden) return;
+    byId("form-title").textContent = t("form_title");
+    byId("form-intro").textContent = t("form_intro");
+    var crops = state.crops || {};
+    function options(season, allowNone) {
+      var list = allowNone ? [h("option", { value: "", text: t("form_none") })] : [];
+      Object.keys(crops).forEach(function (key) {
+        if ((crops[key].seasons || []).indexOf(season) >= 0) list.push(h("option", { value: key, text: cropName(key) }));
+      });
+      return list;
+    }
+    function field(id, labelKey, control) {
+      return h("div", null, h("label", { for: id, text: t(labelKey) }), control);
+    }
+    function number(id, name, min, max) {
+      return h("input", {
+        id: id, type: "number", step: "0.01", min: String(min), max: String(max), value: state.form[name], inputmode: "decimal",
+        oninput: function (event) { state.form[name] = event.target.value; },
+        onchange: function () { renderMap(); }
+      });
+    }
+    function select(id, name, season, allowNone) {
+      var node = h.apply(null, ["select", {
+        id: id, onchange: function (event) { state.form[name] = event.target.value; }
+      }].concat(options(season, allowNone)));
+      node.value = state.form[name];
+      return node;
+    }
+    function tick(id, name) {
+      var box = h("input", { id: id, type: "checkbox", onchange: function (event) { state.form[name] = event.target.checked; } });
+      box.checked = state.form[name];
+      return h("div", { class: "tick" }, box, h("label", { for: id, text: t("form_irrigated") }));
+    }
+    var form = clear(byId("form"));
+    form.onsubmit = function (event) { event.preventDefault(); if (!state.busy) analyse(); };
+    var kharif = field("f-kharif", "form_kharif", select("f-kharif", "kharif", "kharif", false));
+    kharif.appendChild(tick("f-kharif-irr", "kharifIrrigated"));
+    var rabi = field("f-rabi", "form_rabi", select("f-rabi", "rabi", "rabi", true));
+    rabi.appendChild(tick("f-rabi-irr", "rabiIrrigated"));
+    var locate = h("button", {
+      type: "button", text: t("form_locate"),
+      onclick: function () {
+        if (!navigator.geolocation) { state.formMessage = { key: "form_err_locate", bad: true }; renderForm(); return; }
+        navigator.geolocation.getCurrentPosition(function (position) {
+          state.form.lat = position.coords.latitude.toFixed(2);
+          state.form.lon = position.coords.longitude.toFixed(2);
+          state.formMessage = null; renderForm(); renderMap();
+        }, function () { state.formMessage = { key: "form_err_locate", bad: true }; renderForm(); });
+      }
+    });
+    var go = h("button", { type: "submit", class: "go", text: t("form_go") });
+    if (state.busy) go.disabled = true;
+    [field("f-lat", "form_lat", number("f-lat", "lat", INDIA.latMin, INDIA.latMax)),
+      field("f-lon", "form_lon", number("f-lon", "lon", INDIA.lonMin, INDIA.lonMax)),
+      h("div", null, locate), kharif, rabi, h("div", null, go)
+    ].forEach(function (node) { form.appendChild(node); });
+    var status = byId("form-status");
+    status.textContent = state.formMessage ? t(state.formMessage.key) : "";
+    status.className = "note" + (state.formMessage && state.formMessage.bad ? " bad" : "");
+    if (!state.crops) loadCrops().then(renderForm).catch(function (error) { console.error(error); });
+  }
+
+  function showResults(visible) {
+    ["strip", "work", "soil", "climate"].forEach(function (id) { byId(id).hidden = !visible; });
+    if (!visible) byId("check").hidden = true;
+  }
+
   function render() {
     renderChrome();
     renderMap();
+    renderForm();
+    if (state.place === "custom" && !state.cache.custom) { showResults(false); return; }
+    showResults(true);
     load(state.place).then(function (data) {
       renderClimate(data);
       renderRanked();
@@ -577,6 +735,9 @@
       }
     });
   }
+
+  var preferred = (typeof navigator !== "undefined" && navigator.language || "").slice(0, 2).toLowerCase();
+  if (LANGS.indexOf(preferred) >= 0) state.lang = preferred;
 
   window.KhetSat = { state: state, score: score, ranked: ranked, fill: fill, fmt: fmt };
   if (typeof document !== "undefined" && document.getElementById) render();

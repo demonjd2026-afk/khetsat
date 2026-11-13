@@ -18,6 +18,8 @@ For a location, KhetSat takes the rotation in use today and compares it with two
 - what is not known
 - what to check locally before acting
 
+Three locations (Anantapur, Krishna, Anakapalli) come pre-analysed with sourced current rotations. For any other place in India, the farmer picks a point on the map and enters what they grow now; the app fetches NASA data for that point and compares their rotation with the two best alternatives it finds.
+
 The farmer sets five priorities with sliders (water in a normal year, holding up in a poor year, using less water, building the soil, breaking pest cycles) and the ranking updates.
 
 KhetSat supports decisions. It does not replace a farmer's judgment or the local agriculture officer.
@@ -57,6 +59,7 @@ Results for crops grown on leftover soil moisture in the delta are flagged as un
 ## What is checked, and what is not
 
 - 37 unit tests cover the calculations; one checks the radiation formula against a worked example in FAO-56.
+- The in-browser engine used for other places is checked against the Python pipeline: 546 values compared, all in agreement.
 - Every formula, its source, its verification status and the known limitations are listed in [docs/METHODS.md](docs/METHODS.md).
 - Figures describe a NASA grid cell about 50 km across, not a field.
 - Soil water storage is assumed, and every result is re-run at four storage values to show how much it matters.
@@ -69,6 +72,7 @@ python3 -m pipeline.run            # climate indicators
 python3 -m pipeline.run_rotations  # rotation comparison
 python3 -m pipeline.crosscheck     # satellite rainfall cross-check
 python3 -m unittest discover -s tests
+node tests/engine_parity.js        # in-browser engine against the pipeline
 ```
 
 Python 3.10 or later, standard library only. Results are written to `data/processed/`.
@@ -89,7 +93,7 @@ Then visit http://localhost:8000. The app is plain HTML, CSS and JavaScript with
 | `tests/` | Unit tests |
 | `data/reference/` | Crop table and candidate rotations, with their sources |
 | `data/processed/` | Result files read by the app |
-| `app/`, `index.html` | The web app |
+| `app/`, `index.html` | The web app; `app/engine.js` is the in-browser engine |
 | `docs/` | Methods and the architecture diagram |
 
 ## Licence

@@ -24,7 +24,14 @@
 <main>
   <nav class="places" id="places" aria-label="Location"></nav>
 
-  <section class="strip" aria-labelledby="strip-title">
+  <section class="place-form" id="place-form" aria-labelledby="form-title" hidden>
+    <h2 id="form-title"></h2>
+    <p class="lede" id="form-intro"></p>
+    <form id="form" novalidate></form>
+    <p class="note" id="form-status" role="status"></p>
+  </section>
+
+  <section class="strip" id="strip" aria-labelledby="strip-title">
     <h1 id="strip-title"></h1>
     <p class="lede" id="strip-intro"></p>
     <div class="scroll"><div id="strip-chart"></div></div>
@@ -43,7 +50,7 @@
     <p class="note" id="map-key"></p>
   </section>
 
-  <div class="work">
+  <div class="work" id="work">
     <aside class="priorities" aria-labelledby="priorities-title">
       <h2 id="priorities-title"></h2>
       <p id="priorities-intro"></p>
@@ -55,14 +62,14 @@
     </section>
   </div>
 
-  <section class="soil" aria-labelledby="soil-title">
+  <section class="soil" id="soil" aria-labelledby="soil-title">
     <h2 id="soil-title"></h2>
     <p class="lede" id="soil-intro"></p>
     <div class="segments" id="soil-choices" role="group"></div>
     <div class="scroll"><table id="soil-table"></table></div>
   </section>
 
-  <section class="climate" aria-labelledby="climate-title">
+  <section class="climate" id="climate" aria-labelledby="climate-title">
     <h2 id="climate-title"></h2>
     <dl class="stats" id="stats"></dl>
     <h3 id="years-title"></h3>
@@ -92,6 +99,7 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="app/engine.js"></script>
 <script src="app/i18n.js"></script>
 <script src="app/app.js"></script>
 </body>
