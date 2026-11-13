@@ -136,6 +136,22 @@ What it does not settle:
 - **Day boundaries.** POWER serves IMERG on UTC days only, so both series use UTC days in this comparison. Seasonal totals are unaffected; individual days can differ from the main pipeline's local-time days.
 - Which IMERG run (Early, Late or Final) POWER serves has not been confirmed.
 
+## Satellite map layers
+
+The map in the app shows imagery served by NASA Global Imagery Browse Services (GIBS), fetched by the viewer's browser. Nothing is computed from these layers; they are shown so the user can see the seasonal contrast directly.
+
+| Layer | GIBS identifier | Dates shown |
+|---|---|---|
+| Vegetation greenness | `MODIS_Terra_L3_NDVI_16Day` | 16-day composites starting 23 April 2026 and 16 October 2026 |
+| Root-zone soil moisture | `SMAP_L4_Analyzed_Root_Zone_Soil_Moisture` | 23 April 2026 and 16 October 2026 |
+| True colour | `VIIRS_NOAA20_CorrectedReflectance_TrueColor` | Same two days |
+| Borders and coastlines | `Reference_Features` | - |
+
+- The two dates are one dry-season and one post-monsoon example from a single year. They illustrate the seasonal cycle; they are not a climatology.
+- SMAP L4 is a model product that assimilates SMAP observations, on a grid of about 9 km.
+- The colour descriptions in the app come from inspecting the tiles. The official colour bars are not embedded.
+- Layer identifiers and dates were checked against the GIBS capabilities document on 14 November 2026.
+
 ## Verification status
 
 | Item | Status |

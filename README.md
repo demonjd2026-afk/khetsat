@@ -34,7 +34,9 @@ Done so far:
 
 - Satellite rainfall cross-check: the rotation results repeated on GPM IMERG rainfall for 2001-2025. Yearly monsoon totals correlate at 0.87 to 0.92 and the ranking of rotations is unchanged at all three locations
 
-Not built yet: SMAP soil moisture and MODIS vegetation checks, local soil data, a map.
+- Satellite map: MODIS vegetation greenness, SMAP root-zone soil moisture and VIIRS true colour from NASA GIBS, for a dry-season date and a post-monsoon date, with the three locations marked
+
+Not built yet: local soil data, district crop statistics, a published onset definition, prices.
 
 The Telugu and Hindi text has not yet been reviewed by a second native speaker.
 

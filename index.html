@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@400;500;600;700&family=Anek+Latin:wght@400;500;600;700&family=Anek+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="app/styles.css">
 </head>
 <body>
@@ -29,6 +30,17 @@
     <div class="scroll"><div id="strip-chart"></div></div>
     <ul class="legend" id="strip-legend"></ul>
     <p class="note" id="grid-note"></p>
+  </section>
+
+  <section class="map" id="map-section" aria-labelledby="map-title" hidden>
+    <h2 id="map-title"></h2>
+    <p class="lede" id="map-intro"></p>
+    <div class="map-controls">
+      <div class="segments" id="map-layers" role="group"></div>
+      <div class="segments" id="map-moments" role="group"></div>
+    </div>
+    <div id="map"></div>
+    <p class="note" id="map-key"></p>
   </section>
 
   <div class="work">
@@ -79,6 +91,7 @@
   <p>NASA Space Apps Challenge 2026, Field Shift: Adapting Farms with NASA Data</p>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="app/i18n.js"></script>
 <script src="app/app.js"></script>
 </body>

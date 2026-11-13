@@ -3,14 +3,17 @@
 
   var PLACES = {
     anantapur: {
+      lat: 14.68, lon: 77.60,
       names: { en: "Anantapur", te: "అనంతపురం", hi: "अनंतपुर" },
       points: { en: "Anantapur town", te: "అనంతపురం పట్టణం", hi: "अनंतपुर शहर" }
     },
     krishna: {
+      lat: 16.43, lon: 80.99,
       names: { en: "Krishna", te: "కృష్ణా", hi: "कृष्णा" },
       points: { en: "Gudivada", te: "గుడివాడ", hi: "गुडीवाड़ा" }
     },
     anakapalli: {
+      lat: 17.67, lon: 82.61,
       names: { en: "Anakapalli", te: "అనకాపల్లి", hi: "अनकापल्ली" },
       points: { en: "Narsipatnam", te: "నర్సీపట్నం", hi: "नरसीपट्टनम" }
     }
@@ -29,6 +32,8 @@
     place: "anantapur",
     weights: { water_fit: 3, resilience: 3, soil: 3, diversity: 3 },
     soil: 100,
+    mapLayer: "ndvi",
+    mapMoment: "wet",
     cache: {}
   };
 
@@ -241,6 +246,83 @@
       '" stroke="#2b2622" stroke-width="2" stroke-dasharray="7 5"/>');
     return '<svg viewBox="0 0 ' + W + " " + (top + H + 30) + '" role="img" aria-label="' +
       esc(t("years_chart_title")) + '">' + svg.join("") + "</svg>";
+  }
+
+  // ---------- satellite map ----------
+
+  var GIBS = "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/";
+  var MAP_DATES = { dry: "2026-04-23", wet: "2026-10-16" };
+  var MAP_LAYERS = {
+    ndvi: { id: "MODIS_Terra_L3_NDVI_16Day", set: "GoogleMapsCompatible_Level9", zoom: 9, ext: "png" },
+    smap: { id: "SMAP_L4_Analyzed_Root_Zone_Soil_Moisture", set: "GoogleMapsCompatible_Level6", zoom: 6, ext: "png" },
+    "true": { id: "VIIRS_NOAA20_CorrectedReflectance_TrueColor", set: "GoogleMapsCompatible_Level9", zoom: 9, ext: "jpg" }
+  };
+  var mapState = null;
+
+  function gibsLayer(spec, date) {
+    return window.L.tileLayer(
+      GIBS + spec.id + "/default/" + date + "/" + spec.set + "/{z}/{y}/{x}." + spec.ext,
+      { maxNativeZoom: spec.zoom, maxZoom: 9, minZoom: 5, tileSize: 256 });
+  }
+
+  function renderMap() {
+    var section = byId("map-section");
+    if (!window.L) { section.hidden = true; return; }
+    if (!mapState || mapState.loaded) section.hidden = false;
+    byId("map-title").textContent = t("map_title");
+    byId("map-intro").textContent = t("map_intro");
+    byId("map-key").textContent = t("map_key_" + state.mapLayer) + " " + t("map_credit");
+
+    function buttons(id, options, current, onPick) {
+      var box = clear(byId(id));
+      options.forEach(function (option) {
+        box.appendChild(h("button", {
+          type: "button", "aria-pressed": String(option[0] === current), text: t(option[1]),
+          onclick: function () { onPick(option[0]); renderMap(); }
+        }));
+      });
+    }
+    buttons("map-layers", [["ndvi", "map_layer_ndvi"], ["smap", "map_layer_smap"], ["true", "map_layer_true"]],
+      state.mapLayer, function (value) { state.mapLayer = value; });
+    buttons("map-moments", [["dry", "map_dry"], ["wet", "map_wet"]],
+      state.mapMoment, function (value) { state.mapMoment = value; });
+
+    if (!mapState) {
+      var map = window.L.map("map", {
+        center: [15.9, 80.2], zoom: 7, minZoom: 5, maxZoom: 9,
+        scrollWheelZoom: false, attributionControl: true
+      });
+      map.attributionControl.setPrefix(false);
+      map.attributionControl.addAttribution("NASA GIBS");
+      map.createPane("lines").style.zIndex = 450;
+      window.L.tileLayer(GIBS + "Reference_Features/default/GoogleMapsCompatible_Level9/{z}/{y}/{x}.png",
+        { pane: "lines", maxNativeZoom: 9, maxZoom: 9, minZoom: 5 }).addTo(map);
+      mapState = { map: map, data: null, key: "", markers: {}, loaded: false };
+      Object.keys(PLACES).forEach(function (key) {
+        mapState.markers[key] = window.L.circleMarker([PLACES[key].lat, PLACES[key].lon], {
+          radius: 9, weight: 3, color: "#ffffff", fillColor: "#2b2622", fillOpacity: 1
+        }).addTo(map).on("click", function () { state.place = key; render(); });
+      });
+    }
+    var key = state.mapLayer + state.mapMoment;
+    if (key !== mapState.key) {
+      if (mapState.data) mapState.map.removeLayer(mapState.data);
+      mapState.data = gibsLayer(MAP_LAYERS[state.mapLayer], MAP_DATES[state.mapMoment]);
+      mapState.data.on("tileload", function () { mapState.loaded = true; });
+      mapState.data.addTo(mapState.map);
+      mapState.key = key;
+      // If the imagery cannot be reached at all (offline, or a host that
+      // blocks outside images), hide the map instead of showing an empty box.
+      window.setTimeout(function () {
+        if (!mapState.loaded) byId("map-section").hidden = true;
+      }, 8000);
+    }
+    Object.keys(PLACES).forEach(function (place) {
+      var marker = mapState.markers[place], selected = place === state.place;
+      marker.setStyle({ fillColor: selected ? "#e0a106" : "#2b2622", radius: selected ? 11 : 9 });
+      marker.unbindTooltip();
+      marker.bindTooltip(PLACES[place].names[state.lang], { permanent: true, direction: "right", offset: [10, 0] });
+    });
   }
 
   // ---------- sections ----------
@@ -480,6 +562,7 @@
 
   function render() {
     renderChrome();
+    renderMap();
     load(state.place).then(function (data) {
       renderClimate(data);
       renderRanked();

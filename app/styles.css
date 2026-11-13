@@ -149,6 +149,10 @@ details ul { margin: 0.4rem 0 0; padding-left: 1.1rem; max-width: 70ch; }
 .stats dt { font-size: 0.9rem; color: var(--soil-soft); }
 .stats dd { margin: 0; font-size: 1.7rem; font-weight: 600; line-height: 1.2; }
 
+#map { height: 460px; border: 1px solid var(--rule); border-radius: 6px; background: #dfe5ea; z-index: 0; }
+.map-controls { display: flex; flex-wrap: wrap; gap: 0 2rem; }
+.map .leaflet-container { font-family: var(--font); }
+
 .check ul { padding-left: 1.1rem; max-width: 70ch; margin: 0 0 1rem; }
 .check li { margin-bottom: 0.3rem; }
 
