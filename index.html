@@ -5,20 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KhetSat: compare crop rotations with NASA data</title>
 <meta name="description" content="KhetSat compares crop rotations for Andhra Pradesh using 45 years of NASA weather data. NASA Space Apps Challenge 2026, Field Shift.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231f6b4a'/%3E%3Crect x='6' y='18' width='5' height='8' fill='%23b9c6e6'/%3E%3Crect x='13.5' y='12' width='5' height='14' fill='%23fff'/%3E%3Crect x='21' y='7' width='5' height='19' fill='%23e0a106'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="app/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@400;500;600;700&family=Anek+Latin:wght@400;500;600;700&family=Anek+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@400;500;600;700&family=Anek+Kannada:wght@400;500;600;700&family=Anek+Latin:wght@400;500;600;700&family=Anek+Odia:wght@400;500;600;700&family=Anek+Tamil:wght@400;500;600;700&family=Anek+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="app/styles.css">
 </head>
 <body>
 <header class="top">
   <div class="brand">
-    <span class="brand-name">KhetSat</span>
+    <a class="brand-mark" href="./" aria-label="KhetSat">
+      <svg viewBox="0 0 48 48" width="44" height="44" aria-hidden="true" focusable="false">
+        <rect width="48" height="48" rx="11" fill="#ffffff"/>
+        <path d="M12.5 17.5A15 15 0 0 1 33 10.6" fill="none" stroke="#1f6b4a" stroke-opacity="0.55" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="35.6" cy="11.8" r="3.4" fill="#e0a106"/>
+        <path d="M8 28Q24 16.5 40 28" fill="none" stroke="#1f6b4a" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M8 34.5Q24 23 40 34.5" fill="none" stroke="#1f6b4a" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M8 41Q24 29.5 40 41" fill="none" stroke="#1f6b4a" stroke-width="3.2" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-name">KhetSat</span>
+    </a>
     <span class="brand-line" id="tagline"></span>
   </div>
-  <div class="lang" id="lang" role="group" aria-label="Language"></div>
+  <div class="lang"><label for="lang" id="lang-label"></label><select id="lang"></select></div>
 </header>
 
 <main>
@@ -93,6 +103,7 @@
 
 <footer>
   <p class="disclaimer" id="disclaimer"></p>
+  <p id="review-note"></p>
   <p id="sources"></p>
   <p><a href="https://github.com/demonjd2026-afk/khetsat/blob/main/docs/METHODS.md" id="methods-link"></a></p>
   <p>NASA Space Apps Challenge 2026, Field Shift: Adapting Farms with NASA Data</p>
@@ -101,6 +112,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="app/engine.js"></script>
 <script src="app/i18n.js"></script>
+<script src="app/i18n-ta.js"></script>
+<script src="app/i18n-kn.js"></script>
+<script src="app/i18n-mr.js"></script>
+<script src="app/i18n-or.js"></script>
 <script src="app/app.js"></script>
 </body>
 </html>

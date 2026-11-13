@@ -1,6 +1,8 @@
+<img src="app/logo.svg" alt="KhetSat logo" width="72">
+
 # KhetSat
 
-Compare crop rotations for Andhra Pradesh using 45 years of NASA weather data, in English, Telugu and Hindi.
+Compare crop rotations using 45 years of NASA weather data, for Andhra Pradesh and any other place in India, in seven languages.
 
 Entry for the **2026 NASA Space Apps Challenge**, challenge *Field Shift: Adapting Farms with NASA Data* (Visakhapatnam local event, 14-15 November 2026).
 
@@ -63,7 +65,8 @@ Results for crops grown on leftover soil moisture in the delta are flagged as un
 - Every formula, its source, its verification status and the known limitations are listed in [docs/METHODS.md](docs/METHODS.md).
 - Figures describe a NASA grid cell about 50 km across, not a field.
 - Soil water storage is assumed, and every result is re-run at four storage values to show how much it matters.
-- Not yet done: local soil data, prices and yields, checks against rain-gauge records, review of the Telugu and Hindi text by a second native speaker.
+- The app is available in English, Telugu, Hindi, Tamil, Kannada, Marathi and Odia. The six Indian-language versions were drafted during the hackathon and have not yet been reviewed by a second native speaker; the app says so in each of them. `node tests/i18n_check.js` checks that every language has every string and placeholder.
+- Not yet done: local soil data, prices and yields, checks against rain-gauge records, native-speaker review of the translations.
 
 ## Run it
 
@@ -73,6 +76,7 @@ python3 -m pipeline.run_rotations  # rotation comparison
 python3 -m pipeline.crosscheck     # satellite rainfall cross-check
 python3 -m unittest discover -s tests
 node tests/engine_parity.js        # in-browser engine against the pipeline
+node tests/i18n_check.js           # every language has every string
 ```
 
 Python 3.10 or later, standard library only. Results are written to `data/processed/`.

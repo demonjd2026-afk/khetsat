@@ -4,6 +4,8 @@
 window.I18N = {
   en: {
     lang_name: "English",
+    language_label: "Language",
+    review_note: "",
     tagline: "Compare crop rotations with 45 years of NASA weather data",
     choose_location: "Choose a location",
     grid_note: "Figures describe the NASA grid cell (about 50 km across) around {point}. They are not measurements from a single field.",
@@ -154,6 +156,8 @@ window.I18N = {
   },
   te: {
     lang_name: "తెలుగు",
+    language_label: "భాష",
+    review_note: "ఈ అనువాదాన్ని హ్యాకథాన్ కోసం తయారు చేశాం; మరో మాతృభాషా వక్త ఇంకా సమీక్షించలేదు. ఏదైనా తప్పుగా అనిపిస్తే ఇంగ్లీషు పాఠాన్ని ప్రామాణికంగా తీసుకోండి.",
     tagline: "45 ఏళ్ల నాసా వాతావరణ సమాచారంతో పంట మార్పిడి పద్ధతులను పోల్చండి",
     choose_location: "ప్రాంతాన్ని ఎంచుకోండి",
     grid_note: "ఈ అంకెలు {point} చుట్టూ ఉన్న నాసా గ్రిడ్ గడి (సుమారు 50 కి.మీ.)కి చెందినవి. ఇవి ఒక్క పొలంలో కొలిచినవి కావు.",
@@ -304,6 +308,8 @@ window.I18N = {
   },
   hi: {
     lang_name: "हिन्दी",
+    language_label: "भाषा",
+    review_note: "यह अनुवाद हैकथॉन के लिए तैयार किया गया है और किसी दूसरे मातृभाषी ने अभी इसकी समीक्षा नहीं की है। कुछ ग़लत लगे तो अंग्रेज़ी पाठ को मानक मानें।",
     tagline: "नासा के 45 साल के मौसम आँकड़ों से फसल चक्रों की तुलना करें",
     choose_location: "स्थान चुनें",
     grid_note: "ये आँकड़े {point} के आसपास के नासा ग्रिड खाने (लगभग 50 किमी) के हैं। ये किसी एक खेत की माप नहीं हैं।",

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="KhetSat">
+  <rect width="48" height="48" rx="11" fill="#1f6b4a"/>
+  <path d="M12.5 17.5A15 15 0 0 1 33 10.6" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="35.6" cy="11.8" r="3.4" fill="#e0a106"/>
+  <path d="M8 28Q24 16.5 40 28" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M8 34.5Q24 23 40 34.5" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+  <path d="M8 41Q24 29.5 40 41" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round"/>
+</svg>

@@ -10,8 +10,9 @@
   --chalk: #f5f7f1;
   --white: #ffffff;
   --rule: #d5dacd;
-  --font: "Anek Latin", "Anek Telugu", "Anek Devanagari", "Noto Sans Telugu",
-    "Noto Sans Devanagari", system-ui, sans-serif;
+  --font: "Anek Latin", "Anek Telugu", "Anek Devanagari", "Anek Tamil", "Anek Kannada",
+    "Anek Odia", "Noto Sans Telugu", "Noto Sans Devanagari", "Noto Sans Tamil",
+    "Noto Sans Kannada", "Noto Sans Oriya", system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -46,21 +47,23 @@ a { color: var(--paddy); }
   background: var(--paddy);
   color: var(--white);
 }
-.brand { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 1rem; }
-.brand-name { font-size: 1.6rem; font-weight: 700; }
+.brand { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 1.1rem; }
+.brand-mark { display: flex; align-items: center; gap: 0.7rem; color: var(--white); text-decoration: none; }
+.brand-mark svg { display: block; flex: none; }
+.brand-name { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1; }
 .brand-line { opacity: 0.9; }
 
-.lang { display: flex; gap: 0.25rem; }
-.lang button {
+.lang { display: flex; align-items: center; gap: 0.5rem; }
+.lang label { font-size: 0.9rem; opacity: 0.9; }
+.lang select {
   font: inherit;
-  color: var(--white);
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: var(--paddy);
+  background: var(--white);
+  border: 1px solid var(--white);
   border-radius: 999px;
-  padding: 0.25rem 0.9rem;
+  padding: 0.3rem 0.9rem;
   cursor: pointer;
 }
-.lang button[aria-pressed="true"] { background: var(--white); color: var(--paddy); border-color: var(--white); font-weight: 600; }
 
 main { padding: 0 clamp(1rem, 4vw, 3rem) 3rem; max-width: 1280px; margin: 0 auto; }
 

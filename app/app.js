@@ -4,18 +4,18 @@
   var PLACES = {
     anantapur: {
       lat: 14.68, lon: 77.60,
-      names: { en: "Anantapur", te: "అనంతపురం", hi: "अनंतपुर" },
-      points: { en: "Anantapur town", te: "అనంతపురం పట్టణం", hi: "अनंतपुर शहर" }
+      names: { en: "Anantapur", te: "అనంతపురం", hi: "अनंतपुर", ta: "அனந்தபூர்", kn: "ಅನಂತಪುರ", mr: "अनंतपूर", or: "ଅନନ୍ତପୁର" },
+      points: { en: "Anantapur town", te: "అనంతపురం పట్టణం", hi: "अनंतपुर शहर", ta: "அனந்தபூர் நகரம்", kn: "ಅನಂತಪುರ ಪಟ್ಟಣ", mr: "अनंतपूर शहर", or: "ଅନନ୍ତପୁର ସହର" }
     },
     krishna: {
       lat: 16.43, lon: 80.99,
-      names: { en: "Krishna", te: "కృష్ణా", hi: "कृष्णा" },
-      points: { en: "Gudivada", te: "గుడివాడ", hi: "गुडीवाड़ा" }
+      names: { en: "Krishna", te: "కృష్ణా", hi: "कृष्णा", ta: "கிருஷ்ணா", kn: "ಕೃಷ್ಣಾ", mr: "कृष्णा", or: "କୃଷ୍ଣା" },
+      points: { en: "Gudivada", te: "గుడివాడ", hi: "गुडीवाड़ा", ta: "குடிவாடா", kn: "ಗುಡಿವಾಡ", mr: "गुडीवाडा", or: "ଗୁଡ଼ିୱାଡ଼ା" }
     },
     anakapalli: {
       lat: 17.67, lon: 82.61,
-      names: { en: "Anakapalli", te: "అనకాపల్లి", hi: "अनकापल्ली" },
-      points: { en: "Narsipatnam", te: "నర్సీపట్నం", hi: "नरसीपट्टनम" }
+      names: { en: "Anakapalli", te: "అనకాపల్లి", hi: "अनकापल्ली", ta: "அனகாபல்லி", kn: "ಅನಕಾಪಲ್ಲಿ", mr: "अनकापल्ली", or: "ଅନକାପଲ୍ଲୀ" },
+      points: { en: "Narsipatnam", te: "నర్సీపట్నం", hi: "नरसीपट्टनम", ta: "நர்சிபட்டணம்", kn: "ನರ್ಸೀಪಟ್ನಂ", mr: "नरसीपट्टणम", or: "ନର୍ସିପଟନମ" }
     }
   };
   var CROP_COLOURS = {
@@ -25,7 +25,7 @@
   };
   var COMPONENTS = ["water_fit", "resilience", "water_saving", "soil", "diversity"];
   var MONTH_START = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
-  var LANGS = ["en", "te", "hi"];
+  var LANGS = ["en", "te", "hi", "ta", "kn", "mr", "or"];
 
   var state = {
     lang: "en",
@@ -56,19 +56,19 @@
   }
 
   function t(key, params) {
-    var dict = window.I18N[state.lang];
+    var dict = window.I18N[state.lang] || window.I18N.en;
     var template = key in dict ? dict[key] : window.I18N.en[key];
     return typeof template === "string" ? fill(template, params) : template;
   }
 
   function cropName(key) {
-    return window.I18N[state.lang].crops[key] || window.I18N.en.crops[key] || key;
+    return ((window.I18N[state.lang] || {}).crops || {})[key] || window.I18N.en.crops[key] || key;
   }
 
   function explain(entry) {
     var params = Object.assign({}, entry.params);
     if (params.crop) params.crop = cropName(params.crop);
-    var dict = window.I18N[state.lang].x;
+    var dict = (window.I18N[state.lang] || {}).x || {};
     return fill(dict[entry.code] || window.I18N.en.x[entry.code] || entry.code, params);
   }
 
@@ -99,12 +99,12 @@
   function byId(id) { return document.getElementById(id); }
 
   function placeName(key) {
-    if (key !== "custom") return PLACES[key].names[state.lang];
+    if (key !== "custom") return PLACES[key].names[state.lang] || PLACES[key].names.en;
     var data = state.cache.custom;
     return data ? t("custom_name", { lat: data.lat.toFixed(2), lon: data.lon.toFixed(2) }) : t("your_place");
   }
   function pointName(key) {
-    return key === "custom" ? placeName(key) : PLACES[key].points[state.lang];
+    return key === "custom" ? placeName(key) : (PLACES[key].points[state.lang] || PLACES[key].points.en);
   }
   function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); return node; }
 
@@ -354,7 +354,7 @@
       var marker = mapState.markers[place], selected = place === state.place;
       marker.setStyle({ fillColor: selected ? "#e0a106" : "#2b2622", radius: selected ? 11 : 9 });
       marker.unbindTooltip();
-      marker.bindTooltip(PLACES[place].names[state.lang], { permanent: true, direction: "right", offset: [10, 0] });
+      marker.bindTooltip(placeName(place), { permanent: true, direction: "right", offset: [10, 0] });
     });
   }
 
@@ -365,20 +365,20 @@
     byId("tagline").textContent = t("tagline");
 
     var lang = clear(byId("lang"));
+    byId("lang-label").textContent = t("language_label");
     LANGS.forEach(function (code) {
-      lang.appendChild(h("button", {
-        type: "button", lang: code, "aria-pressed": String(code === state.lang),
-        text: window.I18N[code].lang_name,
-        onclick: function () { state.lang = code; render(); }
-      }));
+      if (!window.I18N[code]) return;
+      lang.appendChild(h("option", { value: code, lang: code, text: window.I18N[code].lang_name }));
     });
+    lang.value = state.lang;
+    lang.onchange = function () { state.lang = lang.value; render(); };
 
     var places = clear(byId("places"));
     places.setAttribute("aria-label", t("choose_location"));
     Object.keys(PLACES).forEach(function (key) {
       places.appendChild(h("button", {
         type: "button", "aria-current": String(key === state.place),
-        text: PLACES[key].names[state.lang],
+        text: placeName(key),
         onclick: function () { state.place = key; render(); }
       }));
     });
@@ -413,6 +413,7 @@
         h("dt", { text: t("g_" + key + "_term") }), h("dd", { text: t("g_" + key + "_text") })));
     });
     byId("disclaimer").textContent = t("disclaimer");
+    byId("review-note").textContent = t("review_note");
     byId("sources").textContent = t("sources");
     byId("methods-link").textContent = t("methods_link");
   }
@@ -737,7 +738,7 @@
   }
 
   var preferred = (typeof navigator !== "undefined" && navigator.language || "").slice(0, 2).toLowerCase();
-  if (LANGS.indexOf(preferred) >= 0) state.lang = preferred;
+  if (LANGS.indexOf(preferred) >= 0 && window.I18N[preferred]) state.lang = preferred;
 
   window.KhetSat = { state: state, score: score, ranked: ranked, fill: fill, fmt: fmt };
   if (typeof document !== "undefined" && document.getElementById) render();
