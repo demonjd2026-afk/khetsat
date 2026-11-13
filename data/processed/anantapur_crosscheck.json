@@ -183,8 +183,8 @@
      "failed_satellite": 2
     }
    ],
-   "score_reanalysis": 51.7,
-   "score_satellite": 54.2
+   "score_reanalysis": 58.6,
+   "score_satellite": 60.6
   },
   {
    "id": "groundnut_millet",
@@ -212,8 +212,8 @@
      "failed_satellite": 2
     }
    ],
-   "score_reanalysis": 57.5,
-   "score_satellite": 60.0
+   "score_reanalysis": 66.0,
+   "score_satellite": 68.0
   },
   {
    "id": "millet_chickpea",
@@ -241,8 +241,8 @@
      "failed_satellite": 12
     }
    ],
-   "score_reanalysis": 50.0,
-   "score_satellite": 47.7
+   "score_reanalysis": 53.0,
+   "score_satellite": 51.2
   }
  ],
  "ranking_reanalysis": [
@@ -255,6 +255,6 @@
   "existing",
   "millet_chickpea"
  ],
- "generated_utc": "2026-11-13T19:48:44Z",
+ "generated_utc": "2026-11-13T20:03:59Z",
  "ranking_agrees": true
 }

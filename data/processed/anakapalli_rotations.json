@@ -15,7 +15,7 @@
   "fallow_kc": 0.3,
   "wrsi_failure_threshold": 50.0
  },
- "generated_utc": "2026-11-13T19:42:26Z",
+ "generated_utc": "2026-11-13T20:03:58Z",
  "disclaimer": "Decision support only. Review with local farmers and agriculture officers before acting.",
  "rotations": [
   {
@@ -90,10 +90,11 @@
      },
      "irrigation_mm_mean": 0.0,
      "parameters_verified": true,
+     "parameters_borrowed_from": null,
      "wrsi_by_year_type": {
-      "0": 98.0,
+      "0": 97.0,
       "1": 95.0,
-      "2": 98.0
+      "2": 99.0
      }
     }
    ],
@@ -110,9 +111,10 @@
     "water_fit": 1.0,
     "resilience": 0.94,
     "soil": 0.206,
-    "diversity": 0.0
+    "diversity": 0.0,
+    "water_saving": 1.0
    },
-   "score_equal_weights": 53.6,
+   "score_equal_weights": 62.9,
    "explanation": {
     "why_suggested": [
      {
@@ -243,10 +245,11 @@
      },
      "irrigation_mm_mean": 0.0,
      "parameters_verified": true,
+     "parameters_borrowed_from": null,
      "wrsi_by_year_type": {
-      "0": 98.0,
+      "0": 97.0,
       "1": 95.0,
-      "2": 98.0
+      "2": 99.0
      }
     },
     {
@@ -357,8 +360,9 @@
      },
      "irrigation_mm_mean": 0.0,
      "parameters_verified": true,
+     "parameters_borrowed_from": null,
      "wrsi_by_year_type": {
-      "0": 24.0,
+      "0": 23.0,
       "1": 19.0,
       "2": 26.0
      }
@@ -378,9 +382,10 @@
     "water_fit": 0.19,
     "resilience": 0.1,
     "soil": 0.593,
-    "diversity": 0.5
+    "diversity": 0.5,
+    "water_saving": 0.655
    },
-   "score_equal_weights": 34.6,
+   "score_equal_weights": 40.8,
    "explanation": {
     "why_suggested": [
      {
@@ -564,6 +569,7 @@
      },
      "irrigation_mm_mean": 0.0,
      "parameters_verified": true,
+     "parameters_borrowed_from": null,
      "wrsi_by_year_type": {
       "0": 99.0,
       "1": 100.0,
@@ -649,10 +655,11 @@
      },
      "irrigation_mm_mean": 0.0,
      "parameters_verified": true,
+     "parameters_borrowed_from": null,
      "wrsi_by_year_type": {
-      "0": 64.0,
+      "0": 63.0,
       "1": 56.0,
-      "2": 61.0
+      "2": 60.0
      }
     }
    ],
@@ -670,9 +677,10 @@
     "water_fit": 0.55,
     "resilience": 0.48,
     "soil": 0.558,
-    "diversity": 0.5
+    "diversity": 0.5,
+    "water_saving": 0.939
    },
-   "score_equal_weights": 52.2,
+   "score_equal_weights": 60.5,
    "explanation": {
     "why_suggested": [
      {
@@ -875,22 +883,23 @@
    {
     "id": 0,
     "years": [
+     1984,
      1985,
      1987,
      1992,
      1994,
      1995,
-     1998,
+     1999,
      2002,
      2003,
      2004
     ],
     "centre": {
-     "monsoon_rain_mm": 675.9,
-     "post_monsoon_rain_mm": 436.8,
-     "onset_days_after_jun1": 21.3,
+     "monsoon_rain_mm": 623.3,
+     "post_monsoon_rain_mm": 372.7,
+     "onset_days_after_jun1": 27.5,
      "longest_monsoon_dry_spell_days": 10.8,
-     "hot_days": 8.9
+     "hot_days": 8.1
     }
    },
    {
@@ -899,7 +908,6 @@
      1981,
      1982,
      1983,
-     1984,
      1986,
      1988,
      1989,
@@ -907,7 +915,6 @@
      1991,
      1993,
      1997,
-     1999,
      2000,
      2001,
      2008,
@@ -919,17 +926,18 @@
      2024
     ],
     "centre": {
-     "monsoon_rain_mm": 733.6,
-     "post_monsoon_rain_mm": 192.5,
-     "onset_days_after_jun1": 9.3,
-     "longest_monsoon_dry_spell_days": 7.2,
-     "hot_days": 6.4
+     "monsoon_rain_mm": 751.4,
+     "post_monsoon_rain_mm": 190.0,
+     "onset_days_after_jun1": 10.3,
+     "longest_monsoon_dry_spell_days": 6.9,
+     "hot_days": 6.5
     }
    },
    {
     "id": 2,
     "years": [
      1996,
+     1998,
      2005,
      2006,
      2007,
@@ -946,11 +954,11 @@
      2025
     ],
     "centre": {
-     "monsoon_rain_mm": 969.1,
-     "post_monsoon_rain_mm": 361.9,
+     "monsoon_rain_mm": 969.8,
+     "post_monsoon_rain_mm": 379.1,
      "onset_days_after_jun1": 9.4,
-     "longest_monsoon_dry_spell_days": 4.8,
-     "hot_days": 2.5
+     "longest_monsoon_dry_spell_days": 5.1,
+     "hot_days": 2.9
     }
    }
   ],
@@ -1007,37 +1015,37 @@
     2025
    ]
   },
-  "years_given_same_group_by_both": 25,
+  "years_given_same_group_by_both": 28,
   "years_total": 45,
   "comparison": [
    {
     "rotation": "existing",
     "crop": "rice",
-    "variance_explained_by_clusters": 0.082,
+    "variance_explained_by_clusters": 0.087,
     "variance_explained_by_rain_terciles": 0.03
    },
    {
     "rotation": "rice_greengram",
     "crop": "rice",
-    "variance_explained_by_clusters": 0.082,
+    "variance_explained_by_clusters": 0.087,
     "variance_explained_by_rain_terciles": 0.03
    },
    {
     "rotation": "rice_greengram",
     "crop": "green_gram",
-    "variance_explained_by_clusters": 0.053,
+    "variance_explained_by_clusters": 0.043,
     "variance_explained_by_rain_terciles": 0.011
    },
    {
     "rotation": "maize_greengram",
     "crop": "maize",
-    "variance_explained_by_clusters": 0.043,
+    "variance_explained_by_clusters": 0.126,
     "variance_explained_by_rain_terciles": 0.066
    },
    {
     "rotation": "maize_greengram",
     "crop": "green_gram",
-    "variance_explained_by_clusters": 0.052,
+    "variance_explained_by_clusters": 0.042,
     "variance_explained_by_rain_terciles": 0.023
    }
   ]

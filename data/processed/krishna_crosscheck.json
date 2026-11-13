@@ -181,13 +181,24 @@
      "wrsi_bad_year_satellite": 100.0,
      "failed_reanalysis": 0,
      "failed_satellite": 0
+    },
+    {
+     "crop": "black_gram",
+     "irrigated": true,
+     "seasons": 24,
+     "wrsi_median_reanalysis": 100.0,
+     "wrsi_median_satellite": 100.0,
+     "wrsi_bad_year_reanalysis": 100.0,
+     "wrsi_bad_year_satellite": 100.0,
+     "failed_reanalysis": 0,
+     "failed_satellite": 0
     }
    ],
-   "score_reanalysis": 55.1,
-   "score_satellite": 55.1
+   "score_reanalysis": 81.9,
+   "score_satellite": 81.9
   },
   {
-   "id": "rice_greengram",
+   "id": "rice_blackgram_rainfed",
    "crops": [
     {
      "crop": "rice",
@@ -201,19 +212,19 @@
      "failed_satellite": 0
     },
     {
-     "crop": "green_gram",
+     "crop": "black_gram",
      "irrigated": false,
      "seasons": 24,
-     "wrsi_median_reanalysis": 22.0,
-     "wrsi_median_satellite": 16.0,
+     "wrsi_median_reanalysis": 23.0,
+     "wrsi_median_satellite": 17.0,
      "wrsi_bad_year_reanalysis": 10.0,
-     "wrsi_bad_year_satellite": 7.0,
+     "wrsi_bad_year_satellite": 8.0,
      "failed_reanalysis": 23,
      "failed_satellite": 23
     }
    ],
-   "score_reanalysis": 35.3,
-   "score_satellite": 33.1
+   "score_reanalysis": 48.5,
+   "score_satellite": 46.9
   },
   {
    "id": "rice_maize",
@@ -231,30 +242,30 @@
     },
     {
      "crop": "maize",
-     "irrigated": false,
+     "irrigated": true,
      "seasons": 24,
-     "wrsi_median_reanalysis": 18.0,
-     "wrsi_median_satellite": 13.0,
-     "wrsi_bad_year_reanalysis": 7.0,
-     "wrsi_bad_year_satellite": 7.0,
-     "failed_reanalysis": 24,
-     "failed_satellite": 24
+     "wrsi_median_reanalysis": 100.0,
+     "wrsi_median_satellite": 100.0,
+     "wrsi_bad_year_reanalysis": 100.0,
+     "wrsi_bad_year_satellite": 100.0,
+     "failed_reanalysis": 0,
+     "failed_satellite": 0
     }
    ],
-   "score_reanalysis": 15.7,
-   "score_satellite": 14.4
+   "score_reanalysis": 64.6,
+   "score_satellite": 64.6
   }
  ],
  "ranking_reanalysis": [
   "existing",
-  "rice_greengram",
-  "rice_maize"
+  "rice_maize",
+  "rice_blackgram_rainfed"
  ],
  "ranking_satellite": [
   "existing",
-  "rice_greengram",
-  "rice_maize"
+  "rice_maize",
+  "rice_blackgram_rainfed"
  ],
- "generated_utc": "2026-11-13T19:49:20Z",
+ "generated_utc": "2026-11-13T20:03:59Z",
  "ranking_agrees": true
 }

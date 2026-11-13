@@ -26,7 +26,7 @@ Done so far:
 
 - Data pipeline: 45 years (1981-2025) of daily NASA POWER rainfall and temperature for three Andhra Pradesh locations (Anantapur, Krishna, Anakapalli)
 - Climate indicators per location: monsoon and post-monsoon rainfall, dependable rainfall, reference evapotranspiration, water balance, onset date, dry spells, hot days, and trends with significance tests
-- Rotation engine: a daily soil-water balance (FAO-56 crop coefficients) that compares three rotations per location, including the current one, across all 45 years, with a dry-year view and a soil-capacity sensitivity check
+- Rotation engine: a daily soil-water balance (FAO-56 crop coefficients) that compares three rotations per location, including the current one, across all 45 years, with a dry-year view and a soil-capacity sensitivity check. Current rotations follow published district profiles; monsoon onset follows Sivakumar (1988)
 - For each rotation: why it was suggested, the evidence, benefits, information gaps and risks for local review
 
 - Year types: k-means clustering of seasons compared with rainfall terciles, scored by how well each explains crop water outcomes (the simpler grouping wins in Anantapur; see METHODS)
@@ -36,7 +36,7 @@ Done so far:
 
 - Satellite map: MODIS vegetation greenness, SMAP root-zone soil moisture and VIIRS true colour from NASA GIBS, for a dry-season date and a post-monsoon date, with the three locations marked
 
-Not built yet: local soil data, district crop statistics, a published onset definition, prices.
+Not built yet: local soil data (the open soil database was unavailable when tried), prices and yields, checks against rain-gauge data.
 
 The Telugu and Hindi text has not yet been reviewed by a second native speaker.
 

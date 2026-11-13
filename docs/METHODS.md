@@ -31,7 +31,7 @@ Values describe the grid cell containing each representative point (about 50 km 
 | Monsoon water balance | Monsoon rainfall minus monsoon ET0 | Derived |
 | Longest dry spell | Longest run of days with under 1 mm, 1 June to 30 September | Derived |
 | Hot days | Days with maximum temperature at or above 40 C | Threshold chosen for this project |
-| Onset | First day from 1 June of a 3-day spell totalling 20 mm or more that is not followed within 30 days by a dry spell of 10 days or more | Rule written for this project; see status below |
+| Onset | First day from 1 June when rain over 3 consecutive days totals at least 20 mm and no dry spell in the following 30 days exceeds 7 days | Sivakumar (1988), as restated in ICRISAT Journal Article 1222 (oar.icrisat.org/3054). The original searches from 1 May in West Africa; here the search starts on 1 June |
 | Trend | Theil-Sen slope with a two-sided Mann-Kendall test (tie-corrected), significance at p < 0.05 | Mann (1945), Kendall (1975), Sen (1968) |
 
 ## Rotation engine
@@ -67,10 +67,11 @@ Rotations longer than one year are simulated from every starting year of the cyc
 |---|---|
 | Water fit | Median WRSI of the weakest crop in the rotation |
 | Resilience | 25th-percentile WRSI of the weakest crop (a poor year, 1 in 4) |
+| Water saving | Crop water need of the thriftiest rotation at the location divided by this rotation's crop water need (1 for the thriftiest) |
 | Soil | Half the share of legumes among the crops, half the share of the year the field is cropped |
 | Diversity | 0 for one crop family, 0.5 for two, 1 for three or more |
 
-The overall score is a weighted average of the four, with weights set by the farmer's priorities. It is an index for comparing rotations at one location. It is not a yield or income prediction.
+The overall score is a weighted average of the five, with weights set by the farmer's priorities. An irrigated crop is treated as fully watered, so for irrigated rotations the water-saving score and the irrigation amount carry the water information. It is an index for comparing rotations at one location. It is not a yield or income prediction.
 
 ### Assumptions that drive results
 
@@ -79,12 +80,25 @@ The overall score is a weighted average of the four, with weights set by the far
 | Plant-available soil water | 100 mm | Assumed, not measured. Every run also reports results at 75, 100, 150 and 200 mm. A rotation whose weakest-crop WRSI moves by 20 points or more across that range is flagged as soil-sensitive |
 | Bare-soil evaporation coefficient | 0.3 | Assumed. FAO-56 Chapter 11 makes this depend on how often the soil is wetted |
 | WRSI failure threshold | 50% | Follows the usual WRSI classification; not yet checked against the original FAO source |
-| Existing rotations and sowing dates | See `data/reference/rotations.json` | Working assumptions, not survey data |
+| Existing rotations | See the next table | Based on published district profiles, not on a survey |
+| Sowing dates | See `data/reference/rotations.json` | Working assumptions |
 
-### What the first run shows, and what it does not
+### Basis for the existing rotations
 
-- **Anantapur.** Groundnut gets a median 71% of its water need and fails in 5 of 45 seasons (2002, 2003, 2016, 2018, 2023). Millet needs about 371 mm against 511 mm for groundnut. Alternating the two cuts average crop water need by 14% and adds a second crop family.
-- **Post-rice crops (Krishna, Anakapalli).** A crop sown in December on leftover moisture scores very poorly at 100 mm of soil storage and much better at 200 mm. Deep delta soils may hold more than 100 mm, so these results are flagged soil-sensitive and must not be read as "this rotation fails" until soil data is added.
+| Location | Existing rotation used | Basis |
+|---|---|---|
+| Anantapur | Rainfed groundnut every year | KVK Reddipalli district profile: groundnut is the main crop, grown rainfed in kharif on red soils on about 7 lakh ha (figures for the district before its 2022 division) |
+| Krishna | Irrigated rice, then irrigated black gram | ICAR-CRIDA Agriculture Contingency Plan for Krishna district: paddy on about 269 thousand ha in kharif (229 thousand irrigated); black gram on about 134 thousand ha, mostly in rabi (107 thousand irrigated, 25 thousand rainfed) |
+| Anakapalli | Rainfed rice, then fallow | Assumed. Srinivas et al. (2022), Indian Journal of Agricultural Sciences 92(8), describe scope to expand rice-fallow pulses in north coastal Andhra Pradesh including the former Visakhapatnam district |
+
+Black gram is not in FAO-56. Its crop coefficients and stage lengths are borrowed from the "Green gram and cowpeas" row and flagged as borrowed.
+
+### What the results show, and what they do not
+
+- **Anantapur.** Groundnut gets a median 71% of its water need and fails in 5 of 45 seasons (2002, 2003, 2016, 2018, 2023). Millet needs about 371 mm against 511 mm for groundnut. Alternating the two cuts average crop water need by 14% and adds a second crop family. Millet followed by chickpea fails often: chickpea falls below 50% in 20 of 44 seasons.
+- **Krishna, irrigated crops.** After rice, irrigated black gram needs about 248 mm of irrigation a season and irrigated maize about 406 mm. This comparison does not depend much on the soil assumption, because irrigation makes up the shortfall either way.
+- **Krishna, a known failure of the model.** Black gram grown after rice on leftover moisture is an established practice in the district (about 25 thousand ha rainfed). The model gives it only 20% of its water need at 100 mm of soil storage and 48% at 200 mm. The model therefore under-represents water available to a crop sown into a wet paddy field on deep delta soil (no shallow water table, no relay sowing before harvest, a short local variety not represented). Results for crops on leftover moisture in the delta are flagged soil-sensitive and must not be read as "this fails".
+- **Anakapalli.** The same caution applies to green gram after rice.
 - **Rice.** Water need is crop evapotranspiration only. Puddling and percolation losses in paddy fields are not counted, so real water use is higher than shown.
 - **No water-stress yield response.** The store is drawn down at the full crop rate until empty (no FAO-56 Chapter 8 stress coefficient).
 
@@ -103,13 +117,13 @@ Each grouping is scored by how much of the year-to-year variation in a crop's WR
 
 | Location, crop | Explained by clusters | Explained by rain terciles |
 |---|---|---|
-| Anantapur, groundnut | 0.23 | 0.67 |
-| Anantapur, millet (alternating with groundnut) | 0.25 | 0.56 |
-| Anakapalli, rainfed rice | 0.08 | 0.03 |
+| Anantapur, groundnut | 0.43 | 0.67 |
+| Anantapur, millet (alternating with groundnut) | 0.38 | 0.56 |
+| Anakapalli, rainfed rice | 0.09 | 0.03 |
 
-For rainfed crops in Anantapur the simple rainfall grouping explains crop water outcomes far better than the five-feature clusters. Rainfall terciles are therefore the grouping used to describe good and poor years. Where neither grouping explains much (Anakapalli rice, which is rarely short of water in this model), year type is not a useful lens.
+For rainfed crops in Anantapur the simple rainfall grouping explains crop water outcomes better than the five-feature clusters. Rainfall terciles are therefore the grouping used to describe good and poor years. Where neither grouping explains much (Anakapalli rice, which is rarely short of water in this model), year type is not a useful lens.
 
-The clusters are still informative as a description. In Anantapur they separate three kinds of season: late onset with long dry spells (13 years; onset about 83 days after 1 June), early onset but hot (11 years; about 48 days at or above 40 C), and wet (21 years; about 427 mm of monsoon rain). Groundnut gets about 65% of its water need in the first two and 83% in the third.
+The clusters are still informative as a description. In Anantapur they give three groups of 15, 15 and 15 years: dry, late and hot (about 277 mm of monsoon rain, onset about 74 days after 1 June, 43 hot days); late but cooler, with a weak post-monsoon (318 mm, onset about 78 days, 104 mm after September); and early and wet (465 mm, onset about 33 days).
 
 ### Limits
 
@@ -158,7 +172,7 @@ The map in the app shows imagery served by NASA Global Imagery Browse Services (
 |---|---|
 | Ra formula | Verified by unit test against FAO-56 Example 8 (20 deg S, 3 September, 32.2 MJ m-2 day-1) |
 | Mann-Kendall, Theil-Sen, percentile | Unit-tested on series with known answers |
-| Onset rule | Unit-tested for behaviour. The thresholds are not yet tied to a published definition; replace or cite before presenting onset dates as authoritative |
+| Onset rule | Follows Sivakumar (1988); unit-tested, including the 7-day boundary. The criterion was developed for West Africa and has not been calibrated for Andhra Pradesh |
 | Hargreaves ET0 | Formula implemented as published. Not yet compared with Penman-Monteith or with observed ET for these locations |
 | Kc curve, calendar, water balance, scoring | Unit-tested (12 tests): stage values, overlap detection, water conservation, irrigation accounting |
 | Crop table values | Read from FAO-56 Tables 11 and 12 on fao.org on 14 Nov 2026; worth a second read-through by a person |
@@ -171,7 +185,7 @@ The map in the app shows imagery served by NASA Global Imagery Browse Services (
 - **One point per location.** A district spans several grid cells; one cell is a sample, not an average.
 - **Coastal cells.** Cells that include sea surface under-report land heat and evaporative demand.
 - **Hargreaves ET0** uses temperature only and can overestimate in humid conditions.
-- **The onset rule fits the southwest monsoon.** Anantapur gets much of its rain in September and October, so a June-anchored onset is a rough guide there.
+- **The onset rule was developed for West Africa** and is applied here unchanged apart from the start date. Anantapur gets much of its rain in September and October, so a June-anchored onset is a rough guide there; in 3 of 45 years (1989, 1990, 2018) no date met the criterion.
 
 ## Reproducing
 

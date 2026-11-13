@@ -147,6 +147,7 @@ def evaluate(rotation, dates, rain, et0, crops,
             "wrsi_by_year": {str(s["year"]): round(s["wrsi"], 1) for s in group},
             "irrigation_mm_mean": round(stats.mean([s["irrigation_mm"] for s in group]), 0),
             "parameters_verified": crop["verified"],
+            "parameters_borrowed_from": crop.get("proxy_of"),
         })
 
     entries = [e for pattern in cycle for e in pattern]
@@ -188,12 +189,22 @@ def evaluate(rotation, dates, rain, et0, crops,
     }
 
 
-DEFAULT_WEIGHTS = {"water_fit": 1.0, "resilience": 1.0, "soil": 1.0, "diversity": 1.0}
+DEFAULT_WEIGHTS = {"water_fit": 1.0, "resilience": 1.0, "water_saving": 1.0,
+                   "soil": 1.0, "diversity": 1.0}
+
+
+def add_water_saving(results):
+    """Add the water-saving component: 1.0 for the rotation whose crops need
+    the least water over a year, lower in proportion for the others."""
+    least = min(r["crop_water_need_mm_per_year"] for r in results)
+    for r in results:
+        r["components"]["water_saving"] = round(
+            least / r["crop_water_need_mm_per_year"], 3)
 
 
 def score(components, weights=None):
     """Weighted average of the component scores, 0-100."""
-    weights = weights or DEFAULT_WEIGHTS
+    weights = weights or {k: v for k, v in DEFAULT_WEIGHTS.items() if k in components}
     total = sum(weights.values())
     if total == 0:
         raise ValueError("at least one weight must be above zero")

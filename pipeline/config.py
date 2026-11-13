@@ -48,7 +48,7 @@ ONSET_SEARCH_END = (9, 30)
 ONSET_SPELL_DAYS = 3         # rain is summed over this many days
 ONSET_SPELL_MM = 20.0        # and must reach this total
 ONSET_FALSE_START_WINDOW = 30  # days after the wet spell that are checked
-ONSET_FALSE_START_DRY_DAYS = 10  # a dry spell this long cancels the onset
+ONSET_FALSE_START_DRY_DAYS = 8   # a dry spell exceeding 7 days cancels the onset (Sivakumar 1988)
 HOT_DAY_C = 40.0
 DEPENDABLE_PROBABILITY = 0.75  # rainfall reached or exceeded in 3 years out of 4
 

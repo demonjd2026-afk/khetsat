@@ -28,7 +28,7 @@
    2025
   ]
  },
- "generated_utc": "2026-11-13T19:21:45Z",
+ "generated_utc": "2026-11-13T20:03:58Z",
  "summary": {
   "annual_rain_mm": {
    "mean": 1230.9,
@@ -86,16 +86,16 @@
    }
   },
   "onset_days_after_jun1": {
-   "mean": 11.8,
-   "cv_percent": 79.6,
+   "mean": 13.8,
+   "cv_percent": 87.9,
    "min": 0,
-   "max": 38,
+   "max": 62,
    "trend": {
     "n": 45,
-    "slope_per_decade": -1.667,
-    "mann_kendall_z": -1.5,
-    "p_value": 0.1336,
-    "significant": false
+    "slope_per_decade": -2.703,
+    "mann_kendall_z": -2.274,
+    "p_value": 0.0229,
+    "significant": true
    }
   },
   "longest_monsoon_dry_spell_days": {
@@ -127,9 +127,9 @@
   "onset": {
    "years_without_onset": [],
    "earliest_days_after_jun1": 0,
-   "latest_days_after_jun1": 38,
+   "latest_days_after_jun1": 62,
    "p10_days_after_jun1": 2.0,
-   "p90_days_after_jun1": 26.6
+   "p90_days_after_jun1": 29.6
   },
   "driest_monsoons": [
    {
@@ -288,8 +288,8 @@
    "post_monsoon_rain_mm": 247.6,
    "monsoon_et0_mm": 468.8,
    "monsoon_water_balance_mm": 319.8,
-   "onset_days_after_jun1": 9,
-   "onset_date": "1983-06-10",
+   "onset_days_after_jun1": 20,
+   "onset_date": "1983-06-21",
    "longest_monsoon_dry_spell_days": 8,
    "hot_days": 3,
    "monthly_rain_mm": [
@@ -329,8 +329,8 @@
    "post_monsoon_rain_mm": 217.3,
    "monsoon_et0_mm": 479.7,
    "monsoon_water_balance_mm": 73.1,
-   "onset_days_after_jun1": 6,
-   "onset_date": "1984-06-07",
+   "onset_days_after_jun1": 30,
+   "onset_date": "1984-07-01",
    "longest_monsoon_dry_spell_days": 12,
    "hot_days": 6,
    "monthly_rain_mm": [
@@ -452,8 +452,8 @@
    "post_monsoon_rain_mm": 488.8,
    "monsoon_et0_mm": 520.4,
    "monsoon_water_balance_mm": -70.8,
-   "onset_days_after_jun1": 33,
-   "onset_date": "1987-07-04",
+   "onset_days_after_jun1": 62,
+   "onset_date": "1987-08-02",
    "longest_monsoon_dry_spell_days": 9,
    "hot_days": 3,
    "monthly_rain_mm": [
@@ -944,8 +944,8 @@
    "post_monsoon_rain_mm": 215.3,
    "monsoon_et0_mm": 471.9,
    "monsoon_water_balance_mm": 105.1,
-   "onset_days_after_jun1": 13,
-   "onset_date": "1999-06-14",
+   "onset_days_after_jun1": 34,
+   "onset_date": "1999-07-05",
    "longest_monsoon_dry_spell_days": 8,
    "hot_days": 4,
    "monthly_rain_mm": [
@@ -1313,8 +1313,8 @@
    "post_monsoon_rain_mm": 113.5,
    "monsoon_et0_mm": 447.2,
    "monsoon_water_balance_mm": 324.7,
-   "onset_days_after_jun1": 4,
-   "onset_date": "2008-06-05",
+   "onset_days_after_jun1": 11,
+   "onset_date": "2008-06-12",
    "longest_monsoon_dry_spell_days": 8,
    "hot_days": 13,
    "monthly_rain_mm": [

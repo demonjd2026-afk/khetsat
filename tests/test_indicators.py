@@ -36,6 +36,11 @@ class OnsetTest(unittest.TestCase):
         rain = [0, 0, 10, 8, 5] + [3] * 40
         self.assertEqual(indicators.onset_index(rain), 2)
 
+    def test_seven_dry_days_do_not_cancel_onset(self):
+        # Sivakumar (1988): only a dry spell exceeding 7 days cancels the onset
+        rain = [10, 8, 5] + [0] * 7 + [3] * 40
+        self.assertEqual(indicators.onset_index(rain), 0)
+
     def test_false_start_is_rejected(self):
         false_start = [10, 8, 5] + [0] * 12
         real = [10, 8, 5] + [3] * 40

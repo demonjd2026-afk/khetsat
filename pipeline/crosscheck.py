@@ -72,12 +72,14 @@ def build(key):
     crops = json.loads((REFERENCE / "crops.json").read_text())["crops"]
     rotations = json.loads((REFERENCE / "rotations.json").read_text())[key]
     comparison = []
-    for rot in rotations:
+    evaluated = {}
+    for name, series in (("reanalysis", merra), ("satellite", imerg)):
+        rain = [series.get(d.strftime("%Y%m%d")) for d in dates]
+        evaluated[name] = [rotation.evaluate(rot, dates, rain, et0, crops) for rot in rotations]
+        rotation.add_water_saving(evaluated[name])
+    for index, rot in enumerate(rotations):
         row = {"id": rot["id"], "crops": []}
-        results = {}
-        for name, series in (("reanalysis", merra), ("satellite", imerg)):
-            rain = [series.get(d.strftime("%Y%m%d")) for d in dates]
-            results[name] = rotation.evaluate(rot, dates, rain, et0, crops)
+        results = {name: evaluated[name][index] for name in evaluated}
         for c_re, c_sat in zip(results["reanalysis"]["crops"], results["satellite"]["crops"]):
             row["crops"].append({
                 "crop": c_re["crop"],

@@ -19,18 +19,18 @@
     }
   };
   var CROP_COLOURS = {
-    groundnut: "#7a9e3b", green_gram: "#3f8f5a", chickpea: "#9bb86a",
+    groundnut: "#7a9e3b", green_gram: "#3f8f5a", black_gram: "#56704a", chickpea: "#9bb86a",
     millet: "#d9a441", sorghum: "#c4762b", maize: "#e3c04a",
     rice: "#2f8f8f", sesame: "#8c6bb1", cotton: "#9a9a86"
   };
-  var COMPONENTS = ["water_fit", "resilience", "soil", "diversity"];
+  var COMPONENTS = ["water_fit", "resilience", "water_saving", "soil", "diversity"];
   var MONTH_START = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
   var LANGS = ["en", "te", "hi"];
 
   var state = {
     lang: "en",
     place: "anantapur",
-    weights: { water_fit: 3, resilience: 3, soil: 3, diversity: 3 },
+    weights: { water_fit: 3, resilience: 3, water_saving: 3, soil: 3, diversity: 3 },
     soil: 100,
     mapLayer: "ndvi",
     mapMoment: "wet",
@@ -117,7 +117,9 @@
   function rotationLabel(rotation) {
     var years = {};
     rotation.crops.forEach(function (crop) {
-      (years[crop.cycle_year] = years[crop.cycle_year] || []).push(cropName(crop.crop));
+      var name = cropName(crop.crop);
+      if (crop.irrigated) name = t("irrigated_tag", { crop: name });
+      (years[crop.cycle_year] = years[crop.cycle_year] || []).push(name);
     });
     function join(names) {
       return names.reduce(function (a, b) { return t("then", { a: a, b: b }); });

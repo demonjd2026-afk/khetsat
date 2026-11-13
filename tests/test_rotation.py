@@ -91,6 +91,13 @@ class ScoreTest(unittest.TestCase):
         self.assertEqual(rotation.score(comp, {"water_fit": 1, "resilience": 0,
                                                "soil": 0, "diversity": 0}), 100.0)
 
+    def test_water_saving_component(self):
+        results = [{"crop_water_need_mm_per_year": 400.0, "components": {}},
+                   {"crop_water_need_mm_per_year": 500.0, "components": {}}]
+        rotation.add_water_saving(results)
+        self.assertEqual(results[0]["components"]["water_saving"], 1.0)
+        self.assertEqual(results[1]["components"]["water_saving"], 0.8)
+
     def test_zero_weights_rejected(self):
         with self.assertRaises(ValueError):
             rotation.score({"water_fit": 1.0}, {"water_fit": 0})

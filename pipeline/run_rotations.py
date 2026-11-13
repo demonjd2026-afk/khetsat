@@ -44,7 +44,9 @@ def explain(result, existing, crops):
         if crop["crop"] == "rice" and not seen_rice:
             seen_rice = True
             gaps.append(item("rice_et_only"))
-        if not crop["parameters_verified"]:
+        if crop["parameters_borrowed_from"]:
+            gaps.append(item("proxy_crop", crop=crop["crop"]))
+        elif not crop["parameters_verified"]:
             gaps.append(item("placeholder_length", crop=crop["crop"]))
     if result["existing"]:
         why.append(item("baseline"))
@@ -85,6 +87,13 @@ def explain(result, existing, crops):
         item("assumed_rotation"),
     ])
     risks.extend([item("grid_cell"), item("not_modelled")])
+    seen, unique = set(), []
+    for gap in gaps:
+        key = json.dumps(gap, sort_keys=True)
+        if key not in seen:
+            seen.add(key)
+            unique.append(gap)
+    gaps = unique
     return {
         "why_suggested": why,
         "evidence": evidence,
@@ -150,6 +159,7 @@ def build(key):
         payload, loc["lat"], config.START_YEAR, config.END_YEAR)
     results = [rotation.evaluate(r, dates, rain, et0, crops) for r in rotations]
     existing = next(r for r in results if r["existing"])
+    rotation.add_water_saving(results)
     for result in results:
         result["score_equal_weights"] = rotation.score(result["components"])
         result["explanation"] = explain(result, existing, crops)

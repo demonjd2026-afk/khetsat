@@ -183,8 +183,8 @@
      "failed_satellite": 0
     }
    ],
-   "score_reanalysis": 53.6,
-   "score_satellite": 52.6
+   "score_reanalysis": 62.9,
+   "score_satellite": 62.1
   },
   {
    "id": "rice_greengram",
@@ -212,8 +212,8 @@
      "failed_satellite": 24
     }
    ],
-   "score_reanalysis": 34.3,
-   "score_satellite": 31.3
+   "score_reanalysis": 40.7,
+   "score_satellite": 38.3
   },
   {
    "id": "maize_greengram",
@@ -241,8 +241,8 @@
      "failed_satellite": 11
     }
    ],
-   "score_reanalysis": 52.4,
-   "score_satellite": 50.4
+   "score_reanalysis": 60.9,
+   "score_satellite": 59.3
   }
  ],
  "ranking_reanalysis": [
@@ -255,6 +255,6 @@
   "maize_greengram",
   "rice_greengram"
  ],
- "generated_utc": "2026-11-13T19:49:20Z",
+ "generated_utc": "2026-11-13T20:03:59Z",
  "ranking_agrees": true
 }
