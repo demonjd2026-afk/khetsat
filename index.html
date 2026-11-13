@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KhetSat: compare crop rotations with NASA data</title>
+<meta name="description" content="KhetSat compares crop rotations for Andhra Pradesh using 45 years of NASA weather data. NASA Space Apps Challenge 2026, Field Shift.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231f6b4a'/%3E%3Crect x='6' y='18' width='5' height='8' fill='%23b9c6e6'/%3E%3Crect x='13.5' y='12' width='5' height='14' fill='%23fff'/%3E%3Crect x='21' y='7' width='5' height='19' fill='%23e0a106'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@400;500;600;700&family=Anek+Latin:wght@400;500;600;700&family=Anek+Telugu:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="brand-name">KhetSat</span>
+    <span class="brand-line" id="tagline"></span>
+  </div>
+  <div class="lang" id="lang" role="group" aria-label="Language"></div>
+</header>
+
+<main>
+  <nav class="places" id="places" aria-label="Location"></nav>
+
+  <section class="strip" aria-labelledby="strip-title">
+    <h1 id="strip-title"></h1>
+    <p class="lede" id="strip-intro"></p>
+    <div class="scroll"><div id="strip-chart"></div></div>
+    <ul class="legend" id="strip-legend"></ul>
+    <p class="note" id="grid-note"></p>
+  </section>
+
+  <div class="work">
+    <aside class="priorities" aria-labelledby="priorities-title">
+      <h2 id="priorities-title"></h2>
+      <p id="priorities-intro"></p>
+      <div id="sliders"></div>
+    </aside>
+    <section class="rotations" aria-labelledby="rotations-title">
+      <h2 id="rotations-title"></h2>
+      <ol id="rotation-list"></ol>
+    </section>
+  </div>
+
+  <section class="soil" aria-labelledby="soil-title">
+    <h2 id="soil-title"></h2>
+    <p class="lede" id="soil-intro"></p>
+    <div class="segments" id="soil-choices" role="group"></div>
+    <div class="scroll"><table id="soil-table"></table></div>
+  </section>
+
+  <section class="climate" aria-labelledby="climate-title">
+    <h2 id="climate-title"></h2>
+    <dl class="stats" id="stats"></dl>
+    <h3 id="years-title"></h3>
+    <div class="scroll"><div id="years-chart"></div></div>
+    <p class="note" id="years-note"></p>
+    <p id="trend"></p>
+  </section>
+
+  <section class="glossary" aria-labelledby="glossary-title">
+    <h2 id="glossary-title"></h2>
+    <dl id="glossary"></dl>
+  </section>
+</main>
+
+<footer>
+  <p class="disclaimer" id="disclaimer"></p>
+  <p id="sources"></p>
+  <p><a href="https://github.com/demonjd2026-afk/khetsat/blob/main/docs/METHODS.md" id="methods-link"></a></p>
+  <p>NASA Space Apps Challenge 2026, Field Shift: Adapting Farms with NASA Data</p>
+</footer>
+
+<script src="app/i18n.js"></script>
+<script src="app/app.js"></script>
+</body>
+</html>

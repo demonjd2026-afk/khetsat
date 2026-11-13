@@ -16,74 +16,73 @@ REFERENCE = ROOT / "data" / "reference"
 OUT_DIR = ROOT / "data" / "processed"
 
 
+def item(code, **params):
+    return {"code": code, "params": params}
+
+
 def explain(result, existing, crops):
-    """The five fields the challenge asks for, built only from computed values."""
+    """The five fields the challenge asks for, built only from computed values.
+
+    Each entry is a code with parameters, so the app can render it in any
+    language. The wording for each code lives in app/i18n.js.
+    """
     why, evidence, benefits, gaps, risks = [], [], [], [], []
+    seen_rice = False
     for crop in result["crops"]:
         if crop["irrigated"]:
-            evidence.append(
-                f"{crop['name']} needs about {crop['water_need_mm_mean']:.0f} mm per season; "
-                f"rain supplies part and irrigation about {crop['irrigation_mm_mean']:.0f} mm.")
+            evidence.append(item("crop_irrigated", crop=crop["crop"],
+                                 need=crop["water_need_mm_mean"],
+                                 irrigation=crop["irrigation_mm_mean"]))
         else:
-            evidence.append(
-                f"{crop['name']}: rain and stored soil water met {crop['wrsi_median']:.0f}% "
-                f"of crop water need in a typical year and {crop['wrsi_bad_year']:.0f}% in a "
-                f"poor year (1 in 4); {crop['failed_seasons']} of "
-                f"{crop['seasons_simulated']} seasons fell below "
-                f"{config.WRSI_FAILURE:.0f}%.")
-        if crop["crop"] == "rice":
-            gaps.append("Rice water need here is crop evapotranspiration only. Puddling and "
-                        "percolation losses in paddy fields are not counted, so real water "
-                        "use is higher.")
+            evidence.append(item("crop_rainfed", crop=crop["crop"],
+                                 median=crop["wrsi_median"], bad=crop["wrsi_bad_year"],
+                                 failed=crop["failed_seasons"],
+                                 total=crop["seasons_simulated"],
+                                 threshold=config.WRSI_FAILURE))
+        if crop["crop"] == "rice" and not seen_rice:
+            seen_rice = True
+            gaps.append(item("rice_et_only"))
         if not crop["parameters_verified"]:
-            gaps.append(f"{crop['name']}: season length is a placeholder, not from a published table.")
+            gaps.append(item("placeholder_length", crop=crop["crop"]))
     if result["existing"]:
-        why.append("This is the rotation assumed to be in use now. It is the baseline the others are compared with.")
+        why.append(item("baseline"))
     else:
-        d_res = result["components"]["resilience"] - existing["components"]["resilience"]
-        d_soil = result["components"]["soil"] - existing["components"]["soil"]
+        res, base_res = result["components"]["resilience"], existing["components"]["resilience"]
         d_div = result["components"]["diversity"] - existing["components"]["diversity"]
         d_bare = existing["bare_months_per_year"] - result["bare_months_per_year"]
-        if d_res > 0.02:
-            why.append("It holds up better than the current rotation in poor-rain years.")
-            benefits.append(f"Poor-year water satisfaction of the weakest crop rises from "
-                            f"{existing['components']['resilience']*100:.0f}% to "
-                            f"{result['components']['resilience']*100:.0f}%.")
-        elif d_res < -0.02:
-            risks.append(f"The weakest crop does worse in poor-rain years than the current rotation "
-                         f"({result['components']['resilience']*100:.0f}% against "
-                         f"{existing['components']['resilience']*100:.0f}%).")
+        if res - base_res > 0.02:
+            why.append(item("better_poor_years"))
+            benefits.append(item("resilience_up", base=round(base_res * 100),
+                                 value=round(res * 100)))
+        elif res - base_res < -0.02:
+            risks.append(item("worse_poor_years", base=round(base_res * 100),
+                              value=round(res * 100)))
         if d_bare > 0.5:
-            why.append("It keeps the field covered for more of the year.")
-            benefits.append(f"About {d_bare:.1f} fewer bare months a year, which reduces exposure of the soil to erosion.")
+            why.append(item("more_cover"))
+            benefits.append(item("fewer_bare", months=round(d_bare, 1)))
         if result["legume_share"] > existing["legume_share"]:
-            benefits.append("Adds a legume, which fixes nitrogen from the air.")
+            benefits.append(item("adds_legume"))
         if d_div > 0:
-            why.append("It alternates crop families.")
-            benefits.append("Alternating crop families interrupts pests and diseases that build up under one crop.")
+            why.append(item("alternates_families"))
+            benefits.append(item("breaks_pests"))
         need, base = result["crop_water_need_mm_per_year"], existing["crop_water_need_mm_per_year"]
         if need < base * 0.95:
-            why.append("Its crops need less water over the year.")
-            benefits.append(f"Crop water need averages {need:.0f} mm a year against {base:.0f} mm "
-                            f"for the current rotation ({(base - need) / base * 100:.0f}% less).")
+            why.append(item("less_water"))
+            benefits.append(item("less_water_amount", need=need, base=base,
+                                 percent=round((base - need) / base * 100)))
         elif need > base * 1.05:
-            risks.append(f"Its crops need more water over the year ({need:.0f} mm against {base:.0f} mm), "
-                         "because the field is cropped for longer.")
+            risks.append(item("more_water", need=need, base=base))
         if result["irrigation_mm_per_year"] > existing["irrigation_mm_per_year"] + 1:
-            risks.append("Uses more irrigation water than the current rotation.")
+            risks.append(item("more_irrigation"))
         if not why:
-            why.append("Included as an alternative for comparison; it does not clearly beat the current rotation on the measured criteria.")
-        _ = d_soil
+            why.append(item("no_clear_gain"))
     gaps.extend([
-        "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
-        "Crop season lengths come from FAO tables for other regions, not local varieties.",
-        "Market prices, input costs and yields are not included.",
-        "The current rotation and sowing dates are assumptions, not survey data.",
+        item("soil_assumed", mm=config.SOIL_AVAILABLE_WATER_MM),
+        item("fao_lengths"),
+        item("no_market"),
+        item("assumed_rotation"),
     ])
-    risks.extend([
-        "Results describe a grid cell of about 50 km, not an individual field.",
-        "Pests, diseases, seed availability and labour are not modelled.",
-    ])
+    risks.extend([item("grid_cell"), item("not_modelled")])
     return {
         "why_suggested": why,
         "evidence": evidence,
@@ -122,11 +121,9 @@ def build(key):
         b = high["rotations"][result["id"]]["weakest_crop_wrsi_median"]
         result["soil_sensitive"] = abs(b - a) >= 20
         if result["soil_sensitive"]:
-            result["explanation"]["information_gaps"].insert(0, (
-                f"This result depends strongly on how much water the soil holds: the weakest "
-                f"crop gets {a}% of its water need with {low['soil_available_water_mm']:.0f} mm "
-                f"of soil storage and {b}% with {high['soil_available_water_mm']:.0f} mm. "
-                "Local soil data is needed before relying on it."))
+            result["explanation"]["information_gaps"].insert(0, item(
+                "soil_sensitive", low=a, low_mm=low["soil_available_water_mm"],
+                high=b, high_mm=high["soil_available_water_mm"]))
     out = {
         "location": {"key": key, **loc},
         "period": [config.START_YEAR, config.END_YEAR],

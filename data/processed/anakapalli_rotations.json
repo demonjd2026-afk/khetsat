@@ -15,7 +15,7 @@
   "fallow_kc": 0.3,
   "wrsi_failure_threshold": 50.0
  },
- "generated_utc": "2026-11-13T19:28:18Z",
+ "generated_utc": "2026-11-13T19:30:30Z",
  "disclaimer": "Decision support only. Review with local farmers and agriculture officers before acting.",
  "rotations": [
   {
@@ -63,22 +63,58 @@
    "score_equal_weights": 53.6,
    "explanation": {
     "why_suggested": [
-     "This is the rotation assumed to be in use now. It is the baseline the others are compared with."
+     {
+      "code": "baseline",
+      "params": {}
+     }
     ],
     "evidence": [
-     "Rice (paddy): rain and stored soil water met 100% of crop water need in a typical year and 94% in a poor year (1 in 4); 0 of 45 seasons fell below 50%."
+     {
+      "code": "crop_rainfed",
+      "params": {
+       "crop": "rice",
+       "median": 100.0,
+       "bad": 94.0,
+       "failed": 0,
+       "total": 45,
+       "threshold": 50.0
+      }
+     }
     ],
     "benefits": [],
     "information_gaps": [
-     "Rice water need here is crop evapotranspiration only. Puddling and percolation losses in paddy fields are not counted, so real water use is higher.",
-     "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
-     "Crop season lengths come from FAO tables for other regions, not local varieties.",
-     "Market prices, input costs and yields are not included.",
-     "The current rotation and sowing dates are assumptions, not survey data."
+     {
+      "code": "rice_et_only",
+      "params": {}
+     },
+     {
+      "code": "soil_assumed",
+      "params": {
+       "mm": 100.0
+      }
+     },
+     {
+      "code": "fao_lengths",
+      "params": {}
+     },
+     {
+      "code": "no_market",
+      "params": {}
+     },
+     {
+      "code": "assumed_rotation",
+      "params": {}
+     }
     ],
     "risks_for_local_review": [
-     "Results describe a grid cell of about 50 km, not an individual field.",
-     "Pests, diseases, seed availability and labour are not modelled."
+     {
+      "code": "grid_cell",
+      "params": {}
+     },
+     {
+      "code": "not_modelled",
+      "params": {}
+     }
     ]
    },
    "soil_sensitive": false
@@ -192,31 +228,111 @@
    "score_equal_weights": 34.6,
    "explanation": {
     "why_suggested": [
-     "It keeps the field covered for more of the year.",
-     "It alternates crop families."
+     {
+      "code": "more_cover",
+      "params": {}
+     },
+     {
+      "code": "alternates_families",
+      "params": {}
+     }
     ],
     "evidence": [
-     "Rice (paddy): rain and stored soil water met 100% of crop water need in a typical year and 94% in a poor year (1 in 4); 0 of 45 seasons fell below 50%.",
-     "Green gram: rain and stored soil water met 19% of crop water need in a typical year and 10% in a poor year (1 in 4); 42 of 44 seasons fell below 50%."
+     {
+      "code": "crop_rainfed",
+      "params": {
+       "crop": "rice",
+       "median": 100.0,
+       "bad": 94.0,
+       "failed": 0,
+       "total": 45,
+       "threshold": 50.0
+      }
+     },
+     {
+      "code": "crop_rainfed",
+      "params": {
+       "crop": "green_gram",
+       "median": 19.0,
+       "bad": 10.0,
+       "failed": 42,
+       "total": 44,
+       "threshold": 50.0
+      }
+     }
     ],
     "benefits": [
-     "About 3.3 fewer bare months a year, which reduces exposure of the soil to erosion.",
-     "Adds a legume, which fixes nitrogen from the air.",
-     "Alternating crop families interrupts pests and diseases that build up under one crop."
+     {
+      "code": "fewer_bare",
+      "params": {
+       "months": 3.3
+      }
+     },
+     {
+      "code": "adds_legume",
+      "params": {}
+     },
+     {
+      "code": "breaks_pests",
+      "params": {}
+     }
     ],
     "information_gaps": [
-     "This result depends strongly on how much water the soil holds: the weakest crop gets 13% of its water need with 75 mm of soil storage and 51% with 200 mm. Local soil data is needed before relying on it.",
-     "Rice water need here is crop evapotranspiration only. Puddling and percolation losses in paddy fields are not counted, so real water use is higher.",
-     "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
-     "Crop season lengths come from FAO tables for other regions, not local varieties.",
-     "Market prices, input costs and yields are not included.",
-     "The current rotation and sowing dates are assumptions, not survey data."
+     {
+      "code": "soil_sensitive",
+      "params": {
+       "low": 13,
+       "low_mm": 75.0,
+       "high": 51,
+       "high_mm": 200.0
+      }
+     },
+     {
+      "code": "rice_et_only",
+      "params": {}
+     },
+     {
+      "code": "soil_assumed",
+      "params": {
+       "mm": 100.0
+      }
+     },
+     {
+      "code": "fao_lengths",
+      "params": {}
+     },
+     {
+      "code": "no_market",
+      "params": {}
+     },
+     {
+      "code": "assumed_rotation",
+      "params": {}
+     }
     ],
     "risks_for_local_review": [
-     "The weakest crop does worse in poor-rain years than the current rotation (10% against 94%).",
-     "Its crops need more water over the year (867 mm against 568 mm), because the field is cropped for longer.",
-     "Results describe a grid cell of about 50 km, not an individual field.",
-     "Pests, diseases, seed availability and labour are not modelled."
+     {
+      "code": "worse_poor_years",
+      "params": {
+       "base": 94,
+       "value": 10
+      }
+     },
+     {
+      "code": "more_water",
+      "params": {
+       "need": 867.0,
+       "base": 568.0
+      }
+     },
+     {
+      "code": "grid_cell",
+      "params": {}
+     },
+     {
+      "code": "not_modelled",
+      "params": {}
+     }
     ]
    },
    "soil_sensitive": true
@@ -301,30 +417,107 @@
    "score_equal_weights": 52.2,
    "explanation": {
     "why_suggested": [
-     "It keeps the field covered for more of the year.",
-     "It alternates crop families."
+     {
+      "code": "more_cover",
+      "params": {}
+     },
+     {
+      "code": "alternates_families",
+      "params": {}
+     }
     ],
     "evidence": [
-     "Maize: rain and stored soil water met 100% of crop water need in a typical year and 100% in a poor year (1 in 4); 0 of 45 seasons fell below 50%.",
-     "Green gram: rain and stored soil water met 55% of crop water need in a typical year and 48% in a poor year (1 in 4); 13 of 44 seasons fell below 50%."
+     {
+      "code": "crop_rainfed",
+      "params": {
+       "crop": "maize",
+       "median": 100.0,
+       "bad": 100.0,
+       "failed": 0,
+       "total": 45,
+       "threshold": 50.0
+      }
+     },
+     {
+      "code": "crop_rainfed",
+      "params": {
+       "crop": "green_gram",
+       "median": 55.0,
+       "bad": 48.0,
+       "failed": 13,
+       "total": 44,
+       "threshold": 50.0
+      }
+     }
     ],
     "benefits": [
-     "About 2.5 fewer bare months a year, which reduces exposure of the soil to erosion.",
-     "Adds a legume, which fixes nitrogen from the air.",
-     "Alternating crop families interrupts pests and diseases that build up under one crop."
+     {
+      "code": "fewer_bare",
+      "params": {
+       "months": 2.5
+      }
+     },
+     {
+      "code": "adds_legume",
+      "params": {}
+     },
+     {
+      "code": "breaks_pests",
+      "params": {}
+     }
     ],
     "information_gaps": [
-     "This result depends strongly on how much water the soil holds: the weakest crop gets 45% of its water need with 75 mm of soil storage and 99% with 200 mm. Local soil data is needed before relying on it.",
-     "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
-     "Crop season lengths come from FAO tables for other regions, not local varieties.",
-     "Market prices, input costs and yields are not included.",
-     "The current rotation and sowing dates are assumptions, not survey data."
+     {
+      "code": "soil_sensitive",
+      "params": {
+       "low": 45,
+       "low_mm": 75.0,
+       "high": 99,
+       "high_mm": 200.0
+      }
+     },
+     {
+      "code": "soil_assumed",
+      "params": {
+       "mm": 100.0
+      }
+     },
+     {
+      "code": "fao_lengths",
+      "params": {}
+     },
+     {
+      "code": "no_market",
+      "params": {}
+     },
+     {
+      "code": "assumed_rotation",
+      "params": {}
+     }
     ],
     "risks_for_local_review": [
-     "The weakest crop does worse in poor-rain years than the current rotation (48% against 94%).",
-     "Its crops need more water over the year (605 mm against 568 mm), because the field is cropped for longer.",
-     "Results describe a grid cell of about 50 km, not an individual field.",
-     "Pests, diseases, seed availability and labour are not modelled."
+     {
+      "code": "worse_poor_years",
+      "params": {
+       "base": 94,
+       "value": 48
+      }
+     },
+     {
+      "code": "more_water",
+      "params": {
+       "need": 605.0,
+       "base": 568.0
+      }
+     },
+     {
+      "code": "grid_cell",
+      "params": {}
+     },
+     {
+      "code": "not_modelled",
+      "params": {}
+     }
     ]
    },
    "soil_sensitive": true

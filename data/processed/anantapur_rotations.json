@@ -15,7 +15,7 @@
   "fallow_kc": 0.3,
   "wrsi_failure_threshold": 50.0
  },
- "generated_utc": "2026-11-13T19:28:18Z",
+ "generated_utc": "2026-11-13T19:30:30Z",
  "disclaimer": "Decision support only. Review with local farmers and agriculture officers before acting.",
  "rotations": [
   {
@@ -69,21 +69,54 @@
    "score_equal_weights": 49.9,
    "explanation": {
     "why_suggested": [
-     "This is the rotation assumed to be in use now. It is the baseline the others are compared with."
+     {
+      "code": "baseline",
+      "params": {}
+     }
     ],
     "evidence": [
-     "Groundnut: rain and stored soil water met 71% of crop water need in a typical year and 61% in a poor year (1 in 4); 5 of 45 seasons fell below 50%."
+     {
+      "code": "crop_rainfed",
+      "params": {
+       "crop": "groundnut",
+       "median": 71.0,
+       "bad": 61.0,
+       "failed": 5,
+       "total": 45,
+       "threshold": 50.0
+      }
+     }
     ],
     "benefits": [],
     "information_gaps": [
-     "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
-     "Crop season lengths come from FAO tables for other regions, not local varieties.",
-     "Market prices, input costs and yields are not included.",
-     "The current rotation and sowing dates are assumptions, not survey data."
+     {
+      "code": "soil_assumed",
+      "params": {
+       "mm": 100.0
+      }
+     },
+     {
+      "code": "fao_lengths",
+      "params": {}
+     },
+     {
+      "code": "no_market",
+      "params": {}
+     },
+     {
+      "code": "assumed_rotation",
+      "params": {}
+     }
     ],
     "risks_for_local_review": [
-     "Results describe a grid cell of about 50 km, not an individual field.",
-     "Pests, diseases, seed availability and labour are not modelled."
+     {
+      "code": "grid_cell",
+      "params": {}
+     },
+     {
+      "code": "not_modelled",
+      "params": {}
+     }
     ]
    },
    "soil_sensitive": false
@@ -165,26 +198,82 @@
    "score_equal_weights": 55.8,
    "explanation": {
     "why_suggested": [
-     "It alternates crop families.",
-     "Its crops need less water over the year."
+     {
+      "code": "alternates_families",
+      "params": {}
+     },
+     {
+      "code": "less_water",
+      "params": {}
+     }
     ],
     "evidence": [
-     "Groundnut: rain and stored soil water met 71% of crop water need in a typical year and 61% in a poor year (1 in 4); 5 of 45 seasons fell below 50%.",
-     "Millet: rain and stored soil water met 76% of crop water need in a typical year and 64% in a poor year (1 in 4); 4 of 45 seasons fell below 50%."
+     {
+      "code": "crop_rainfed",
+      "params": {
+       "crop": "groundnut",
+       "median": 71.0,
+       "bad": 61.0,
+       "failed": 5,
+       "total": 45,
+       "threshold": 50.0
+      }
+     },
+     {
+      "code": "crop_rainfed",
+      "params": {
+       "crop": "millet",
+       "median": 76.0,
+       "bad": 64.0,
+       "failed": 4,
+       "total": 45,
+       "threshold": 50.0
+      }
+     }
     ],
     "benefits": [
-     "Alternating crop families interrupts pests and diseases that build up under one crop.",
-     "Crop water need averages 441 mm a year against 511 mm for the current rotation (14% less)."
+     {
+      "code": "breaks_pests",
+      "params": {}
+     },
+     {
+      "code": "less_water_amount",
+      "params": {
+       "need": 441.0,
+       "base": 511.0,
+       "percent": 14
+      }
+     }
     ],
     "information_gaps": [
-     "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
-     "Crop season lengths come from FAO tables for other regions, not local varieties.",
-     "Market prices, input costs and yields are not included.",
-     "The current rotation and sowing dates are assumptions, not survey data."
+     {
+      "code": "soil_assumed",
+      "params": {
+       "mm": 100.0
+      }
+     },
+     {
+      "code": "fao_lengths",
+      "params": {}
+     },
+     {
+      "code": "no_market",
+      "params": {}
+     },
+     {
+      "code": "assumed_rotation",
+      "params": {}
+     }
     ],
     "risks_for_local_review": [
-     "Results describe a grid cell of about 50 km, not an individual field.",
-     "Pests, diseases, seed availability and labour are not modelled."
+     {
+      "code": "grid_cell",
+      "params": {}
+     },
+     {
+      "code": "not_modelled",
+      "params": {}
+     }
     ]
    },
    "soil_sensitive": false
@@ -286,30 +375,109 @@
    "score_equal_weights": 50.0,
    "explanation": {
     "why_suggested": [
-     "It keeps the field covered for more of the year.",
-     "It alternates crop families."
+     {
+      "code": "more_cover",
+      "params": {}
+     },
+     {
+      "code": "alternates_families",
+      "params": {}
+     }
     ],
     "evidence": [
-     "Millet: rain and stored soil water met 67% of crop water need in a typical year and 56% in a poor year (1 in 4); 9 of 45 seasons fell below 50%.",
-     "Chickpea (Bengal gram): rain and stored soil water met 53% of crop water need in a typical year and 43% in a poor year (1 in 4); 20 of 44 seasons fell below 50%."
+     {
+      "code": "crop_rainfed",
+      "params": {
+       "crop": "millet",
+       "median": 67.0,
+       "bad": 56.0,
+       "failed": 9,
+       "total": 45,
+       "threshold": 50.0
+      }
+     },
+     {
+      "code": "crop_rainfed",
+      "params": {
+       "crop": "chickpea",
+       "median": 53.0,
+       "bad": 43.0,
+       "failed": 20,
+       "total": 44,
+       "threshold": 50.0
+      }
+     }
     ],
     "benefits": [
-     "About 2.6 fewer bare months a year, which reduces exposure of the soil to erosion.",
-     "Alternating crop families interrupts pests and diseases that build up under one crop."
+     {
+      "code": "fewer_bare",
+      "params": {
+       "months": 2.6
+      }
+     },
+     {
+      "code": "breaks_pests",
+      "params": {}
+     }
     ],
     "information_gaps": [
-     "This result depends strongly on how much water the soil holds: the weakest crop gets 46% of its water need with 75 mm of soil storage and 69% with 200 mm. Local soil data is needed before relying on it.",
-     "Chickpea (Bengal gram): season length is a placeholder, not from a published table.",
-     "Soil water-holding capacity is assumed (100 mm), not measured for this location.",
-     "Crop season lengths come from FAO tables for other regions, not local varieties.",
-     "Market prices, input costs and yields are not included.",
-     "The current rotation and sowing dates are assumptions, not survey data."
+     {
+      "code": "soil_sensitive",
+      "params": {
+       "low": 46,
+       "low_mm": 75.0,
+       "high": 69,
+       "high_mm": 200.0
+      }
+     },
+     {
+      "code": "placeholder_length",
+      "params": {
+       "crop": "chickpea"
+      }
+     },
+     {
+      "code": "soil_assumed",
+      "params": {
+       "mm": 100.0
+      }
+     },
+     {
+      "code": "fao_lengths",
+      "params": {}
+     },
+     {
+      "code": "no_market",
+      "params": {}
+     },
+     {
+      "code": "assumed_rotation",
+      "params": {}
+     }
     ],
     "risks_for_local_review": [
-     "The weakest crop does worse in poor-rain years than the current rotation (43% against 61%).",
-     "Its crops need more water over the year (685 mm against 511 mm), because the field is cropped for longer.",
-     "Results describe a grid cell of about 50 km, not an individual field.",
-     "Pests, diseases, seed availability and labour are not modelled."
+     {
+      "code": "worse_poor_years",
+      "params": {
+       "base": 61,
+       "value": 43
+      }
+     },
+     {
+      "code": "more_water",
+      "params": {
+       "need": 685.0,
+       "base": 511.0
+      }
+     },
+     {
+      "code": "grid_cell",
+      "params": {}
+     },
+     {
+      "code": "not_modelled",
+      "params": {}
+     }
     ]
    },
    "soil_sensitive": true
