@@ -9,8 +9,10 @@ from . import config
 RAW_DIR = pathlib.Path(__file__).resolve().parent.parent / "data" / "raw"
 
 
-def build_url(lat, lon, start_year, end_year, parameters):
+def build_url(lat, lon, start_year, end_year, parameters, time_standard=None):
+    extra = {"time-standard": time_standard} if time_standard else {}
     query = urllib.parse.urlencode({
+        **extra,
         "parameters": ",".join(parameters),
         "community": config.POWER_COMMUNITY,
         "longitude": lon,
@@ -23,14 +25,18 @@ def build_url(lat, lon, start_year, end_year, parameters):
 
 
 def fetch_daily(key, lat, lon, start_year=config.START_YEAR,
-                end_year=config.END_YEAR, parameters=None, refresh=False):
-    """Return the POWER response for a point, using the cache when present."""
+                end_year=config.END_YEAR, parameters=None, refresh=False,
+                time_standard=None, tag=""):
+    """Return the POWER response for a point, using the cache when present.
+
+    `tag` separates cache files for requests with different parameters.
+    """
     parameters = parameters or config.POWER_PARAMETERS
     RAW_DIR.mkdir(parents=True, exist_ok=True)
-    cache = RAW_DIR / f"power_{key}_{start_year}_{end_year}.json"
+    cache = RAW_DIR / f"power{tag}_{key}_{start_year}_{end_year}.json"
     if cache.exists() and not refresh:
         return json.loads(cache.read_text())
-    url = build_url(lat, lon, start_year, end_year, parameters)
+    url = build_url(lat, lon, start_year, end_year, parameters, time_standard)
     request = urllib.request.Request(url, headers={"User-Agent": "khetsat-pipeline"})
     with urllib.request.urlopen(request, timeout=120) as response:
         payload = json.loads(response.read().decode("utf-8"))

@@ -63,5 +63,20 @@ class StatsTest(unittest.TestCase):
         self.assertAlmostEqual(stats.theil_sen_slope([0, 1, 2, 3], [1, 3, 5, 7]), 2.0)
 
 
+class CorrelationTest(unittest.TestCase):
+    def test_pearson_perfect(self):
+        self.assertAlmostEqual(stats.pearson([1, 2, 3], [2, 4, 6]), 1.0)
+        self.assertAlmostEqual(stats.pearson([1, 2, 3], [6, 4, 2]), -1.0)
+
+    def test_pearson_constant_is_undefined(self):
+        self.assertIsNone(stats.pearson([1, 1, 1], [1, 2, 3]))
+
+    def test_ranks_with_ties(self):
+        self.assertEqual(stats.ranks([10, 20, 20, 30]), [1.0, 2.5, 2.5, 4.0])
+
+    def test_spearman_monotonic(self):
+        self.assertAlmostEqual(stats.spearman([1, 2, 3, 4], [1, 4, 9, 100]), 1.0)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,260 @@
+{
+ "location": {
+  "key": "anantapur",
+  "name": "Anantapur",
+  "point_label": "Anantapur town",
+  "lat": 14.68,
+  "lon": 77.6
+ },
+ "period": [
+  2001,
+  2025
+ ],
+ "years_compared": 25,
+ "years_dropped_for_missing_satellite_days": [],
+ "sources": {
+  "reanalysis": "PRECTOTCORR (MERRA-2) via NASA POWER",
+  "satellite": "IMERG_PRECTOT (GPM IMERG) via NASA POWER",
+  "time_standard": "UTC for both in this comparison"
+ },
+ "monsoon_rain": {
+  "mean_reanalysis_mm": 362.0,
+  "mean_satellite_mm": 433.0,
+  "mean_difference_mm": -71.0,
+  "mean_difference_percent": -16.0,
+  "pearson_r": 0.91,
+  "spearman_r": 0.94,
+  "driest_five_reanalysis": [
+   2002,
+   2003,
+   2004,
+   2006,
+   2018
+  ],
+  "driest_five_satellite": [
+   2002,
+   2003,
+   2006,
+   2012,
+   2018
+  ],
+  "driest_five_in_common": 4,
+  "by_year": [
+   {
+    "year": 2001,
+    "reanalysis_mm": 373.0,
+    "satellite_mm": 423.0
+   },
+   {
+    "year": 2002,
+    "reanalysis_mm": 174.0,
+    "satellite_mm": 248.0
+   },
+   {
+    "year": 2003,
+    "reanalysis_mm": 141.0,
+    "satellite_mm": 174.0
+   },
+   {
+    "year": 2004,
+    "reanalysis_mm": 245.0,
+    "satellite_mm": 382.0
+   },
+   {
+    "year": 2005,
+    "reanalysis_mm": 473.0,
+    "satellite_mm": 577.0
+   },
+   {
+    "year": 2006,
+    "reanalysis_mm": 255.0,
+    "satellite_mm": 318.0
+   },
+   {
+    "year": 2007,
+    "reanalysis_mm": 611.0,
+    "satellite_mm": 912.0
+   },
+   {
+    "year": 2008,
+    "reanalysis_mm": 445.0,
+    "satellite_mm": 500.0
+   },
+   {
+    "year": 2009,
+    "reanalysis_mm": 396.0,
+    "satellite_mm": 432.0
+   },
+   {
+    "year": 2010,
+    "reanalysis_mm": 454.0,
+    "satellite_mm": 516.0
+   },
+   {
+    "year": 2011,
+    "reanalysis_mm": 295.0,
+    "satellite_mm": 383.0
+   },
+   {
+    "year": 2012,
+    "reanalysis_mm": 286.0,
+    "satellite_mm": 329.0
+   },
+   {
+    "year": 2013,
+    "reanalysis_mm": 378.0,
+    "satellite_mm": 460.0
+   },
+   {
+    "year": 2014,
+    "reanalysis_mm": 303.0,
+    "satellite_mm": 345.0
+   },
+   {
+    "year": 2015,
+    "reanalysis_mm": 277.0,
+    "satellite_mm": 387.0
+   },
+   {
+    "year": 2016,
+    "reanalysis_mm": 278.0,
+    "satellite_mm": 398.0
+   },
+   {
+    "year": 2017,
+    "reanalysis_mm": 432.0,
+    "satellite_mm": 556.0
+   },
+   {
+    "year": 2018,
+    "reanalysis_mm": 264.0,
+    "satellite_mm": 206.0
+   },
+   {
+    "year": 2019,
+    "reanalysis_mm": 396.0,
+    "satellite_mm": 420.0
+   },
+   {
+    "year": 2020,
+    "reanalysis_mm": 568.0,
+    "satellite_mm": 691.0
+   },
+   {
+    "year": 2021,
+    "reanalysis_mm": 426.0,
+    "satellite_mm": 443.0
+   },
+   {
+    "year": 2022,
+    "reanalysis_mm": 546.0,
+    "satellite_mm": 537.0
+   },
+   {
+    "year": 2023,
+    "reanalysis_mm": 284.0,
+    "satellite_mm": 341.0
+   },
+   {
+    "year": 2024,
+    "reanalysis_mm": 393.0,
+    "satellite_mm": 432.0
+   },
+   {
+    "year": 2025,
+    "reanalysis_mm": 358.0,
+    "satellite_mm": 418.0
+   }
+  ]
+ },
+ "rotations": [
+  {
+   "id": "existing",
+   "crops": [
+    {
+     "crop": "groundnut",
+     "irrigated": false,
+     "seasons": 25,
+     "wrsi_median_reanalysis": 77.0,
+     "wrsi_median_satellite": 80.0,
+     "wrsi_bad_year_reanalysis": 62.0,
+     "wrsi_bad_year_satellite": 69.0,
+     "failed_reanalysis": 5,
+     "failed_satellite": 2
+    }
+   ],
+   "score_reanalysis": 51.7,
+   "score_satellite": 54.2
+  },
+  {
+   "id": "groundnut_millet",
+   "crops": [
+    {
+     "crop": "groundnut",
+     "irrigated": false,
+     "seasons": 25,
+     "wrsi_median_reanalysis": 77.0,
+     "wrsi_median_satellite": 80.0,
+     "wrsi_bad_year_reanalysis": 62.0,
+     "wrsi_bad_year_satellite": 69.0,
+     "failed_reanalysis": 5,
+     "failed_satellite": 2
+    },
+    {
+     "crop": "millet",
+     "irrigated": false,
+     "seasons": 25,
+     "wrsi_median_reanalysis": 79.0,
+     "wrsi_median_satellite": 87.0,
+     "wrsi_bad_year_reanalysis": 65.0,
+     "wrsi_bad_year_satellite": 73.0,
+     "failed_reanalysis": 3,
+     "failed_satellite": 2
+    }
+   ],
+   "score_reanalysis": 57.5,
+   "score_satellite": 60.0
+  },
+  {
+   "id": "millet_chickpea",
+   "crops": [
+    {
+     "crop": "millet",
+     "irrigated": false,
+     "seasons": 25,
+     "wrsi_median_reanalysis": 78.0,
+     "wrsi_median_satellite": 85.0,
+     "wrsi_bad_year_reanalysis": 62.0,
+     "wrsi_bad_year_satellite": 68.0,
+     "failed_reanalysis": 4,
+     "failed_satellite": 3
+    },
+    {
+     "crop": "chickpea",
+     "irrigated": false,
+     "seasons": 24,
+     "wrsi_median_reanalysis": 53.0,
+     "wrsi_median_satellite": 49.0,
+     "wrsi_bad_year_reanalysis": 43.0,
+     "wrsi_bad_year_satellite": 38.0,
+     "failed_reanalysis": 11,
+     "failed_satellite": 12
+    }
+   ],
+   "score_reanalysis": 50.0,
+   "score_satellite": 47.7
+  }
+ ],
+ "ranking_reanalysis": [
+  "groundnut_millet",
+  "existing",
+  "millet_chickpea"
+ ],
+ "ranking_satellite": [
+  "groundnut_millet",
+  "existing",
+  "millet_chickpea"
+ ],
+ "generated_utc": "2026-11-13T19:48:44Z",
+ "ranking_agrees": true
+}

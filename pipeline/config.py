@@ -58,3 +58,6 @@ FALLOW_KC = 0.3                  # evaporation coefficient for uncropped days
 WRSI_FAILURE = 50.0              # below this a season is counted as failed
 WRSI_SATISFACTORY = 80.0
 SOIL_SENSITIVITY_MM = [75.0, 100.0, 150.0, 200.0]  # capacities tested
+
+# Satellite rainfall cross-check
+IMERG_START_YEAR = 2001  # first full calendar year of GPM IMERG

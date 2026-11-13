@@ -144,6 +144,7 @@ def evaluate(rotation, dates, rain, et0, crops,
             "wrsi_bad_year": round(stats.percentile(wrsi, 0.25), 0),
             "failed_seasons": len(failed),
             "failed_years": sorted(failed),
+            "wrsi_by_year": {str(s["year"]): round(s["wrsi"], 1) for s in group},
             "irrigation_mm_mean": round(stats.mean([s["irrigation_mm"] for s in group]), 0),
             "parameters_verified": crop["verified"],
         })

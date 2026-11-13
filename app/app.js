@@ -139,8 +139,9 @@
         return response.json();
       });
     }
-    return Promise.all([get(place), get(place + "_rotations")]).then(function (parts) {
-      state.cache[place] = { climate: parts[0], rotations: parts[1] };
+    var check = get(place + "_crosscheck").catch(function () { return null; });
+    return Promise.all([get(place), get(place + "_rotations"), check]).then(function (parts) {
+      state.cache[place] = { climate: parts[0], rotations: parts[1], check: parts[2] };
       return state.cache[place];
     });
   }
@@ -336,6 +337,42 @@
     byId("trend").textContent = sentence + " " + t("trend_caution");
   }
 
+  function renderCheck(data) {
+    var section = byId("check"), check = data.check;
+    if (!check) { section.hidden = true; return; }
+    section.hidden = false;
+    var rain = check.monsoon_rain;
+    byId("check-title").textContent = t("check_title");
+    byId("check-intro").textContent = t("check_intro", { from: check.period[0], to: check.period[1] });
+    var points = clear(byId("check-points"));
+    var percent = Math.abs(rain.mean_difference_percent);
+    [
+      t("check_together", { r: rain.pearson_r.toFixed(2) }),
+      t(rain.mean_difference_percent < 0 ? "check_wetter" : "check_drier", { percent: percent }),
+      t("check_driest", { n: rain.driest_five_in_common }),
+      t(check.ranking_agrees ? "check_rank_same" : "check_rank_diff")
+    ].forEach(function (text) { points.appendChild(h("li", { text: text })); });
+
+    var labels = {};
+    data.rotations.rotations.forEach(function (r) { labels[r.id] = rotationLabel(r); });
+    var table = clear(byId("check-table"));
+    table.appendChild(h("thead", null, h("tr", null,
+      h("th", { text: t("check_col_crop") }),
+      h("th", { class: "num", text: t("check_col_model") }),
+      h("th", { class: "num", text: t("check_col_sat") }))));
+    var body = h("tbody");
+    check.rotations.forEach(function (rotation) {
+      rotation.crops.forEach(function (crop) {
+        if (crop.irrigated) return;
+        body.appendChild(h("tr", null,
+          h("td", null, cropName(crop.crop), h("div", { class: "note", text: labels[rotation.id] || rotation.id })),
+          h("td", { class: "num", text: fmt(crop.wrsi_median_reanalysis) + "%" }),
+          h("td", { class: "num", text: fmt(crop.wrsi_median_satellite) + "%" })));
+      });
+    });
+    table.appendChild(body);
+  }
+
   function reasonList(entries) {
     if (!entries.length) return h("p", { class: "note", text: t("none_listed") });
     var list = h("ul");
@@ -446,6 +483,7 @@
     load(state.place).then(function (data) {
       renderClimate(data);
       renderRanked();
+      renderCheck(data);
     }).catch(function (error) {
       console.error(error);
       var main = document.querySelector("main");

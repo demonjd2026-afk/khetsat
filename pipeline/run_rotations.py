@@ -9,7 +9,9 @@ import json
 import pathlib
 import sys
 
-from . import config, power, rotation
+import statistics
+
+from . import config, indicators, power, rotation, yeartypes
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 REFERENCE = ROOT / "data" / "reference"
@@ -92,6 +94,53 @@ def explain(result, existing, crops):
     }
 
 
+def build_year_types(payload, lat, results):
+    """Group the years two ways and compare how well each explains crop outcomes."""
+    rain = power.clean_series(payload, "PRECTOTCORR")
+    tmax = power.clean_series(payload, "T2M_MAX")
+    tmin = power.clean_series(payload, "T2M_MIN")
+    years = list(range(config.START_YEAR, config.END_YEAR + 1))
+    rows = [indicators.yearly_indicators(y, rain, tmax, tmin, lat) for y in years]
+    cluster_labels, clusters, _ = yeartypes.classify(rows)
+    tercile_labels = yeartypes.terciles([r["monsoon_rain_mm"] for r in rows])
+    cluster_of = {str(r["year"]): l for r, l in zip(rows, cluster_labels)}
+    tercile_of = {str(r["year"]): l for r, l in zip(rows, tercile_labels)}
+
+    comparison = []
+    for result in results:
+        for crop in result["crops"]:
+            if crop["irrigated"]:
+                continue
+            pairs = sorted(crop["wrsi_by_year"].items())
+            values = [v for _, v in pairs]
+            comparison.append({
+                "rotation": result["id"],
+                "crop": crop["crop"],
+                "variance_explained_by_clusters": round(
+                    yeartypes.eta_squared([cluster_of[y] for y, _ in pairs], values), 3),
+                "variance_explained_by_rain_terciles": round(
+                    yeartypes.eta_squared([tercile_of[y] for y, _ in pairs], values), 3),
+            })
+            crop["wrsi_by_year_type"] = {
+                str(c["id"]): round(statistics.fmean(
+                    [v for y, v in pairs if cluster_of[y] == c["id"]]), 0)
+                for c in clusters
+                if any(cluster_of[y] == c["id"] for y, _ in pairs)
+            }
+    same = sum(1 for a, b in zip(cluster_labels, tercile_labels) if a == b)
+    return {
+        "features": yeartypes.FEATURES,
+        "clusters": clusters,
+        "rain_terciles": {
+            str(j): [r["year"] for r, l in zip(rows, tercile_labels) if l == j]
+            for j in range(3)
+        },
+        "years_given_same_group_by_both": same,
+        "years_total": len(rows),
+        "comparison": comparison,
+    }
+
+
 def build(key):
     loc = config.LOCATIONS[key]
     crops = json.loads((REFERENCE / "crops.json").read_text())["crops"]
@@ -115,6 +164,7 @@ def build(key):
                 "failed_season_share": res["failed_season_share"],
             }
         sensitivity.append(row)
+    year_types = build_year_types(payload, loc["lat"], results)
     low, high = sensitivity[0], sensitivity[-1]
     for result in results:
         a = low["rotations"][result["id"]]["weakest_crop_wrsi_median"]
@@ -136,6 +186,7 @@ def build(key):
         "disclaimer": "Decision support only. Review with local farmers and agriculture officers before acting.",
         "rotations": results,
         "soil_capacity_sensitivity": sensitivity,
+        "year_types": year_types,
     }
     path = OUT_DIR / f"{key}_rotations.json"
     path.write_text(json.dumps(out, indent=1))

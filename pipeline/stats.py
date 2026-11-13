@@ -91,3 +91,34 @@ def trend(years, values, alpha=0.05):
         "p_value": round(p, 4),
         "significant": p < alpha,
     }
+
+
+def pearson(xs, ys):
+    """Pearson correlation coefficient."""
+    mx, my = statistics.fmean(xs), statistics.fmean(ys)
+    sxy = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+    sxx = sum((x - mx) ** 2 for x in xs)
+    syy = sum((y - my) ** 2 for y in ys)
+    if sxx == 0 or syy == 0:
+        return None
+    return sxy / math.sqrt(sxx * syy)
+
+
+def ranks(values):
+    """Ranks starting at 1, ties given their average rank."""
+    order = sorted(range(len(values)), key=lambda i: values[i])
+    result = [0.0] * len(values)
+    i = 0
+    while i < len(order):
+        j = i
+        while j + 1 < len(order) and values[order[j + 1]] == values[order[i]]:
+            j += 1
+        for k in range(i, j + 1):
+            result[order[k]] = (i + j) / 2.0 + 1.0
+        i = j + 1
+    return result
+
+
+def spearman(xs, ys):
+    """Spearman rank correlation."""
+    return pearson(ranks(xs), ranks(ys))

@@ -7,6 +7,7 @@ This file records how every number in KhetSat is produced, where the formula com
 | Dataset | Used for | Access | Resolution | Period used |
 |---|---|---|---|---|
 | NASA POWER Daily API (`PRECTOTCORR`, `T2M_MAX`, `T2M_MIN`) | Rainfall, temperature, reference evapotranspiration | Public REST API, no login | 0.5 x 0.625 degree (MERRA-2) | 1981-2025 |
+| GPM IMERG via NASA POWER (`IMERG_PRECTOT`) | Satellite rainfall cross-check | Same API, `time-standard=UTC` | As served by POWER | 2001-2025 |
 
 Values describe the grid cell containing each representative point (about 50 km across). They are not field measurements and not district averages.
 
@@ -87,6 +88,54 @@ The overall score is a weighted average of the four, with weights set by the far
 - **Rice.** Water need is crop evapotranspiration only. Puddling and percolation losses in paddy fields are not counted, so real water use is higher than shown.
 - **No water-stress yield response.** The store is drawn down at the full crop rate until empty (no FAO-56 Chapter 8 stress coefficient).
 
+## Year types: pattern-finding compared with a statistical grouping
+
+The challenge asks teams to compare pattern-finding ("SI") and statistical approaches. Two groupings of the 45 years are computed in `pipeline/yeartypes.py`:
+
+| Approach | How years are grouped |
+|---|---|
+| Statistical | Terciles of monsoon rainfall: the driest third, the middle third, the wettest third |
+| Pattern-finding | k-means clustering (k = 3, 25 restarts, fixed seed) on five standardised features: monsoon rain, post-monsoon rain, onset date, longest monsoon dry spell, hot days |
+
+Each grouping is scored by how much of the year-to-year variation in a crop's WRSI it explains (eta squared, 0 to 1).
+
+### Result
+
+| Location, crop | Explained by clusters | Explained by rain terciles |
+|---|---|---|
+| Anantapur, groundnut | 0.23 | 0.67 |
+| Anantapur, millet (alternating with groundnut) | 0.25 | 0.56 |
+| Anakapalli, rainfed rice | 0.08 | 0.03 |
+
+For rainfed crops in Anantapur the simple rainfall grouping explains crop water outcomes far better than the five-feature clusters. Rainfall terciles are therefore the grouping used to describe good and poor years. Where neither grouping explains much (Anakapalli rice, which is rarely short of water in this model), year type is not a useful lens.
+
+The clusters are still informative as a description. In Anantapur they separate three kinds of season: late onset with long dry spells (13 years; onset about 83 days after 1 June), early onset but hot (11 years; about 48 days at or above 40 C), and wet (21 years; about 427 mm of monsoon rain). Groundnut gets about 65% of its water need in the first two and 83% in the third.
+
+### Limits
+
+- k = 3 was chosen to match the three terciles, not selected by a fit statistic.
+- Clusters use climate features only; no crop or soil information.
+- 45 years is a small sample, so cluster membership is sensitive to the features chosen.
+
+## Satellite rainfall cross-check
+
+The main pipeline uses reanalysis rainfall (`PRECTOTCORR`, MERRA-2) because it starts in 1981. `pipeline/crosscheck.py` compares it with GPM IMERG satellite rainfall (`IMERG_PRECTOT`, also served by NASA POWER) for 2001-2025, and re-runs the rotation engine on IMERG rain with the same temperatures.
+
+| Location | Monsoon rain, reanalysis | Monsoon rain, satellite | Difference | Correlation of yearly totals | Driest five years in common | Rotation ranking |
+|---|---|---|---|---|---|---|
+| Anantapur | 362 mm | 433 mm | reanalysis 16% lower | 0.91 | 4 of 5 | Same |
+| Krishna | 723 mm | 795 mm | reanalysis 9% lower | 0.92 | 4 of 5 | Same |
+| Anakapalli | 866 mm | 874 mm | reanalysis 1% lower | 0.87 | 5 of 5 | Same |
+
+What this supports: the two sources agree on which years were wet or dry, and the order of the three rotations does not depend on which is used.
+
+What it does not settle:
+
+- **Amounts.** In Anantapur the satellite record is wetter, so groundnut fails in 2 of 25 seasons on satellite rain against 5 of 25 on reanalysis rain. The main results use the drier source and may be pessimistic there.
+- **Independence.** Both products are adjusted with rain-gauge data, so they are not fully independent of each other, and neither is a local gauge record.
+- **Day boundaries.** POWER serves IMERG on UTC days only, so both series use UTC days in this comparison. Seasonal totals are unaffected; individual days can differ from the main pipeline's local-time days.
+- Which IMERG run (Early, Late or Final) POWER serves has not been confirmed.
+
 ## Verification status
 
 | Item | Status |
@@ -97,7 +146,8 @@ The overall score is a weighted average of the four, with weights set by the far
 | Hargreaves ET0 | Formula implemented as published. Not yet compared with Penman-Monteith or with observed ET for these locations |
 | Kc curve, calendar, water balance, scoring | Unit-tested (12 tests): stage values, overlap detection, water conservation, irrigation accounting |
 | Crop table values | Read from FAO-56 Tables 11 and 12 on fao.org on 14 Nov 2026; worth a second read-through by a person |
-| Rainfall totals | Not yet cross-checked against GPM IMERG or India Meteorological Department data |
+| k-means, terciles, eta squared | Unit-tested (6 tests) on data with known answers |
+| Rainfall totals | Cross-checked against GPM IMERG for 2001-2025 (see above). Not yet checked against India Meteorological Department gauge data |
 
 ## Known limitations
 
@@ -112,6 +162,7 @@ The overall score is a weighted average of the four, with weights set by the far
 ```
 python3 -m pipeline.run            # downloads to data/raw (cached), writes data/processed
 python3 -m pipeline.run_rotations  # evaluates the candidate rotations
+python3 -m pipeline.crosscheck     # compares with satellite rainfall
 python3 -m unittest discover -s tests
 ```
 

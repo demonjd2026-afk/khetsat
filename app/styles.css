@@ -149,6 +149,9 @@ details ul { margin: 0.4rem 0 0; padding-left: 1.1rem; max-width: 70ch; }
 .stats dt { font-size: 0.9rem; color: var(--soil-soft); }
 .stats dd { margin: 0; font-size: 1.7rem; font-weight: 600; line-height: 1.2; }
 
+.check ul { padding-left: 1.1rem; max-width: 70ch; margin: 0 0 1rem; }
+.check li { margin-bottom: 0.3rem; }
+
 .glossary dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem 2.5rem; }
 .glossary dt { font-weight: 600; }
 .glossary dd { margin: 0; color: var(--soil-soft); }

@@ -1,0 +1,260 @@
+{
+ "location": {
+  "key": "anakapalli",
+  "name": "Anakapalli",
+  "point_label": "Narsipatnam",
+  "lat": 17.67,
+  "lon": 82.61
+ },
+ "period": [
+  2001,
+  2025
+ ],
+ "years_compared": 25,
+ "years_dropped_for_missing_satellite_days": [],
+ "sources": {
+  "reanalysis": "PRECTOTCORR (MERRA-2) via NASA POWER",
+  "satellite": "IMERG_PRECTOT (GPM IMERG) via NASA POWER",
+  "time_standard": "UTC for both in this comparison"
+ },
+ "monsoon_rain": {
+  "mean_reanalysis_mm": 866.0,
+  "mean_satellite_mm": 874.0,
+  "mean_difference_mm": -9.0,
+  "mean_difference_percent": -1.0,
+  "pearson_r": 0.87,
+  "spearman_r": 0.82,
+  "driest_five_reanalysis": [
+   2001,
+   2002,
+   2009,
+   2011,
+   2013
+  ],
+  "driest_five_satellite": [
+   2001,
+   2002,
+   2009,
+   2011,
+   2013
+  ],
+  "driest_five_in_common": 5,
+  "by_year": [
+   {
+    "year": 2001,
+    "reanalysis_mm": 601.0,
+    "satellite_mm": 717.0
+   },
+   {
+    "year": 2002,
+    "reanalysis_mm": 453.0,
+    "satellite_mm": 550.0
+   },
+   {
+    "year": 2003,
+    "reanalysis_mm": 682.0,
+    "satellite_mm": 746.0
+   },
+   {
+    "year": 2004,
+    "reanalysis_mm": 769.0,
+    "satellite_mm": 824.0
+   },
+   {
+    "year": 2005,
+    "reanalysis_mm": 932.0,
+    "satellite_mm": 1045.0
+   },
+   {
+    "year": 2006,
+    "reanalysis_mm": 915.0,
+    "satellite_mm": 995.0
+   },
+   {
+    "year": 2007,
+    "reanalysis_mm": 941.0,
+    "satellite_mm": 877.0
+   },
+   {
+    "year": 2008,
+    "reanalysis_mm": 772.0,
+    "satellite_mm": 833.0
+   },
+   {
+    "year": 2009,
+    "reanalysis_mm": 576.0,
+    "satellite_mm": 709.0
+   },
+   {
+    "year": 2010,
+    "reanalysis_mm": 962.0,
+    "satellite_mm": 1014.0
+   },
+   {
+    "year": 2011,
+    "reanalysis_mm": 641.0,
+    "satellite_mm": 706.0
+   },
+   {
+    "year": 2012,
+    "reanalysis_mm": 1018.0,
+    "satellite_mm": 1020.0
+   },
+   {
+    "year": 2013,
+    "reanalysis_mm": 628.0,
+    "satellite_mm": 669.0
+   },
+   {
+    "year": 2014,
+    "reanalysis_mm": 673.0,
+    "satellite_mm": 820.0
+   },
+   {
+    "year": 2015,
+    "reanalysis_mm": 1061.0,
+    "satellite_mm": 1018.0
+   },
+   {
+    "year": 2016,
+    "reanalysis_mm": 1128.0,
+    "satellite_mm": 1055.0
+   },
+   {
+    "year": 2017,
+    "reanalysis_mm": 1115.0,
+    "satellite_mm": 970.0
+   },
+   {
+    "year": 2018,
+    "reanalysis_mm": 945.0,
+    "satellite_mm": 873.0
+   },
+   {
+    "year": 2019,
+    "reanalysis_mm": 1000.0,
+    "satellite_mm": 985.0
+   },
+   {
+    "year": 2020,
+    "reanalysis_mm": 1047.0,
+    "satellite_mm": 895.0
+   },
+   {
+    "year": 2021,
+    "reanalysis_mm": 1002.0,
+    "satellite_mm": 942.0
+   },
+   {
+    "year": 2022,
+    "reanalysis_mm": 1002.0,
+    "satellite_mm": 771.0
+   },
+   {
+    "year": 2023,
+    "reanalysis_mm": 746.0,
+    "satellite_mm": 808.0
+   },
+   {
+    "year": 2024,
+    "reanalysis_mm": 1088.0,
+    "satellite_mm": 1149.0
+   },
+   {
+    "year": 2025,
+    "reanalysis_mm": 943.0,
+    "satellite_mm": 871.0
+   }
+  ]
+ },
+ "rotations": [
+  {
+   "id": "existing",
+   "crops": [
+    {
+     "crop": "rice",
+     "irrigated": false,
+     "seasons": 25,
+     "wrsi_median_reanalysis": 100.0,
+     "wrsi_median_satellite": 99.0,
+     "wrsi_bad_year_reanalysis": 94.0,
+     "wrsi_bad_year_satellite": 91.0,
+     "failed_reanalysis": 0,
+     "failed_satellite": 0
+    }
+   ],
+   "score_reanalysis": 53.6,
+   "score_satellite": 52.6
+  },
+  {
+   "id": "rice_greengram",
+   "crops": [
+    {
+     "crop": "rice",
+     "irrigated": false,
+     "seasons": 25,
+     "wrsi_median_reanalysis": 100.0,
+     "wrsi_median_satellite": 99.0,
+     "wrsi_bad_year_reanalysis": 94.0,
+     "wrsi_bad_year_satellite": 91.0,
+     "failed_reanalysis": 0,
+     "failed_satellite": 0
+    },
+    {
+     "crop": "green_gram",
+     "irrigated": false,
+     "seasons": 24,
+     "wrsi_median_reanalysis": 19.0,
+     "wrsi_median_satellite": 12.0,
+     "wrsi_bad_year_reanalysis": 9.0,
+     "wrsi_bad_year_satellite": 4.0,
+     "failed_reanalysis": 23,
+     "failed_satellite": 24
+    }
+   ],
+   "score_reanalysis": 34.3,
+   "score_satellite": 31.3
+  },
+  {
+   "id": "maize_greengram",
+   "crops": [
+    {
+     "crop": "maize",
+     "irrigated": false,
+     "seasons": 25,
+     "wrsi_median_reanalysis": 100.0,
+     "wrsi_median_satellite": 100.0,
+     "wrsi_bad_year_reanalysis": 100.0,
+     "wrsi_bad_year_satellite": 100.0,
+     "failed_reanalysis": 0,
+     "failed_satellite": 0
+    },
+    {
+     "crop": "green_gram",
+     "irrigated": false,
+     "seasons": 24,
+     "wrsi_median_reanalysis": 57.0,
+     "wrsi_median_satellite": 52.0,
+     "wrsi_bad_year_reanalysis": 47.0,
+     "wrsi_bad_year_satellite": 44.0,
+     "failed_reanalysis": 8,
+     "failed_satellite": 11
+    }
+   ],
+   "score_reanalysis": 52.4,
+   "score_satellite": 50.4
+  }
+ ],
+ "ranking_reanalysis": [
+  "existing",
+  "maize_greengram",
+  "rice_greengram"
+ ],
+ "ranking_satellite": [
+  "existing",
+  "maize_greengram",
+  "rice_greengram"
+ ],
+ "generated_utc": "2026-11-13T19:49:20Z",
+ "ranking_agrees": true
+}
