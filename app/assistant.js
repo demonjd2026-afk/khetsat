@@ -166,6 +166,13 @@
         lines.push(t("a_trust_custom"));
       }
       lines.push(t("grid_note", { point: k.pointName(state.place) }));
+      // Anantapur only: the failed seasons were compared with published drought reports
+      // (docs/METHODS.md). The stored result is used, so a changed soil does not alter the claim.
+      var now = (data.rotations.rotations || []).filter(function (r) { return r.existing; })[0];
+      var dry = now && now.crops.filter(function (c) { return !c.irrigated && (c.failed_years || []).length; })[0];
+      if (state.place === "anantapur" && dry && k.soilNow() === null && dry.failed_years.join() === "2002,2003,2016,2018,2023") {
+        lines.push(t("a_trust_drought", { crop: k.cropName(dry.crop), years: dry.failed_years.join(", ") }));
+      }
       lines.push(t("a_trust_not"));
       lines.push(t("a_trust_use"));
     } else if (intent === "check") {

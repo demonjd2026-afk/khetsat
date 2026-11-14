@@ -204,6 +204,10 @@ Done on 14 November 2026, for Anantapur only. This is a comparison with publishe
 
 **Rain-gauge normals.** NASA POWER averages 603 mm a year and 353 mm for June to September at the Anantapur grid cell (1981 to 2025). Published gauge-based normals for the district are 552 mm a year and about 318 mm for the monsoon months ([The Hindu, via inkl](https://www.inkl.com/news/anantapur-sees-69-excess-rainfall-in-four-months)), and 530 mm a year with 310 mm in kharif from IMD data for 1971 to 2015 ([IJBSM study](https://ojs.pphouse.org/index.php/IJBSM/article/download/5202/2880/13364)). POWER is therefore roughly 9% to 14% wetter than the gauge normals. The periods and areas differ (one 50 km cell against a district average), so this is an order-of-size check only.
 
+## Translation review
+
+On 14 November 2026 each of the six Indian-language versions (244 strings each) was read against the English by a separate AI reviewer that had not written the text. The reviewers flagged 148 strings; 146 corrections were applied (Telugu 23, Hindi 30, Tamil 31, Kannada 29, Marathi 18, Odia 15). Typical fixes: case endings glued onto crop and place names that gave wrong forms, verb gender fixed to one gender, "loam" translated as alluvial soil, "failed" softened to "affected", the word for transpiration used for evapotranspiration, and clipped month names in dates that are read aloud. This is a machine review. No native speaker has yet read the text, and the reviewers themselves marked several wordings (for example for "the rains set in") as needing a native check.
+
 ## Local soil
 
 The stored results assume the soil holds 100 mm of water for the crop. Under the priority sliders the farmer can replace that assumption for the place being shown, and the 45 years are run again in the browser (`app/engine.js`) with the new storage. For the three pre-analysed locations the browser downloads the same NASA POWER series the pipeline used; at 100 mm the browser result is identical to the stored one (see the parity test).

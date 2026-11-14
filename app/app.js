@@ -158,7 +158,8 @@
 
   function dateAfterJune1(days) {
     var date = new Date(2001, 5, 1 + Math.round(days));
-    return date.getDate() + " " + t("months")[date.getMonth()];
+    // Full month names: these dates are read aloud, and a clipped name is mispronounced.
+    return date.getDate() + " " + (t("months_full") || t("months"))[date.getMonth()];
   }
 
   // ---------- data ----------
