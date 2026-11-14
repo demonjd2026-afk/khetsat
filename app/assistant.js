@@ -223,7 +223,10 @@
   var ICON_MIC = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>';
   var ICON_STOP = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>';
 
-  var ui = { current: null, heard: "", status: null, speaking: false, listening: false, open: false, rec: null };
+  // thread: the conversation shown in the panel, oldest first.
+  //   { role: "user", intent } for a tapped question, { role: "user", text } for the person's own words,
+  //   { role: "bot", intent, free } for an answer; free marks an answer to the person's own words.
+  var ui = { thread: [], typing: false, current: null, status: null, speaking: false, listening: false, open: false, rec: null };
 
   function iconButton(className, icon, label, onclick) {
     var button = h("button", { type: "button", class: className, onclick: onclick });
@@ -312,33 +315,61 @@
     rec.onresult = function (event) {
       var options = event.results[0], heard = options[0].transcript, intent = null;
       ui.status = null;
-      if ((window.KHETSAT_CONFIG || {}).aiUrl) {
-        byId("assist-heard").textContent = t("assist_heard", { text: heard });
-        route(heard, k.state.lang, function (found) { ask(found, heard); });
-        return;
-      }
+      if ((window.KHETSAT_CONFIG || {}).aiUrl) { askFree(heard); return; }
       for (var i = 0; i < options.length && !intent; i++) {
         intent = match(options[i].transcript, k.state.lang);
         if (intent) heard = options[i].transcript;
       }
-      ask(intent, heard);
+      askFree(heard, intent);
     };
     try { rec.start(); } catch (error) { ui.status = { key: "assist_mic_error", bad: true }; paintControls(); }
   }
 
   // ---------- asking ----------
 
-  function ask(intent, heard) {
-    ui.heard = heard || "";
-    ui.current = intent || "unknown";
-    if (heard === undefined) ui.status = null;
+  function linesFor(message) {
+    if (message.intent === "unknown") return [t("assist_unknown")];
+    var reply = answer(message.intent);
+    return (message.free ? [reply.title] : []).concat(reply.lines);
+  }
+
+  function say(text) {
+    ui.thread.push(text);
+    if (ui.thread.length > 30) ui.thread = ui.thread.slice(-30);
+  }
+
+  function respond(intent, free) {
+    ui.typing = false;
+    var message = { role: "bot", intent: intent || "unknown", free: Boolean(free) };
+    say(message);
+    ui.current = message;
+    paintThread();
+    paintControls();
+    speak(linesFor(message));
+  }
+
+  // A tapped question or a section's Listen button.
+  function ask(intent) {
+    ui.status = null;
+    stopSpeaking();
     openPanel();
-    paintAnswer();
-    // On a small screen the answer sits below the list of questions; bring it into view.
-    var panel = byId("assist-panel"), target = byId("assist-status");
-    if (panel && target && panel.scrollHeight > panel.clientHeight) panel.scrollTop = Math.max(0, target.offsetTop - 8);
-    var lines = intent ? [answer(intent).title].concat(answer(intent).lines) : [t("assist_unknown")];
-    speak(lines);
+    say({ role: "user", intent: intent });
+    ui.typing = true;
+    paintThread();
+    window.setTimeout(function () { respond(intent, false); }, 450);
+  }
+
+  // The person's own words, typed or spoken. If the question is already known (speech matched
+  // on the device), it is passed in; otherwise it is worked out here.
+  function askFree(text, known) {
+    ui.status = null;
+    stopSpeaking();
+    openPanel();
+    say({ role: "user", text: text });
+    ui.typing = true;
+    paintThread();
+    if (known !== undefined) { window.setTimeout(function () { respond(known, true); }, 450); return; }
+    route(text, k.state.lang, function (found) { respond(found, true); });
   }
 
   function openPanel() {
@@ -356,14 +387,30 @@
 
   // ---------- drawing ----------
 
-  function paintAnswer() {
+  function paintThread() {
     var box = clear(byId("assist-answer"));
-    byId("assist-heard").textContent = ui.heard ? t("assist_heard", { text: ui.heard }) : "";
-    if (!ui.current) return;
-    if (ui.current === "unknown") { box.appendChild(h("p", { text: t("assist_unknown") })); return; }
-    var reply = answer(ui.current);
-    box.appendChild(h("h3", { text: reply.title }));
-    reply.lines.forEach(function (line) { box.appendChild(h("p", { text: line })); });
+    box.appendChild(h("div", { class: "msg bot" }, h("p", { text: t("assist_intro") })));
+    var lastQuestion = null;
+    ui.thread.forEach(function (message) {
+      if (message.role === "user") {
+        var words = message.text || t(message.intent === "advice" ? "advice_title" : "q_" + message.intent);
+        lastQuestion = h("div", { class: "msg user", text: words });
+        box.appendChild(lastQuestion);
+        return;
+      }
+      var bubble = h("div", { class: "msg bot" });
+      if (message.intent === "unknown") {
+        bubble.appendChild(h("p", { text: t("assist_unknown") }));
+      } else {
+        var reply = answer(message.intent);
+        if (message.free) bubble.appendChild(h("div", { class: "matched", text: reply.title }));
+        reply.lines.forEach(function (line) { bubble.appendChild(h("p", { text: line })); });
+      }
+      box.appendChild(bubble);
+    });
+    if (ui.typing) box.appendChild(h("div", { class: "msg bot typing", "aria-hidden": "true" }, h("i"), h("i"), h("i")));
+    // Keep the latest question at the top of the view so its answer is read from the start.
+    box.scrollTop = lastQuestion ? Math.max(0, lastQuestion.offsetTop - 6) : 0;
   }
 
   function paintControls() {
@@ -415,7 +462,6 @@
     setLabel(byId("assist-fab"), ICON_MIC, t("assist_open"));
     setLabel(byId("assist-top"), ICON_MIC, t("assist_open"));
     byId("assist-title").textContent = t("assist_title");
-    byId("assist-intro").textContent = t("assist_intro");
     byId("assist-close").setAttribute("aria-label", t("assist_close"));
     byId("assist-input").setAttribute("placeholder", t("assist_type"));
     byId("assist-input").setAttribute("aria-label", t("assist_type"));
@@ -424,7 +470,7 @@
     INTENTS.forEach(function (intent) {
       chips.appendChild(h("button", { type: "button", text: t("q_" + intent), onclick: function () { ask(intent); } }));
     });
-    paintAnswer();
+    paintThread();
     paintControls();
     paintTrust();
     paintAdvice();
@@ -468,28 +514,23 @@
       event.preventDefault();
       var text = input.value.trim();
       if (!text) return;
-      ui.status = null;
       input.value = "";
-      byId("assist-heard").textContent = t("assist_heard", { text: text });
-      route(text, k.state.lang, function (found) { ask(found, text); });
+      askFree(text);
     });
     var speakButton = iconButton("assist-speak", ICON_SPEAKER, "", function () {
       if (ui.speaking) { stopSpeaking(); return; }
       if (!ui.current) return;
       ui.status = null;
-      speak(ui.current === "unknown" ? [t("assist_unknown")] : [answer(ui.current).title].concat(answer(ui.current).lines));
+      speak(linesFor(ui.current));
     });
     speakButton.id = "assist-speak";
 
     var panel = h("section", { id: "assist-panel", class: "assist-panel", role: "dialog", "aria-labelledby": "assist-title", hidden: "" },
-      h("div", { class: "assist-head" }, h("h2", { id: "assist-title" }), close),
-      h("p", { id: "assist-intro", class: "note" }),
+      h("div", { class: "assist-head" }, h("h2", { id: "assist-title" }), speakButton, close),
+      h("div", { id: "assist-answer", class: "assist-log", "aria-live": "polite" }),
       h("div", { id: "assist-chips", class: "assist-chips" }),
-      h("div", { class: "assist-ask" }, mic, form),
       h("p", { id: "assist-status", class: "note", role: "status" }),
-      h("p", { id: "assist-heard", class: "note" }),
-      h("div", { id: "assist-answer", class: "assist-answer", "aria-live": "polite" }),
-      speakButton);
+      h("div", { class: "assist-ask" }, mic, form));
     document.body.appendChild(panel);
     document.body.appendChild(fab);
 

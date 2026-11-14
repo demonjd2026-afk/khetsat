@@ -258,6 +258,26 @@ footer p { max-width: 90ch; }
 .assist-answer h3 { color: var(--paddy); }
 .assist-answer p { margin-bottom: 0.5rem; }
 .assist-speak { margin-top: 0.3rem; }
+/* the guide as a conversation: question on the right, answer on the left */
+.assist-panel { display: flex; flex-direction: column; overflow: hidden; height: min(660px, calc(100vh - 6.5rem)); padding-bottom: 0.8rem; }
+.assist-head { align-items: center; gap: 0.6rem; }
+.assist-head h2 { margin: 0; flex: 1; }
+.assist-head .assist-speak { margin: 0; font-size: 0.85rem; padding: 0.2rem 0.7rem; }
+.assist-log { flex: 1; min-height: 120px; overflow-y: auto; position: relative; display: flex; flex-direction: column; gap: 0.55rem; padding: 0.6rem 0.2rem; margin-top: 0.5rem; border-top: 1px solid var(--rule); }
+.msg { max-width: 90%; padding: 0.5rem 0.8rem; border-radius: 14px; font-size: 0.95rem; }
+.msg p { margin: 0 0 0.4rem; max-width: none; }
+.msg p:last-child { margin: 0; }
+.msg.user { align-self: flex-end; background: var(--paddy); color: var(--white); border-bottom-right-radius: 4px; }
+.msg.bot { align-self: flex-start; background: var(--paddy-pale); border-bottom-left-radius: 4px; }
+.msg .matched { font-size: 0.8rem; font-style: italic; color: var(--soil-soft); margin-bottom: 0.3rem; }
+.msg.typing { display: flex; gap: 0.3rem; padding: 0.7rem 0.8rem; }
+.msg.typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--paddy); opacity: 0.35; animation: assist-dot 1s infinite; }
+.msg.typing i:nth-child(2) { animation-delay: 0.15s; }
+.msg.typing i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes assist-dot { 0%, 60%, 100% { opacity: 0.3; } 30% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .msg.typing i { animation: none; opacity: 0.6; } }
+.assist-panel .assist-chips { flex-wrap: nowrap; overflow-x: auto; margin: 0.5rem 0; padding-bottom: 0.3rem; border-top: 1px solid var(--rule); padding-top: 0.6rem; }
+.assist-panel .assist-chips button { white-space: nowrap; flex: none; font-size: 0.86rem; }
 footer { padding-bottom: 5rem; }
 
 .error { background: #fbe9e5; border-left: 4px solid var(--laterite); padding: 1rem; margin-top: 1.5rem; }
