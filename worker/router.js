@@ -29,7 +29,48 @@ trust - how accurate or reliable the data is, where it comes from, whether to be
 check - what to verify locally or be careful about before deciding, risks, limits, what is not included
 none  - anything else (prices, pests, loans, weather forecasts, greetings, unrelated requests)
 
-Reply with exactly one word from: best, poor, water, rain, chart, map, trust, check, none.`;
+Most questions about what to grow, drought, water, rain, the chart, the map, how far to trust the
+data, or what to check do match a topic: choose the closest one. Use none only when the question is
+clearly about something else.
+
+Examples:
+ఈ సంవత్సరం ఏ పంట వేయాలి -> best
+నా పొలానికి ఏది మంచిది -> best
+వర్షాలు పడకపోతే ఏమవుతుంది -> poor
+కరువు వస్తే ఎలా -> poor
+ఎంత నీరు అవసరం -> water
+ఏది తక్కువ నీరు వాడుతుంది -> water
+ఇక్కడ ఎంత వర్షం పడుతుంది -> rain
+రుతుపవనాలు ఎప్పుడు మొదలవుతాయి -> rain
+ఈ చార్ట్ వివరించండి -> chart
+రంగు పట్టీలు అంటే ఏమిటి -> chart
+మ్యాప్ వివరించండి -> map
+ఈ మ్యాప్ ఏమి చూపిస్తుంది -> map
+దీన్ని నమ్మవచ్చా -> trust
+ఈ సమాచారం సరైనదేనా -> trust
+నేను దేని గురించి జాగ్రత్త పడాలి -> check
+ఇందులో నష్టభయాలు ఏమిటి -> check
+ఒక జోక్ చెప్పు -> none
+इस साल क्या बोना चाहिए -> best
+मेरे खेत के लिए कौन सा सबसे अच्छा है -> best
+बारिश न हो तो क्या होगा -> poor
+सूखा पड़ा तो क्या होगा -> poor
+कितना पानी लगेगा -> water
+किसमें कम पानी लगता है -> water
+यहाँ कितनी बारिश होती है -> rain
+मानसून कब शुरू होता है -> rain
+यह चार्ट समझाइए -> chart
+रंगीन पट्टियों का क्या मतलब है -> chart
+नक्शा समझाइए -> map
+यह नक्शा क्या दिखा रहा है -> map
+क्या इस पर भरोसा कर सकते हैं -> trust
+क्या यह जानकारी सही है -> trust
+मुझे किस बात का ध्यान रखना चाहिए -> check
+इसमें क्या जोखिम हैं -> check
+एक चुटकुला सुनाओ -> none
+
+Reply in English with exactly one lowercase word from this list and nothing else:
+best, poor, water, rain, chart, map, trust, check, none`;
 
 function cors(origin) {
   const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
@@ -74,15 +115,17 @@ export default {
       },
       body: JSON.stringify({
         model: env.KHETSAT_MODEL || DEFAULT_MODEL,
-        max_tokens: 10,
+        max_tokens: 20,
         system: SYSTEM,
-        messages: [{ role: "user", content: text }]
+        messages: [{ role: "user", content: "Question: " + text + "\n\nTopic (one English word):" }]
       })
     });
     if (!answer.ok) return reply({ error: "model request failed", status: answer.status }, 502, origin);
     const data = await answer.json();
-    const word = String(((data.content || [])[0] || {}).text || "").toLowerCase().replace(/[^a-z]/g, "");
-    const intent = TOPICS.includes(word) ? word : "none";
-    return reply({ intent: intent }, 200, origin);
+    // Take the first topic word that appears in the reply; anything else counts as none.
+    const raw = String(((data.content || []).find((part) => part.type === "text") || {}).text || "");
+    const words = raw.toLowerCase().split(/[^a-z]+/).filter(Boolean);
+    const intent = words.find((word) => TOPICS.includes(word)) || "none";
+    return reply({ intent: intent, raw: raw.slice(0, 60) }, 200, origin);
   }
 };

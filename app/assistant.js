@@ -205,7 +205,8 @@
     }).then(function (json) {
       clearTimeout(timer);
       if (INTENTS.indexOf(json.intent) >= 0) finish(json.intent, "model");
-      else if (json.intent === "none") finish(null, "model");
+      // When the model finds no match, the keyword lists get a second look.
+      else if (json.intent === "none") finish(match(text, lang), "model, then local");
       else finish(match(text, lang), "local");
     }).catch(function () { clearTimeout(timer); finish(match(text, lang), "local"); });
   }
