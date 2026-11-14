@@ -115,7 +115,9 @@ export default {
       },
       body: JSON.stringify({
         model: env.KHETSAT_MODEL || DEFAULT_MODEL,
-        max_tokens: 20,
+        // Room for the model's own reasoning before its one-word reply; with a small limit
+        // the reply was cut off before the word appeared.
+        max_tokens: 400,
         system: SYSTEM,
         messages: [{ role: "user", content: "Question: " + text + "\n\nTopic (one English word):" }]
       })
