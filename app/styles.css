@@ -359,3 +359,17 @@ footer { padding-bottom: 5rem; }
 }
 
 @media (max-width: 640px) { .tabs button { padding: 0.4rem 0.7rem; font-size: 0.92rem; } .tabs { gap: 0.3rem; } }
+
+/* Listen sits on the heading's line, a little to its right. */
+details.fold > summary { display: flex; align-items: center; gap: 0.4rem 0.8rem; }
+details.fold > summary h2 { flex: 0 1 auto; min-width: 0; }
+details.fold > summary .say { flex: none; margin: 0 0 0 0.6rem; }
+@media (min-width: 641px) {
+  main :is(h1, h2):has(+ .say:not(.big)) { display: inline-block; vertical-align: middle; margin-right: 1.1rem; max-width: calc(100% - 9rem); }
+  main :is(h1, h2) + .say:not(.big) { vertical-align: middle; margin-bottom: 0.4em; }
+}
+/* Glossary as cards. */
+.glossary dl { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.9rem; margin: 1rem 0 0; }
+.glossary dl > div { background: var(--white); border: 1px solid var(--rule); border-top: 4px solid var(--paddy); border-radius: 8px; padding: 0.9rem 1rem; }
+.glossary dt { color: var(--paddy); margin-bottom: 0.3rem; }
+.glossary dd { font-size: 0.95rem; line-height: 1.45; }
