@@ -565,12 +565,12 @@
         h("div", { class: "match" },
           h("strong", { text: String(entry.score) }),
           h("span", { text: t("match") + ", " + t("out_of_100") })),
-        meters,
         h("div", { class: "scroll" }, table),
         h("div", { class: "reasons" },
           h("h4", { text: t("sec_why") }), reasonList(ex.why_suggested),
-          h("h4", { text: t("sec_evidence") }), reasonList(ex.evidence),
-          h("h4", { text: t("sec_benefits") }), reasonList(ex.benefits),
+          h("details", null, h("summary", { text: t("sec_evidence") }),
+            meters, reasonList(ex.evidence),
+            h("h4", { text: t("sec_benefits") }), reasonList(ex.benefits)),
           h("details", null, h("summary", { text: t("sec_gaps") }), reasonList(ex.information_gaps)),
           h("details", null, h("summary", { text: t("sec_risks") }), reasonList(ex.risks_for_local_review)))));
   }

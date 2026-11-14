@@ -82,6 +82,18 @@ main { padding: 0 clamp(1rem, 4vw, 3rem) 3rem; max-width: 1280px; margin: 0 auto
 .places button[aria-current="true"] { color: var(--soil); font-weight: 600; border-bottom-color: var(--turmeric); }
 
 section, .work { margin-top: 2.6rem; }
+
+/* Sections that open on a click, so the page starts short. */
+details.fold { margin-top: 1rem; border-top: 1px solid var(--rule); padding-top: 0.9rem; }
+details.fold > summary { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; list-style: none; cursor: pointer; }
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary::before { content: "+"; flex: none; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--paddy-pale); color: var(--paddy); font-weight: 700; font-size: 1.2rem; line-height: 1.7rem; text-align: center; }
+details.fold[open] > summary::before { content: "\2212"; }
+details.fold > summary h2 { margin: 0; font-size: 1.25rem; }
+details.fold > summary .say { margin: 0; }
+details.fold[open] > summary { margin-bottom: 0.9rem; }
+details.fold.trust { margin-top: 1.6rem; }
+.reasons details .meters { margin-top: 0.7rem; }
 .strip { margin-top: 1.8rem; }
 .lede { font-size: 1.08rem; color: var(--soil-soft); }
 .note { font-size: 0.88rem; color: var(--soil-soft); }
