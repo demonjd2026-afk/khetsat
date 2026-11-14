@@ -97,7 +97,8 @@
           to: k.dateAfterJune1(summary.onset.p90_days_after_jun1)
         }) + " " + t("a_sow"));
       }
-      lines.push(x("no_market") + " " + t("disclaimer"));
+      lines.push(x("no_market"));
+      lines.push(t("disclaimer"));
     } else if (intent === "best") {
       lines.push(t("a_best", { place: k.placeName(state.place), rotation: k.rotationLabel(top), score: order[0].score }));
       if (top.existing) lines.push(t("a_best_current"));
@@ -481,8 +482,7 @@
     section.hidden = !data;
     if (!data) return;
     byId("advice-title").textContent = t("advice_title");
-    var list = clear(byId("advice-points"));
-    answer("advice").lines.forEach(function (line) { list.appendChild(h("li", { text: line })); });
+    structure(clear(byId("advice-points")), answer("advice"));
   }
 
   function refresh() {
@@ -490,7 +490,6 @@
       setLabel(button, ICON_SPEAKER, t(button.getAttribute("data-label") || "assist_listen"));
     });
     setLabel(byId("assist-fab"), ICON_MIC, t("assist_open"));
-    setLabel(byId("assist-top"), ICON_MIC, t("assist_open"));
     byId("assist-title").textContent = t("assist_title");
     byId("assist-close").setAttribute("aria-label", t("assist_close"));
     ["assist-clear", "assist-expand"].forEach(function (id) {
@@ -522,9 +521,6 @@
     // Large listen and ask buttons under the list of places, for people who do not read.
     var bar = h("div", { class: "listen-bar" });
     bar.appendChild(sayButton("best", "listen_summary", "say big"));
-    var top = iconButton("say big ask", ICON_MIC, "", function () { openPanel(); paintControls(); if (Recognition) listen(); });
-    top.id = "assist-top";
-    bar.appendChild(top);
     var places = byId("places");
     places.parentNode.insertBefore(bar, places.nextSibling);
 
