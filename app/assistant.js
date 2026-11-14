@@ -318,34 +318,38 @@
     var rec = new Recognition();
     ui.rec = rec;
     rec.lang = SPEECH_TAGS[k.state.lang] || "en-IN";
-    rec.interimResults = false;
     rec.maxAlternatives = 3;
+    // The browser reports the words as they are heard, a piece at a time. They are shown in the
+    // status line while the person speaks; the question is sent once, when the microphone stops
+    // (a second press on the button, or a pause in speech).
+    var heard = "";
+    rec.interimResults = true;
     rec.onstart = function () { ui.listening = true; ui.status = { key: "assist_listening" }; paintControls(); };
-    rec.onend = function () {
-      ui.listening = false;
-      if (ui.status && ui.status.key === "assist_listening") ui.status = { key: "assist_mic_error", bad: true };
-      paintControls();
+    rec.onresult = function (event) {
+      var parts = [];
+      for (var i = 0; i < event.results.length; i++) parts.push(event.results[i][0].transcript);
+      heard = parts.join(" ").replace(/\s+/g, " ").trim();
+      if (heard) { ui.status = { key: "assist_heard", params: { text: heard } }; paintControls(); }
     };
     rec.onerror = function (event) {
+      if (event.error === "no-speech" || event.error === "aborted") return;
       var blocked = ["not-allowed", "service-not-allowed", "language-not-supported", "audio-capture"].indexOf(event.error) >= 0;
       ui.status = { key: blocked ? "assist_no_mic" : "assist_mic_error", bad: true };
+      heard = "";
       paintControls();
     };
-    var handled = false;
-    rec.onresult = function (event) {
-      // The browser can report the same spoken question more than once; answer it once.
-      var options = event.results[event.results.length - 1];
-      if (handled || !options || options.isFinal === false) return;
-      handled = true;
-      try { rec.stop(); } catch (error) { /* already stopped */ }
-      var heard = options[0].transcript, intent = null;
-      ui.status = null;
-      if ((window.KHETSAT_CONFIG || {}).aiUrl) { askFree(heard); return; }
-      for (var i = 0; i < options.length && !intent; i++) {
-        intent = match(options[i].transcript, k.state.lang);
-        if (intent) heard = options[i].transcript;
+    rec.onend = function () {
+      ui.listening = false;
+      if (ui.rec === rec) ui.rec = null;
+      if (heard) {
+        var text = heard;
+        heard = "";
+        ui.status = null;
+        if ((window.KHETSAT_CONFIG || {}).aiUrl) askFree(text); else askFree(text, match(text, k.state.lang));
+      } else if (ui.status && ui.status.key === "assist_listening") {
+        ui.status = { key: "assist_mic_error", bad: true };
       }
-      askFree(heard, intent);
+      paintControls();
     };
     try { rec.start(); } catch (error) { ui.status = { key: "assist_mic_error", bad: true }; paintControls(); }
   }
