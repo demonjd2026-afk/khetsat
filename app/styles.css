@@ -158,7 +158,15 @@ details ul { margin: 0.4rem 0 0; padding-left: 1.1rem; max-width: 70ch; }
 .map-controls { display: flex; flex-wrap: wrap; gap: 0 2rem; }
 .map .leaflet-container { font-family: var(--font); }
 
-.place-form form { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem 1.5rem; align-items: end; max-width: 980px; }
+/* Three columns: place on the first row, crops and the compare button on the second.
+   Cells align at the top so labels line up; button cells are pushed down by one label height. */
+.place-form form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.1rem 1.5rem; align-items: start; max-width: 860px; }
+.place-form .action { padding-top: calc(1.5em + 0.25rem); }
+.place-form .action button { width: 100%; }
+@media (max-width: 640px) {
+  .place-form form { grid-template-columns: 1fr; }
+  .place-form .action { padding-top: 0; }
+}
 .place-form label { display: block; font-weight: 500; margin-bottom: 0.25rem; }
 .place-form input[type="number"], .place-form select { font: inherit; width: 100%; padding: 0.45rem 0.6rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--white); color: var(--soil); }
 .place-form .tick { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.4rem; font-size: 0.95rem; }

@@ -706,7 +706,7 @@
     if (state.busy) go.disabled = true;
     [field("f-lat", "form_lat", number("f-lat", "lat", INDIA.latMin, INDIA.latMax)),
       field("f-lon", "form_lon", number("f-lon", "lon", INDIA.lonMin, INDIA.lonMax)),
-      h("div", null, locate), kharif, rabi, h("div", null, go)
+      h("div", { class: "action" }, locate), kharif, rabi, h("div", { class: "action" }, go)
     ].forEach(function (node) { form.appendChild(node); });
     var status = byId("form-status");
     status.textContent = state.formMessage ? t(state.formMessage.key) : "";
