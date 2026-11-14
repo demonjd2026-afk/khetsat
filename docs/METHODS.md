@@ -186,6 +186,23 @@ Limits specific to this mode:
 - **No satellite cross-check or year types** are computed for these places.
 - Sowing dates in this mode come from the onset rule; the three pipeline locations use fixed dates. Results for the same place can therefore differ slightly between the two modes.
 
+## Local soil
+
+The stored results assume the soil holds 100 mm of water for the crop. Under the priority sliders the farmer can replace that assumption for the place being shown, and the 45 years are run again in the browser (`app/engine.js`) with the new storage. For the three pre-analysed locations the browser downloads the same NASA POWER series the pipeline used; at 100 mm the browser result is identical to the stored one (see the parity test).
+
+- **Soil type.** Four choices set the storage to 75, 100, 150 or 200 mm. The labels (light or shallow, medium, deep loam, deep clay) are indicative. They are meant to sit within the ranges of available water FAO-56 Table 19 gives for a one-metre root zone; that table was not re-read when the labels were written, so the pairing of label and value is worth a check by a person.
+- **Soil map estimate.** "Estimate from soil map" queries ISRIC SoilGrids 2.0 for volumetric water content at field capacity (33 kPa, `wv0033`) and at wilting point (1500 kPa, `wv1500`) in five layers down to 100 cm. Storage is the difference, summed over the layers, in millimetres, rounded to 5 mm and limited to 30 to 250 mm.
+- **Limits.** SoilGrids is a modelled global map on a 250 m grid, not a field test, and neighbouring points can differ a lot (around Anantapur, points a few kilometres apart gave about 75, 100 and 140 mm). Towns and water bodies have no value; the app then tries four points 0.05 degrees (about 5 km) away and reports the distance used. One metre is used as the root zone for every crop; real rooting depth differs by crop and by soil depth. The satellite rainfall cross-check is not re-run for a changed soil.
+- **Tested.** On 14 November 2026 the picker and the estimate were run in a browser against the live NASA POWER and SoilGrids services for Anantapur: the default reproduced the stored figures, 150 mm and a 140 mm estimate changed them, and returning to "not sure" restored them.
+
+## What has changed
+
+The "What has changed" section compares 2011 to 2025 with 1981 to 2010, using the same 45 years: mean monsoon rainfall, mean onset date (years with an onset), and for each rotation the number of rain-fed seasons counted as failed (under 50% of water need met) in each period.
+
+- No statistical test is applied to these differences, and fifteen years is a short record. The section says so. The formal trend test on the full record is in the climate section.
+- It describes the past. Nothing is projected forward.
+- A season that runs past the end of 2025 is not simulated, so some rotations show 29 recent seasons instead of 30.
+
 ## Voice guide
 
 `app/assistant.js` answers eight fixed questions by tap, typed text or speech, and reads the answer aloud.

@@ -327,7 +327,9 @@
       if (result.irrigation_mm_per_year > existing.irrigation_mm_per_year + 1) risks.push(item("more_irrigation"));
       if (!why.length) why.push(item("no_clear_gain"));
     }
-    gap(item("soil_assumed", { mm: CONFIG.soilMm })); gap(item("fao_lengths")); gap(item("no_market"));
+    if (options.soilMm === undefined) gap(item("soil_assumed", { mm: CONFIG.soilMm }));
+    else gap(item("soil_chosen", { mm: options.soilMm }));
+    gap(item("fao_lengths")); gap(item("no_market"));
     gap(item(options.rotationGapCode || "assumed_rotation"));
     risks.push(item("grid_cell")); risks.push(item("not_modelled"));
     return { why_suggested: why, evidence: evidence, benefits: benefits, information_gaps: gaps, risks_for_local_review: risks };
@@ -336,7 +338,9 @@
   // Full comparison for a list of rotations (the first existing one is the baseline).
   function compare(rotations, series, crops, options) {
     options = options || {};
-    var results = rotations.map(function (r) { return evaluate(r, series, crops); });
+    // options.soilMm: soil water storage chosen by the farmer or estimated from a soil map.
+    // Left out, the default (CONFIG.soilMm) is used, as in the Python pipeline.
+    var results = rotations.map(function (r) { return evaluate(r, series, crops, options.soilMm); });
     if (results.some(function (r) { return !r; })) return null;
     var existing = results.filter(function (r) { return r.existing; })[0];
     addWaterSaving(results);
@@ -393,7 +397,8 @@
     var series = buildSeries(payload, lat), clim = climate(series);
     var flags = { kharifIrrigated: current.kharifIrrigated, rabiIrrigated: current.rabiIrrigated };
     var mine = makeRotation("existing", crops, clim.summary, current.kharif, current.rabi, flags);
-    if (!mine || !evaluate(mine, series, crops)) return { error: "rotation_does_not_fit", climate: clim };
+    var soilMm = current.soilMm;
+    if (!mine || !evaluate(mine, series, crops, soilMm)) return { error: "rotation_does_not_fit", climate: clim };
     mine.existing = true;
     var names = Object.keys(crops);
     var kharifCrops = names.filter(function (c) { return (crops[c].seasons || []).indexOf("kharif") >= 0; });
@@ -412,10 +417,10 @@
     });
     var evaluated = [];
     candidates.forEach(function (rotation) {
-      var result = evaluate(rotation, series, crops);
+      var result = evaluate(rotation, series, crops, soilMm);
       if (result) evaluated.push({ rotation: rotation, result: result });
     });
-    var mineResult = evaluate(mine, series, crops);
+    var mineResult = evaluate(mine, series, crops, soilMm);
     addWaterSaving(evaluated.map(function (e) { return e.result; }).concat([mineResult]));
     evaluated.forEach(function (e) { e.score = score(e.result.components); });
     evaluated.sort(function (a, b) { return b.score - a.score; });
@@ -439,7 +444,7 @@
     }).some(take);
     evaluated.forEach(function (e) { if (picks.length < 2) take(e); });
     var comparison = compare([mine].concat(picks), series, crops,
-      { candidates: evaluated.length, baselineCode: "baseline_yours", rotationGapCode: "your_rotation" });
+      { candidates: evaluated.length, baselineCode: "baseline_yours", rotationGapCode: "your_rotation", soilMm: soilMm });
     return { climate: clim, rotations: comparison, candidates: evaluated.length, sowing: sowingPlan(clim.summary, crops, current.kharif) };
   }
 

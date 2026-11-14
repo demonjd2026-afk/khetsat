@@ -24,6 +24,8 @@ For a location, KhetSat takes the rotation in use today and compares it with two
 
 Three locations (Anantapur, Krishna, Anakapalli) come pre-analysed with sourced current rotations. For any other place in India, the farmer picks a point on the map and enters what they grow now; the app fetches NASA data for that point and compares their rotation with the two best alternatives it finds.
 
+The farmer can also give their soil. Choosing a soil type, or asking for an estimate from the SoilGrids soil map, re-runs the 45 years with that soil's water storage instead of the default 100 mm. A "What has changed" section sets the last fifteen years against the thirty before: monsoon rain, the date the rains settle, and how often each rotation failed.
+
 The farmer sets five priorities with sliders (water in a normal year, holding up in a poor year, using less water, building the soil, breaking pest cycles) and the ranking updates.
 
 A "Suggestion for your farm" box at the top states the result in plain words: the rotation that fits best, how it holds up in a poor-rain year, when the rains usually settle, and what to check before acting.
@@ -60,6 +62,7 @@ Results for crops grown on leftover soil moisture in the delta are flagged as un
 | NASA POWER daily API (MERRA-2 rainfall and temperature, 1981-2025) | Climate indicators and the rotation water balance |
 | GPM IMERG rainfall, served by NASA POWER (2001-2025) | Cross-check of rainfall and of the rotation ranking |
 | NASA GIBS: MODIS NDVI, SMAP L4 root-zone soil moisture, VIIRS true colour | Satellite map in the app (display only) |
+| ISRIC SoilGrids 2.0 (water content at field capacity and wilting point) | Optional estimate of soil water storage for the chosen place |
 | OpenStreetMap Nominatim | Place name shown for chosen coordinates (label only) |
 | FAO Irrigation and Drainage Paper 56, Tables 11 and 12 | Crop coefficients and growth-stage lengths |
 | Sivakumar (1988) | Definition of monsoon onset |
@@ -71,11 +74,11 @@ Results for crops grown on leftover soil moisture in the delta are flagged as un
 - The in-browser engine used for other places is checked against the Python pipeline: 546 values compared, all in agreement.
 - Every formula, its source, its verification status and the known limitations are listed in [docs/METHODS.md](docs/METHODS.md).
 - Figures describe a NASA grid cell about 50 km across, not a field.
-- Soil water storage is assumed, and every result is re-run at four storage values to show how much it matters.
+- Soil water storage defaults to an assumed 100 mm. The farmer can set it by soil type or from the SoilGrids map, which is modelled, not measured; every result is also re-run at four storage values to show how much it matters.
 - The app is available in English, Telugu, Hindi, Tamil, Kannada, Marathi and Odia. The six Indian-language versions were drafted during the hackathon and have not yet been reviewed by a second native speaker; the app says so in each of them. `node tests/i18n_check.js` checks that every language has every string and placeholder.
 - The voice guide is checked without a browser: every question in every language is recognised from its keywords, and every answer for every place and language is complete (`node tests/assistant_check.js`, 634 checks). Reading aloud and voice input use the browser's own speech features, so they depend on the device: a phone or computer without a voice for a language shows the answer as text and says so. Voice input needs Chrome or Edge and an internet connection.
 - How well the guide understands free wording was measured on 120 natural phrasings in English, Telugu and Hindi that were not used to build its keyword lists: 53% were routed to the right question, 33% were not recognised (the guide says so and shows the question list) and 13% got an answer on the wrong topic. All 12 out-of-scope questions were declined. The listed questions themselves are always recognised. With the optional question router switched on, the same 120 phrasings scored 97% right (116 of 120), 1 on the wrong topic and 3 not recognised, with all 12 out-of-scope questions declined (`node tests/assistant_eval.js`). The phrasings were written by the author, not collected from farmers.
-- Not yet done: local soil data, prices and yields, checks against rain-gauge records, native-speaker review of the translations.
+- Not yet done: field soil tests, prices and yields, checks against rain-gauge records, native-speaker review of the translations.
 
 ## Run it
 

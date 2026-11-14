@@ -9,6 +9,7 @@ global.window = global;
 require("../app/i18n.js");
 for (const code of ["ta", "kn", "mr", "or"]) require(`../app/i18n-${code}.js`);
 require("../app/i18n-voice.js");
+require("../app/i18n-soil.js");
 require("../app/app.js");
 require("../app/assistant.js");
 

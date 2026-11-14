@@ -40,6 +40,11 @@
     formMessage: null,
     crops: null,
     names: {},
+    soilChoice: {},     // per place: { mm, note } once the farmer picks a soil or uses the soil map
+    soilBusy: false,
+    soilMessage: null,
+    weather: {},        // per place: the NASA POWER download, kept so a soil change can re-run
+    baseline: {},       // per place: the result as first shown, to return to "not sure"
     cache: {}
   };
 
@@ -658,6 +663,8 @@
     var list = clear(byId("rotation-list"));
     order.forEach(function (entry, index) { list.appendChild(rotationCard(entry, index)); });
     renderSoil(data, order);
+    renderChange(data, order);
+    renderSoilPick();
     notify();
   }
 
@@ -673,6 +680,211 @@
     }).then(function (json) { state.crops = json.crops; return state.crops; });
   }
 
+  function fetchWeather(lat, lon) {
+    var url = "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR,T2M_MAX,T2M_MIN" +
+      "&community=AG&longitude=" + lon + "&latitude=" + lat + "&start=19810101&end=20251231&format=JSON";
+    return fetch(url).then(function (response) {
+      if (!response.ok) throw new Error("NASA POWER: " + response.status);
+      return response.json();
+    });
+  }
+
+  // ---------- the farmer's soil ----------
+  // The stored results assume the soil holds 100 mm of water. When the farmer picks a soil, or
+  // asks for an estimate from the SoilGrids soil map, the 45 years are run again in the browser
+  // with that storage, for the place being shown.
+
+  var SOIL_OPTIONS = [75, 100, 150, 200];
+
+  function soilNow() {
+    var choice = state.soilChoice[state.place];
+    return choice ? choice.mm : null;
+  }
+
+  function placePoint() {
+    if (state.place === "custom") {
+      var data = state.cache.custom;
+      return data ? { lat: data.lat, lon: data.lon } : null;
+    }
+    return { lat: PLACES[state.place].lat, lon: PLACES[state.place].lon };
+  }
+
+  function loadRotationRef() {
+    if (state.rotationRef) return Promise.resolve(state.rotationRef);
+    return fetch("data/reference/rotations.json").then(function (response) {
+      if (!response.ok) throw new Error("rotations: " + response.status);
+      return response.json();
+    }).then(function (json) { state.rotationRef = json; return json; });
+  }
+
+  // Runs the place again with the chosen storage (null returns to the stored result).
+  function rerunWithSoil(place, mm) {
+    var data = state.cache[place];
+    if (!data) return Promise.resolve();
+    if (!state.baseline[place]) state.baseline[place] = data.rotations;
+    if (place === "custom") {
+      var kept = state.weather.custom;
+      return loadCrops().then(function (crops) {
+        var current = Object.assign({}, kept.current);
+        if (mm !== null) current.soilMm = mm;
+        var result = window.KhetEngine.analysePlace(kept.payload, kept.lat, crops, current);
+        if (result.error) throw new Error(result.error);
+        data.rotations = result.rotations;
+        data.candidates = result.candidates;
+      });
+    }
+    if (mm === null) { data.rotations = state.baseline[place]; return Promise.resolve(); }
+    var point = PLACES[place];
+    var weather = state.weather[place] ? Promise.resolve(state.weather[place])
+      : fetchWeather(point.lat, point.lon).then(function (payload) { state.weather[place] = payload; return payload; });
+    return Promise.all([loadCrops(), loadRotationRef(), weather]).then(function (parts) {
+      var series = window.KhetEngine.buildSeries(parts[2], point.lat);
+      var result = window.KhetEngine.compare(parts[1][place], series, parts[0], { soilMm: mm });
+      if (!result) throw new Error("rotation does not fit");
+      data.rotations = result;
+    });
+  }
+
+  function chooseSoil(mm, note) {
+    var place = state.place;
+    if (state.soilBusy || !state.cache[place]) return;
+    state.soilBusy = true;
+    state.soilMessage = { key: "soil_estimating" };
+    renderSoilPick();
+    rerunWithSoil(place, mm).then(function () {
+      if (mm === null) delete state.soilChoice[place]; else state.soilChoice[place] = { mm: mm, note: note || null };
+      state.soilMessage = note || null;
+      if (SOIL_OPTIONS.indexOf(mm) >= 0) state.soil = mm;
+    }).catch(function (error) {
+      console.error(error);
+      state.soilMessage = { key: "soil_rerun_failed", bad: true };
+    }).then(function () {
+      state.soilBusy = false;
+      if (state.place === place) { renderClimate(state.cache[place]); renderRanked(); }
+      renderSoilPick();
+    });
+  }
+
+  // Water the soil can hold for a crop in its top metre, from the SoilGrids map: the difference
+  // between water content at field capacity (33 kPa) and at wilting point (1500 kPa), summed
+  // over the mapped layers. Towns and water have no value, so nearby points are tried.
+  function soilMapAt(lat, lon) {
+    var url = "https://rest.isric.org/soilgrids/v2.0/properties/query?lon=" + lon.toFixed(3) + "&lat=" + lat.toFixed(3) +
+      "&property=wv0033&property=wv1500&depth=0-5cm&depth=5-15cm&depth=15-30cm&depth=30-60cm&depth=60-100cm&value=mean";
+    return fetch(url).then(function (response) {
+      if (!response.ok) throw new Error("SoilGrids: " + response.status);
+      return response.json();
+    }).then(function (json) {
+      var layers = {};
+      ((json.properties || {}).layers || []).forEach(function (layer) { layers[layer.name] = layer.depths; });
+      var top = layers.wv0033, bottom = layers.wv1500, mm = 0;
+      if (!top || !bottom || top.length !== bottom.length) return null;
+      for (var i = 0; i < top.length; i++) {
+        var fc = top[i].values.mean, wp = bottom[i].values.mean;
+        if (fc === null || wp === null || fc === undefined || wp === undefined) return null;
+        var thicknessCm = top[i].range.bottom_depth - top[i].range.top_depth;
+        // values are in thousandths of cm3 per cm3; 1 cm of soil holding 0.001 holds 0.01 mm
+        mm += Math.max(0, fc - wp) / 1000 * thicknessCm * 10;
+      }
+      return mm;
+    });
+  }
+
+  function estimateSoil() {
+    var point = placePoint();
+    if (!point || state.soilBusy) return;
+    state.soilBusy = true;
+    state.soilMessage = { key: "soil_estimating" };
+    renderSoilPick();
+    var step = 0.05;
+    var tries = [[0, 0], [step, 0], [0, step], [-step, 0], [0, -step]];
+    function attempt(index) {
+      if (index >= tries.length) return Promise.resolve(null);
+      var lat = point.lat + tries[index][0], lon = point.lon + tries[index][1];
+      return soilMapAt(lat, lon).then(function (mm) {
+        if (mm === null) return attempt(index + 1);
+        var km = 111 * Math.sqrt(Math.pow(tries[index][0], 2) + Math.pow(tries[index][1] * Math.cos(point.lat * Math.PI / 180), 2));
+        return { mm: Math.max(30, Math.min(250, Math.round(mm / 5) * 5)), km: Math.round(km) };
+      });
+    }
+    attempt(0).then(function (found) {
+      state.soilBusy = false;
+      if (!found) { state.soilMessage = { key: "soil_estimate_failed", bad: true }; renderSoilPick(); return; }
+      chooseSoil(found.mm, { key: "soil_estimated", params: { mm: found.mm, km: found.km } });
+    }).catch(function (error) {
+      console.error(error);
+      state.soilBusy = false;
+      state.soilMessage = { key: "soil_estimate_failed", bad: true };
+      renderSoilPick();
+    });
+  }
+
+  function renderSoilPick() {
+    var box = byId("soil-pick");
+    if (!box) return;
+    clear(box);
+    if (!state.cache[state.place]) return;
+    var now = soilNow();
+    var options = [h("option", { value: "", text: t("soil_opt_default") })];
+    SOIL_OPTIONS.forEach(function (mm) { options.push(h("option", { value: String(mm), text: t("soil_opt_" + mm) })); });
+    if (now !== null && SOIL_OPTIONS.indexOf(now) < 0) options.push(h("option", { value: String(now), text: now + " mm" }));
+    var select = h.apply(null, ["select", {
+      id: "soil-select", onchange: function (event) { chooseSoil(event.target.value === "" ? null : Number(event.target.value)); }
+    }].concat(options));
+    select.value = now === null ? "" : String(now);
+    var button = h("button", { type: "button", text: t("soil_estimate"), onclick: estimateSoil });
+    if (state.soilBusy) { select.disabled = true; button.disabled = true; }
+    var shown = state.soilMessage || (state.soilChoice[state.place] || {}).note;
+    box.appendChild(h("h3", { text: t("soil_pick_title") }));
+    box.appendChild(h("p", { text: t("soil_pick_intro") }));
+    box.appendChild(h("label", { for: "soil-select", class: "visually-hidden", text: t("soil_pick_title") }));
+    box.appendChild(select);
+    box.appendChild(button);
+    box.appendChild(h("p", { class: "note" + (shown && shown.bad ? " bad" : ""), role: "status", text: shown ? t(shown.key, shown.params) : "" }));
+  }
+
+  // ---------- what has changed ----------
+  // The last 15 years (2011 to 2025) against the 30 before, from the same 45 years.
+  function renderChange(data, order) {
+    var section = byId("change");
+    if (!section) return;
+    var rows = data.climate.years || [];
+    var recent = rows.filter(function (row) { return row.year >= 2011; });
+    var earlier = rows.filter(function (row) { return row.year < 2011; });
+    if (!recent.length || !earlier.length) { section.hidden = true; return; }
+    section.hidden = false;
+    byId("change-title").textContent = t("change_title");
+    function average(list, field) {
+      var values = list.map(function (row) { return row[field]; }).filter(function (v) { return typeof v === "number"; });
+      if (!values.length) return null;
+      return values.reduce(function (a, b) { return a + b; }, 0) / values.length;
+    }
+    var list = clear(byId("change-points"));
+    list.appendChild(h("li", { text: t("change_rain", {
+      recent: Math.round(average(recent, "monsoon_rain_mm")), earlier: Math.round(average(earlier, "monsoon_rain_mm"))
+    }) }));
+    var onsetRecent = average(recent, "onset_days_after_jun1"), onsetEarlier = average(earlier, "onset_days_after_jun1");
+    if (onsetRecent !== null && onsetEarlier !== null) {
+      list.appendChild(h("li", { text: t("change_onset", { recent: dateAfterJune1(onsetRecent), earlier: dateAfterJune1(onsetEarlier) }) }));
+    }
+    order.forEach(function (entry) {
+      var rainfed = entry.rotation.crops.filter(function (crop) { return !crop.irrigated; });
+      if (!rainfed.length) return;
+      var failedRecent = 0, failedEarlier = 0, totalRecent = 0, totalEarlier = 0;
+      rainfed.forEach(function (crop) {
+        (crop.failed_years || []).forEach(function (year) { if (year >= 2011) failedRecent++; else failedEarlier++; });
+        // a season that runs past the end of the record is missing from the recent years
+        totalRecent += 15 - Math.max(0, 45 - crop.seasons_simulated);
+        totalEarlier += 30;
+      });
+      list.appendChild(h("li", { text: t("change_fail", {
+        rotation: rotationLabel(entry.rotation), recent: failedRecent, recentTotal: totalRecent,
+        earlier: failedEarlier, earlierTotal: totalEarlier
+      }) }));
+    });
+    list.appendChild(h("li", { class: "note", text: t("change_note") }));
+  }
+
   function analyse() {
     var lat = Number(state.form.lat), lon = Number(state.form.lon);
     var inside = state.form.lat !== "" && state.form.lon !== "" && isFinite(lat) && isFinite(lon) &&
@@ -681,18 +893,18 @@
     state.busy = true;
     state.formMessage = { key: "form_loading", bad: false };
     renderForm();
-    var url = "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=PRECTOTCORR,T2M_MAX,T2M_MIN" +
-      "&community=AG&longitude=" + lon + "&latitude=" + lat + "&start=19810101&end=20251231&format=JSON";
     var failure = "form_err_fetch";
-    Promise.all([loadCrops(), fetch(url).then(function (response) {
-      if (!response.ok) throw new Error("NASA POWER: " + response.status);
-      return response.json();
-    })]).then(function (parts) {
-      var result = window.KhetEngine.analysePlace(parts[1], lat, parts[0], {
+    // A new place starts from "not sure" for soil; a soil-map estimate belongs to the old point.
+    delete state.soilChoice.custom;
+    state.soilMessage = null;
+    Promise.all([loadCrops(), fetchWeather(lat, lon)]).then(function (parts) {
+      var current = {
         kharif: state.form.kharif, rabi: state.form.rabi || null,
         kharifIrrigated: state.form.kharifIrrigated, rabiIrrigated: state.form.rabiIrrigated
-      });
+      };
+      var result = window.KhetEngine.analysePlace(parts[1], lat, parts[0], current);
       if (result.error) { failure = "form_err_fit"; throw new Error(result.error); }
+      state.weather.custom = { payload: parts[1], lat: lat, lon: lon, current: current };
       state.cache.custom = {
         custom: true, lat: lat, lon: lon, check: null,
         climate: result.climate, rotations: result.rotations,
@@ -836,7 +1048,7 @@
 
   function showResults(visible) {
     ["strip", "work", "soil", "climate"].forEach(function (id) { byId(id).hidden = !visible; });
-    if (!visible) byId("check").hidden = true;
+    if (!visible) { byId("check").hidden = true; byId("change").hidden = true; }
   }
 
   // Lets the voice guide (app/assistant.js) redraw when the language, place or ranking changes.
@@ -845,6 +1057,7 @@
   }
 
   function render() {
+    if (!state.soilBusy) state.soilMessage = null;
     renderChrome();
     renderMap();
     renderForm();
@@ -881,6 +1094,7 @@
     state: state, score: score, ranked: ranked, fill: fill, fmt: fmt,
     t: t, explain: explain, cropName: cropName, placeName: placeName, pointName: pointName,
     rotationLabel: rotationLabel, dateAfterJune1: dateAfterJune1, h: h, byId: byId, clear: clear,
+    soilNow: soilNow,
     hooks: []
   };
   if (typeof document !== "undefined" && document.getElementById) render();

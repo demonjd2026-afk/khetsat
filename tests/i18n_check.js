@@ -5,6 +5,7 @@ global.window = {};
 require("../app/i18n.js");
 for (const code of ["ta", "kn", "mr", "or"]) require(`../app/i18n-${code}.js`);
 require("../app/i18n-voice.js");
+require("../app/i18n-soil.js");
 const all = window.I18N;
 const placeholders = (text) => (String(text).match(/\{\w+\}/g) || []).sort().join(",");
 let problems = 0;

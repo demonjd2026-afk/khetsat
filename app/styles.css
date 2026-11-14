@@ -133,6 +133,21 @@ details.fold.trust { margin-top: 1.6rem; background: none; border: 0; border-top
 .slider input { width: 100%; accent-color: var(--paddy); }
 .slider .ends { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--soil-soft); }
 
+.soil-pick { border-top: 1px solid var(--rule); margin-top: 0.4rem; padding: 0.9rem 0 0.6rem; }
+.soil-pick:empty { display: none; }
+.soil-pick h3 { font-size: 1.05rem; margin-bottom: 0.2rem; }
+.soil-pick select, .soil-pick button { font: inherit; width: 100%; padding: 0.45rem 0.6rem; border-radius: 6px; margin-bottom: 0.5rem; }
+.soil-pick select { border: 1px solid var(--rule); background: var(--white); color: var(--soil); }
+.soil-pick button { border: 1px solid var(--paddy); background: var(--white); color: var(--paddy); cursor: pointer; }
+.soil-pick button:disabled, .soil-pick select:disabled { opacity: 0.6; cursor: progress; }
+.soil-pick .note { margin: 0; }
+.soil-pick .note:empty { display: none; }
+.soil-pick .note.bad { color: var(--laterite); font-weight: 600; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.change ul { margin: 0; padding-left: 1.1rem; max-width: 80ch; }
+.change li { margin-bottom: 0.3rem; }
+.change li.note { list-style: none; margin-left: -1.1rem; margin-top: 0.5rem; }
+
 #rotation-list { list-style: none; margin: 0; padding: 0; }
 .rotation { display: grid; grid-template-columns: 3.2rem 1fr; gap: 0 1rem; padding: 1.4rem 0; border-top: 1px solid var(--rule); }
 .rotation:first-child { border-top: 3px solid var(--paddy); }

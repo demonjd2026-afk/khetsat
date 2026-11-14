@@ -128,7 +128,7 @@
         heads[lines.length] = k.rotationLabel(r);
         lines.push(line);
       });
-      lines.push(x("soil_assumed", { mm: state.soil }));
+      lines.push(k.soilNow() === null ? x("soil_assumed", { mm: 100 }) : x("soil_chosen", { mm: k.soilNow() }));
     } else if (intent === "rain") {
       var rain = summary.monsoon_rain_mm;
       lines.push(t("a_rain", { mean: Math.round(rain.mean), dep: Math.round(rain.dependable_75) }));
