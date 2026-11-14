@@ -140,6 +140,10 @@ details.fold.trust { margin-top: 1.6rem; background: none; border: 0; border-top
 .soil-pick select { border: 1px solid var(--rule); background: var(--white); color: var(--soil); }
 .soil-pick button { border: 1px solid var(--paddy); background: var(--white); color: var(--paddy); cursor: pointer; }
 .soil-pick button:disabled, .soil-pick select:disabled { opacity: 0.6; cursor: progress; }
+.soil-pick .own-label { display: block; font-size: 0.9rem; margin: 0.2rem 0 0.35rem; }
+.soil-pick .own { display: flex; gap: 0.5rem; }
+.soil-pick .own input { font: inherit; flex: 1 1 5rem; min-width: 0; padding: 0.45rem 0.6rem; border: 1px solid var(--rule); border-radius: 6px; margin-bottom: 0.5rem; background: var(--white); color: var(--soil); }
+.soil-pick .own button { flex: 0 0 auto; width: auto; }
 .soil-pick .note { margin: 0; }
 .soil-pick .note:empty { display: none; }
 .soil-pick .note.bad { color: var(--laterite); font-weight: 600; }

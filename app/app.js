@@ -840,6 +840,16 @@
     box.appendChild(h("label", { for: "soil-select", class: "visually-hidden", text: t("soil_pick_title") }));
     box.appendChild(select);
     box.appendChild(button);
+    // A value from a soil test or an agriculture officer, for anyone who has one.
+    var own = h("input", { id: "soil-own", type: "number", min: "30", max: "250", step: "5", inputmode: "numeric" });
+    var useOwn = h("button", { type: "button", text: t("soil_own_apply"), onclick: function () {
+      var mm = Math.round(Number(own.value));
+      if (!own.value || !(mm >= 30 && mm <= 250)) { state.soilMessage = { key: "soil_own_bad", bad: true }; renderSoilPick(); return; }
+      chooseSoil(mm, { key: "soil_own_note", params: { mm: mm } });
+    } });
+    if (state.soilBusy) { own.disabled = true; useOwn.disabled = true; }
+    box.appendChild(h("label", { for: "soil-own", class: "own-label", text: t("soil_own_label") }));
+    box.appendChild(h("div", { class: "own" }, own, useOwn));
     box.appendChild(h("p", { class: "note" + (shown && shown.bad ? " bad" : ""), role: "status", text: shown ? t(shown.key, shown.params) : "" }));
   }
 
