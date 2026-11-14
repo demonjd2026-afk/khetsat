@@ -82,14 +82,21 @@
     if (intent === "advice") {
       // The short version shown at the top of the page: which rotation, how it does in a
       // poor-rain year, when the rains settle, and the reminder to check locally.
-      lines.push(t("a_best", { place: k.placeName(state.place), rotation: k.rotationLabel(top), score: order[0].score }));
+      // Said the way a person would say it: no percentages or scores, only "about half",
+      // "about 1 year in 9". The exact figures stay in the rotation cards below.
+      lines.push(t("adv_pick", { place: k.placeName(state.place), rotation: k.rotationLabel(top) }));
       if (top.existing) lines.push(t("a_best_current"));
       else top.explanation.why_suggested.forEach(function (entry) { lines.push(k.explain(entry)); });
-      lines.push(top.crops.map(function (crop) {
+      top.crops.forEach(function (crop) {
         var name = k.cropName(crop.crop);
-        return crop.irrigated ? t("a_poor_irrigated", { crop: name })
-          : t("a_poor_crop", { crop: name, bad: crop.wrsi_bad_year, failed: crop.failed_seasons, total: crop.seasons_simulated });
-      }).join(" "));
+        if (crop.irrigated) { lines.push(t("a_poor_irrigated", { crop: name })); return; }
+        var share = crop.wrsi_bad_year;
+        var band = share >= 88 ? 90 : share >= 71 ? 75 : share >= 62 ? 60 : share >= 55 ? 55 : share >= 45 ? 45 : 0;
+        var often = crop.failed_seasons > 0
+          ? t("adv_fail", { k: Math.max(2, Math.round(crop.seasons_simulated / crop.failed_seasons)) })
+          : t("adv_nofail", { total: crop.seasons_simulated });
+        lines.push(t("adv_dry_" + band, { crop: name }) + " " + often);
+      });
       var rainfed = top.crops.some(function (crop) { return !crop.irrigated; });
       if (rainfed && summary.onset.p10_days_after_jun1 !== null) {
         lines.push(t("a_rain_onset", {
@@ -97,8 +104,7 @@
           to: k.dateAfterJune1(summary.onset.p90_days_after_jun1)
         }) + " " + t("a_sow"));
       }
-      lines.push(x("no_market"));
-      lines.push(t("disclaimer"));
+      lines.push(t("adv_end"));
     } else if (intent === "best") {
       lines.push(t("a_best", { place: k.placeName(state.place), rotation: k.rotationLabel(top), score: order[0].score }));
       if (top.existing) lines.push(t("a_best_current"));
@@ -446,7 +452,7 @@
 
   // Lays an answer out as a lead sentence, a list of points and small-print caveats.
   function structure(bubble, reply) {
-    var caveats = [t("disclaimer"), k.explain({ code: "no_market", params: {} })];
+    var caveats = [t("disclaimer"), k.explain({ code: "no_market", params: {} }), t("adv_end")];
     var lines = reply.lines.slice(), notes = [];
     while (lines.length > 1 && caveats.indexOf(lines[lines.length - 1]) >= 0) notes.unshift(lines.pop());
     if (lines.length === 1 && !notes.length) { bubble.appendChild(h("p", { text: lines[0] })); return; }
@@ -569,7 +575,7 @@
   function build() {
     // Large listen and ask buttons under the list of places, for people who do not read.
     var bar = h("div", { class: "listen-bar" });
-    bar.appendChild(sayButton("best", "listen_summary", "say big"));
+    bar.appendChild(sayButton("advice", "listen_summary", "say big"));
     var places = byId("places");
     places.parentNode.insertBefore(bar, places.nextSibling);
 
