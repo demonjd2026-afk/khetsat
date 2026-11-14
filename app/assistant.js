@@ -221,6 +221,8 @@
   var Recognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
   var ICON_SPEAKER = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16 8.5a5 5 0 0 1 0 7M18.8 5.8a9 9 0 0 1 0 12.4"/></svg>';
   var ICON_MIC = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>';
+  var ICON_NEW = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4"/></svg>';
+  var ICON_EXPAND = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg>';
   var ICON_STOP = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>';
 
   // thread: the conversation shown in the panel, oldest first.
@@ -375,6 +377,7 @@
   function openPanel() {
     ui.open = true;
     byId("assist-panel").hidden = false;
+    byId("assist-fab").hidden = byId("assist-panel").classList.contains("wide");
     byId("assist-fab").setAttribute("aria-expanded", "true");
   }
   function closePanel() {
@@ -382,6 +385,7 @@
     stopSpeaking();
     if (ui.listening && ui.rec) ui.rec.stop();
     byId("assist-panel").hidden = true;
+    byId("assist-fab").hidden = false;
     byId("assist-fab").setAttribute("aria-expanded", "false");
   }
 
@@ -463,6 +467,11 @@
     setLabel(byId("assist-top"), ICON_MIC, t("assist_open"));
     byId("assist-title").textContent = t("assist_title");
     byId("assist-close").setAttribute("aria-label", t("assist_close"));
+    ["assist-clear", "assist-expand"].forEach(function (id) {
+      var label = t(id.replace("-", "_"));
+      byId(id).setAttribute("aria-label", label);
+      byId(id).setAttribute("title", label);
+    });
     byId("assist-input").setAttribute("placeholder", t("assist_type"));
     byId("assist-input").setAttribute("aria-label", t("assist_type"));
     byId("assist-send").textContent = t("assist_send");
@@ -506,6 +515,19 @@
     fab.setAttribute("aria-controls", "assist-panel");
 
     var close = h("button", { type: "button", id: "assist-close", class: "assist-close", text: "×", onclick: closePanel });
+    // Start a new conversation, and switch between the small panel and a large window.
+    var clearButton = h("button", { type: "button", id: "assist-clear", class: "assist-tool", onclick: function () {
+      stopSpeaking(); ui.thread = []; ui.typing = false; ui.current = null; ui.status = null;
+      paintThread(); paintControls();
+    } });
+    clearButton.innerHTML = ICON_NEW;
+    var expandButton = h("button", { type: "button", id: "assist-expand", class: "assist-tool", "aria-pressed": "false", onclick: function () {
+      var wide = byId("assist-panel").classList.toggle("wide");
+      expandButton.setAttribute("aria-pressed", String(wide));
+      byId("assist-fab").hidden = wide;
+      paintThread();
+    } });
+    expandButton.innerHTML = ICON_EXPAND;
     var mic = iconButton("assist-mic", ICON_MIC, "", listen);
     mic.id = "assist-mic";
     var input = h("input", { id: "assist-input", type: "text", autocomplete: "off" });
@@ -526,7 +548,7 @@
     speakButton.id = "assist-speak";
 
     var panel = h("section", { id: "assist-panel", class: "assist-panel", role: "dialog", "aria-labelledby": "assist-title", hidden: "" },
-      h("div", { class: "assist-head" }, h("h2", { id: "assist-title" }), speakButton, close),
+      h("div", { class: "assist-head" }, h("h2", { id: "assist-title" }), speakButton, clearButton, expandButton, close),
       h("div", { id: "assist-answer", class: "assist-log", "aria-live": "polite" }),
       h("div", { id: "assist-chips", class: "assist-chips" }),
       h("p", { id: "assist-status", class: "note", role: "status" }),
