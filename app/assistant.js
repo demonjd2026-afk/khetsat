@@ -318,8 +318,14 @@
       ui.status = { key: blocked ? "assist_no_mic" : "assist_mic_error", bad: true };
       paintControls();
     };
+    var handled = false;
     rec.onresult = function (event) {
-      var options = event.results[0], heard = options[0].transcript, intent = null;
+      // The browser can report the same spoken question more than once; answer it once.
+      var options = event.results[event.results.length - 1];
+      if (handled || !options || options.isFinal === false) return;
+      handled = true;
+      try { rec.stop(); } catch (error) { /* already stopped */ }
+      var heard = options[0].transcript, intent = null;
       ui.status = null;
       if ((window.KHETSAT_CONFIG || {}).aiUrl) { askFree(heard); return; }
       for (var i = 0; i < options.length && !intent; i++) {
