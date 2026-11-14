@@ -184,6 +184,16 @@ Limits specific to this mode:
 - **No satellite cross-check or year types** are computed for these places.
 - Sowing dates in this mode come from the onset rule; the three pipeline locations use fixed dates. Results for the same place can therefore differ slightly between the two modes.
 
+## Voice guide
+
+`app/assistant.js` answers eight fixed questions by tap, typed text or speech, and reads the answer aloud.
+
+- **No language model.** Each answer is built from the same result files and translated sentences the page displays (rotation scores, share of water need met, failed seasons, the satellite cross-check). The guide cannot produce a figure that is not in the data.
+- **Recognising a question.** Spoken or typed text is matched against a keyword list for each question in the current language and in English. The best-scoring question is answered and its title is shown and spoken first, so the user can tell which question was understood. Text that matches nothing gets "I did not find that question" and the list of questions.
+- **Speech.** Reading aloud uses the browser's speech synthesis and voice input uses the browser's speech recognition. Nothing is sent to a KhetSat server. In Chrome and Edge, voice input sends audio to the browser vendor's speech service and needs a connection.
+- **Limits.** Which languages can be spoken depends on the voices installed on the device; where there is none, the answer is shown as text with a note. Voice input is not available in Firefox or Safari on some systems, and Odia recognition is not offered by every browser. Recognition accuracy for farm vocabulary and local dialects has not been measured. The keyword lists and the new sentences in the six Indian languages have not been reviewed by a second native speaker.
+- **Checks.** `node tests/assistant_check.js` confirms that all eight questions are recognised from keywords alone in all seven languages, and that every answer for the three locations in every language is complete (571 checks).
+
 ## Verification status
 
 | Item | Status |

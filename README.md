@@ -26,6 +26,8 @@ Three locations (Anantapur, Krishna, Anakapalli) come pre-analysed with sourced 
 
 The farmer sets five priorities with sliders (water in a normal year, holding up in a poor year, using less water, building the soil, breaking pest cycles) and the ranking updates.
 
+A voice guide answers eight common questions (which rotation fits, what happens in a poor-rain year, how to read the map and the chart, how accurate the data is, what to check locally) by tap, by typing or by speaking, and reads the answer aloud in the chosen language. It is for people who do not read, or who do not follow the charts. Each answer is assembled from the figures already on the page; no language model is involved, so the guide cannot say anything the data does not support.
+
 KhetSat supports decisions. It does not replace a farmer's judgment or the local agriculture officer.
 
 ## What the data shows
@@ -68,6 +70,7 @@ Results for crops grown on leftover soil moisture in the delta are flagged as un
 - Figures describe a NASA grid cell about 50 km across, not a field.
 - Soil water storage is assumed, and every result is re-run at four storage values to show how much it matters.
 - The app is available in English, Telugu, Hindi, Tamil, Kannada, Marathi and Odia. The six Indian-language versions were drafted during the hackathon and have not yet been reviewed by a second native speaker; the app says so in each of them. `node tests/i18n_check.js` checks that every language has every string and placeholder.
+- The voice guide is checked without a browser: every question in every language is recognised from its keywords, and every answer for every place and language is complete (`node tests/assistant_check.js`, 571 checks). Reading aloud and voice input use the browser's own speech features, so they depend on the device: a phone or computer without a voice for a language shows the answer as text and says so. Voice input needs Chrome or Edge and an internet connection.
 - Not yet done: local soil data, prices and yields, checks against rain-gauge records, native-speaker review of the translations.
 
 ## Run it
@@ -79,6 +82,7 @@ python3 -m pipeline.crosscheck     # satellite rainfall cross-check
 python3 -m unittest discover -s tests
 node tests/engine_parity.js        # in-browser engine against the pipeline
 node tests/i18n_check.js           # every language has every string
+node tests/assistant_check.js      # voice guide: questions recognised, answers complete
 ```
 
 Python 3.10 or later, standard library only. Results are written to `data/processed/`.
@@ -99,7 +103,7 @@ Then visit http://localhost:8000. The app is plain HTML, CSS and JavaScript with
 | `tests/` | Unit tests |
 | `data/reference/` | Crop table and candidate rotations, with their sources |
 | `data/processed/` | Result files read by the app |
-| `app/`, `index.html` | The web app; `app/engine.js` is the in-browser engine |
+| `app/`, `index.html` | The web app; `app/engine.js` is the in-browser engine, `app/assistant.js` the voice guide |
 | `docs/` | Methods and the architecture diagram |
 
 ## Licence

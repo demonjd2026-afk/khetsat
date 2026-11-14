@@ -602,6 +602,7 @@
     var list = clear(byId("rotation-list"));
     order.forEach(function (entry, index) { list.appendChild(rotationCard(entry, index)); });
     renderSoil(data, order);
+    notify();
   }
 
   // ---------- your own place ----------
@@ -718,10 +719,16 @@
     if (!visible) byId("check").hidden = true;
   }
 
+  // Lets the voice guide (app/assistant.js) redraw when the language, place or ranking changes.
+  function notify() {
+    ((window.KhetSat || {}).hooks || []).forEach(function (hook) { hook(); });
+  }
+
   function render() {
     renderChrome();
     renderMap();
     renderForm();
+    notify();
     if (state.place === "custom" && !state.cache.custom) { showResults(false); return; }
     showResults(true);
     load(state.place).then(function (data) {
@@ -740,6 +747,11 @@
   var preferred = (typeof navigator !== "undefined" && navigator.language || "").slice(0, 2).toLowerCase();
   if (LANGS.indexOf(preferred) >= 0 && window.I18N[preferred]) state.lang = preferred;
 
-  window.KhetSat = { state: state, score: score, ranked: ranked, fill: fill, fmt: fmt };
+  window.KhetSat = {
+    state: state, score: score, ranked: ranked, fill: fill, fmt: fmt,
+    t: t, explain: explain, cropName: cropName, placeName: placeName, pointName: pointName,
+    rotationLabel: rotationLabel, dateAfterJune1: dateAfterJune1, h: h, byId: byId, clear: clear,
+    hooks: []
+  };
   if (typeof document !== "undefined" && document.getElementById) render();
 })();
