@@ -85,14 +85,28 @@ section, .work { margin-top: 2.6rem; }
 
 /* Sections that open on a click, so the page starts short. */
 details.fold { margin-top: 1rem; border-top: 1px solid var(--rule); padding-top: 0.9rem; }
-details.fold > summary { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; list-style: none; cursor: pointer; }
+details.fold > summary { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0.4rem 0.8rem; list-style: none; cursor: pointer; }
+details.fold > summary .say { grid-column: 2; justify-self: start; }
 details.fold > summary::-webkit-details-marker { display: none; }
 details.fold > summary::before { content: "+"; flex: none; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--paddy-pale); color: var(--paddy); font-weight: 700; font-size: 1.2rem; line-height: 1.7rem; text-align: center; }
 details.fold[open] > summary::before { content: "\2212"; }
 details.fold > summary h2 { margin: 0; font-size: 1.25rem; }
 details.fold > summary .say { margin: 0; }
 details.fold[open] > summary { margin-bottom: 0.9rem; }
-details.fold.trust { margin-top: 1.6rem; }
+details.fold.trust { margin-top: 1.6rem; background: none; border: 0; border-top: 1px solid var(--rule); border-radius: 0; padding: 0.9rem 0 0; }
+.only-narrow { display: none; }
+@media (max-width: 640px) {
+  .only-narrow { display: block; }
+  .only-wide { display: none; }
+  .scroll #strip-chart, .scroll #years-chart { min-width: 0; }
+  .crop-table th, .crop-table td { padding-right: 0.5rem; }
+  /* the floating button shrinks to its icon so it covers less of the page */
+  .assist-fab { padding: 0.8rem; }
+  .assist-fab span { display: none; }
+  h1 { font-size: 1.7rem; }
+  .map #map { height: 340px; }
+  body .assist-fab { padding: 0.8rem; }
+}
 .reasons details .meters { margin-top: 0.7rem; }
 .strip { margin-top: 1.8rem; }
 .lede { font-size: 1.08rem; color: var(--soil-soft); }
@@ -161,6 +175,8 @@ details ul { margin: 0.4rem 0 0; padding-left: 1.1rem; max-width: 70ch; }
   color: var(--soil);
   cursor: pointer;
 }
+.segments button:disabled { opacity: 0.4; cursor: not-allowed; }
+.segments select { font: inherit; padding: 0.4rem 0.7rem; border: 1px solid var(--soil); border-radius: 6px; background: var(--white); color: var(--soil); font-weight: 600; cursor: pointer; }
 .segments button[aria-pressed="true"] { background: var(--soil); color: var(--white); border-color: var(--soil); }
 
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.2rem 2rem; margin: 1rem 0 2rem; }

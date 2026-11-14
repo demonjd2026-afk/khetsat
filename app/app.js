@@ -33,6 +33,7 @@
     weights: { water_fit: 3, resilience: 3, water_saving: 3, soil: 3, diversity: 3 },
     soil: 100,
     mapLayer: "ndvi",
+    mapYear: 2026,
     mapMonth: 9,
     form: { lat: "", lon: "", kharif: "rice", rabi: "", kharifIrrigated: false, rabiIrrigated: false },
     busy: false,
@@ -143,6 +144,7 @@
     }
     var keys = Object.keys(years).sort();
     if (keys.length === 1) return t("every_year", { crops: join(years[keys[0]]) });
+    if (keys.length === 2) return t("alternate", { a: join(years[keys[0]]), b: join(years[keys[1]]) });
     return keys.map(function (k) {
       return t("year_n", { n: Number(k), crops: join(years[k]) });
     }).join(". ");
@@ -173,8 +175,15 @@
 
   // ---------- charts ----------
 
+  // On a phone the charts are drawn narrower, so their text stays readable without sideways scrolling.
+  function narrow() {
+    return typeof window !== "undefined" && window.innerWidth > 0 && window.innerWidth < 640;
+  }
+
   function stripChart(data, order) {
-    var W = 1200, left = 56, right = 16, top = 30, chartH = 230;
+    var N = narrow();
+    var W = N ? 420 : 1200, left = N ? 34 : 56, right = N ? 8 : 16, top = 30, chartH = N ? 170 : 230;
+    var small = N ? 11 : 14;
     var plotW = W - left - right;
     var clim = data.climate.summary.monthly_climatology;
     var peak = Math.max.apply(null, clim.mean_rain_mm.concat(clim.mean_et0_mm));
@@ -186,31 +195,34 @@
     for (var tick = 0; tick <= yMax; tick += 50) {
       svg.push('<line x1="' + left + '" x2="' + (W - right) + '" y1="' + y(tick) + '" y2="' + y(tick) +
         '" stroke="#d5dacd" stroke-width="1"/>');
-      svg.push('<text x="' + (left - 8) + '" y="' + (y(tick) + 5) + '" text-anchor="end" font-size="14">' + tick + '</text>');
+      svg.push('<text x="' + (left - 6) + '" y="' + (y(tick) + 4) + '" text-anchor="end" font-size="' + small + '">' + tick + '</text>');
     }
-    svg.push('<text x="' + left + '" y="16" font-size="14" fill="#5d554d">' + esc(t("mm_per_month")) + '</text>');
+    svg.push('<text x="' + left + '" y="16" font-size="' + small + '" fill="#5d554d">' + esc(t("mm_per_month")) + '</text>');
 
     var months = t("months");
     var line = [];
     for (var m = 0; m < 12; m++) {
-      var x0 = x(MONTH_START[m]) + 5, w = x(MONTH_START[m + 1]) - x(MONTH_START[m]) - 10;
+      var pad = N ? 2 : 5;
+      var x0 = x(MONTH_START[m]) + pad, w = x(MONTH_START[m + 1]) - x(MONTH_START[m]) - 2 * pad;
       var mean = clim.mean_rain_mm[m], dep = clim.dependable_75_rain_mm[m];
       svg.push('<rect x="' + x0 + '" y="' + y(mean) + '" width="' + w + '" height="' + (y(0) - y(mean)) + '" fill="#b9c6e6"/>');
       svg.push('<rect x="' + x0 + '" y="' + y(dep) + '" width="' + w + '" height="' + (y(0) - y(dep)) + '" fill="#2f4b8f"/>');
       var cx = (x(MONTH_START[m]) + x(MONTH_START[m + 1])) / 2;
       line.push(cx + "," + y(clim.mean_et0_mm[m]));
-      svg.push('<text x="' + cx + '" y="' + (top + chartH + 22) + '" text-anchor="middle" font-size="15">' + esc(months[m]) + '</text>');
+      if (!N || m % 2 === 0) {
+        svg.push('<text x="' + cx + '" y="' + (top + chartH + 20) + '" text-anchor="middle" font-size="' + (N ? 12 : 15) + '">' + esc(months[m]) + '</text>');
+      }
     }
-    svg.push('<polyline points="' + line.join(" ") + '" fill="none" stroke="#e0a106" stroke-width="4" stroke-linejoin="round"/>');
+    svg.push('<polyline points="' + line.join(" ") + '" fill="none" stroke="#e0a106" stroke-width="' + (N ? 3 : 4) + '" stroke-linejoin="round"/>');
     line.forEach(function (point) {
       var xy = point.split(",");
-      svg.push('<circle cx="' + xy[0] + '" cy="' + xy[1] + '" r="5" fill="#e0a106"/>');
+      svg.push('<circle cx="' + xy[0] + '" cy="' + xy[1] + '" r="' + (N ? 3.5 : 5) + '" fill="#e0a106"/>');
     });
 
     var cursor = top + chartH + 44;
     order.forEach(function (entry, index) {
       var rotation = entry.rotation;
-      svg.push('<text x="' + left + '" y="' + (cursor + 14) + '" font-size="15" font-weight="600">' +
+      svg.push('<text x="' + left + '" y="' + (cursor + 14) + '" font-size="' + (N ? 12.5 : 15) + '" font-weight="600">' +
         (index + 1) + ". " + esc(rotationLabel(rotation)) + '</text>');
       cursor += 22;
       for (var year = 1; year <= rotation.cycle_years; year++) {
@@ -223,8 +235,8 @@
             var px = x(part[0]), pw = x(part[1]) - x(part[0]);
             svg.push('<rect x="' + px + '" y="' + cursor + '" width="' + pw + '" height="24" rx="3" fill="' +
               (CROP_COLOURS[crop.crop] || "#888") + '"/>');
-            if (pw > 90) {
-              svg.push('<text x="' + (px + 8) + '" y="' + (cursor + 17) + '" font-size="14" fill="#1c1a17">' +
+            if (pw > (N ? 60 : 90)) {
+              svg.push('<text x="' + (px + (N ? 5 : 8)) + '" y="' + (cursor + 17) + '" font-size="' + (N ? 12 : 14) + '" fill="#1c1a17">' +
                 esc(cropName(crop.crop)) + '</text>');
             }
           });
@@ -239,7 +251,9 @@
   }
 
   function yearsChart(climate) {
-    var rows = climate.years, W = 1200, left = 56, right = 16, top = 14, H = 190;
+    var N = narrow();
+    var rows = climate.years, W = N ? 420 : 1200, left = N ? 34 : 56, right = N ? 8 : 16, top = 14, H = N ? 150 : 190;
+    var small = N ? 11 : 14, gap = N ? 1 : 3;
     var plotW = W - left - right;
     var peak = Math.max.apply(null, rows.map(function (r) { return r.monsoon_rain_mm; }));
     var yMax = Math.ceil(peak / 200) * 200;
@@ -250,15 +264,15 @@
     var svg = [];
     for (var tick = 0; tick <= yMax; tick += 200) {
       svg.push('<line x1="' + left + '" x2="' + (W - right) + '" y1="' + y(tick) + '" y2="' + y(tick) + '" stroke="#d5dacd"/>');
-      svg.push('<text x="' + (left - 8) + '" y="' + (y(tick) + 5) + '" text-anchor="end" font-size="14">' + tick + '</text>');
+      svg.push('<text x="' + (left - 6) + '" y="' + (y(tick) + 4) + '" text-anchor="end" font-size="' + small + '">' + tick + '</text>');
     }
     rows.forEach(function (row, i) {
-      var bx = left + i * step + 3;
-      svg.push('<rect x="' + bx + '" y="' + y(row.monsoon_rain_mm) + '" width="' + (step - 6) + '" height="' +
+      var bx = left + i * step + gap;
+      svg.push('<rect x="' + bx + '" y="' + y(row.monsoon_rain_mm) + '" width="' + (step - 2 * gap) + '" height="' +
         (y(0) - y(row.monsoon_rain_mm)) + '" fill="' + (driest[row.year] ? "#a8402d" : "#2f4b8f") + '"><title>' +
         row.year + ": " + Math.round(row.monsoon_rain_mm) + ' mm</title></rect>');
-      if (row.year % 5 === 0) {
-        svg.push('<text x="' + (bx + (step - 6) / 2) + '" y="' + (top + H + 20) + '" text-anchor="middle" font-size="14">' + row.year + '</text>');
+      if (row.year % (N ? 10 : 5) === 0) {
+        svg.push('<text x="' + (bx + (step - 2 * gap) / 2) + '" y="' + (top + H + 18) + '" text-anchor="middle" font-size="' + small + '">' + row.year + '</text>');
       }
     });
     var dep = climate.summary.monsoon_rain_mm.dependable_75;
@@ -271,11 +285,29 @@
   // ---------- satellite map ----------
 
   var GIBS = "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/";
-  // One date per month of 2026, January to October. The 15th is used, except August, where the
-  // soil-moisture layer has no imagery from the 10th to the 15th. For the 16-day vegetation
-  // composite the imagery service returns the composite that contains the date.
-  var MAP_DATES = ["2026-01-15", "2026-02-15", "2026-03-15", "2026-04-15", "2026-05-15",
-    "2026-06-15", "2026-07-15", "2026-08-16", "2026-09-15", "2026-10-15"];
+  // The map can show any month from January 2022 on. The 15th of the month is used unless a
+  // layer has no imagery that day; those cases are listed here (another day, or null for none).
+  // Every date was checked by requesting tiles over Andhra Pradesh on 14 November 2026.
+  var MAP_YEARS = [2022, 2023, 2024, 2025, 2026];
+  var MAP_EXCEPTIONS = {
+    ndvi: { "2026-11": null, "2026-12": null },
+    smap: { "2025-10": "05", "2025-11": null, "2026-08": "20", "2026-11": "10", "2026-12": null },
+    "true": { "2026-11": "10", "2026-12": null }
+  };
+  function mapDate(layer, year, month) {
+    var key = year + "-" + (month < 9 ? "0" : "") + (month + 1);
+    var special = MAP_EXCEPTIONS[layer] || {};
+    if (key in special) return special[key] === null ? null : key + "-" + special[key];
+    return key + "-15";
+  }
+  // If the chosen month has no imagery for this layer and year, move to the nearest month that has.
+  function settleMapMonth() {
+    for (var step = 0; step < 12; step++) {
+      var earlier = state.mapMonth - step, later = state.mapMonth + step;
+      if (earlier >= 0 && mapDate(state.mapLayer, state.mapYear, earlier)) { state.mapMonth = earlier; return; }
+      if (later <= 11 && mapDate(state.mapLayer, state.mapYear, later)) { state.mapMonth = later; return; }
+    }
+  }
   var MAP_LAYERS = {
     ndvi: { id: "MODIS_Terra_L3_NDVI_16Day", set: "GoogleMapsCompatible_Level9", zoom: 9, ext: "png" },
     smap: { id: "SMAP_L4_Analyzed_Root_Zone_Soil_Moisture", set: "GoogleMapsCompatible_Level6", zoom: 6, ext: "png" },
@@ -295,7 +327,8 @@
     if (!mapState || mapState.loaded) section.hidden = false;
     byId("map-title").textContent = t("map_title");
     byId("map-intro").textContent = t("map_intro");
-    var shown = MAP_DATES[state.mapMonth].split("-");
+    settleMapMonth();
+    var shown = mapDate(state.mapLayer, state.mapYear, state.mapMonth).split("-");
     byId("map-key").textContent = Number(shown[2]) + " " + t("months")[Number(shown[1]) - 1] + " " + shown[0] + ". " +
       t("map_key_" + state.mapLayer) + " " + t("map_credit");
 
@@ -310,9 +343,18 @@
     }
     buttons("map-layers", [["ndvi", "map_layer_ndvi"], ["smap", "map_layer_smap"], ["true", "map_layer_true"]],
       state.mapLayer, function (value) { state.mapLayer = value; });
-    buttons("map-moments", MAP_DATES.map(function (date, index) {
-      return [index, null, t("months")[Number(date.split("-")[1]) - 1]];
-    }), state.mapMonth, function (value) { state.mapMonth = value; });
+    buttons("map-moments", t("months").map(function (name, index) { return [index, null, name]; }),
+      state.mapMonth, function (value) { state.mapMonth = value; });
+    var monthBox = byId("map-moments");
+    Array.prototype.forEach.call(monthBox.children, function (button, index) {
+      if (!mapDate(state.mapLayer, state.mapYear, index)) button.disabled = true;
+    });
+    var yearSelect = h.apply(null, ["select", {
+      id: "map-year", "aria-label": String(state.mapYear),
+      onchange: function (event) { state.mapYear = Number(event.target.value); renderMap(); }
+    }].concat(MAP_YEARS.map(function (year) { return h("option", { value: String(year), text: String(year) }); })));
+    yearSelect.value = String(state.mapYear);
+    monthBox.insertBefore(yearSelect, monthBox.firstChild);
 
     if (!mapState) {
       var map = window.L.map("map", {
@@ -339,10 +381,10 @@
         }).addTo(map).on("click", function () { state.place = key; render(); });
       });
     }
-    var key = state.mapLayer + state.mapMonth;
+    var key = state.mapLayer + state.mapYear + "-" + state.mapMonth;
     if (key !== mapState.key) {
       if (mapState.data) mapState.map.removeLayer(mapState.data);
-      mapState.data = gibsLayer(MAP_LAYERS[state.mapLayer], MAP_DATES[state.mapMonth]);
+      mapState.data = gibsLayer(MAP_LAYERS[state.mapLayer], mapDate(state.mapLayer, state.mapYear, state.mapMonth));
       mapState.data.on("tileload", function () { mapState.loaded = true; });
       mapState.data.addTo(mapState.map);
       mapState.key = key;
@@ -537,22 +579,25 @@
         h("th", { text: "" }),
         h("th", { class: "num", text: t("typical_year") }),
         h("th", { class: "num", text: t("poor_year") }),
-        h("th", { text: "" }))));
+        h("th", { class: "only-wide", text: "" }))));
     var body = h("tbody");
     rotation.crops.forEach(function (crop) {
       var name = h("td", null,
         h("span", { class: "swatch", style: "background:" + (CROP_COLOURS[crop.crop] || "#888") }),
         cropName(crop.crop),
         h("div", { class: "note", text: t("needs_water", { mm: crop.water_need_mm_mean }) }));
+      var outcome = crop.irrigated ? t("irrigated_note", { mm: crop.irrigation_mm_mean })
+        : t("failed_seasons", { failed: crop.failed_seasons, total: crop.seasons_simulated });
+      name.appendChild(h("div", { class: "note only-narrow", text: outcome }));
       if (crop.irrigated) {
         body.appendChild(h("tr", null, name,
           h("td", { class: "num", text: "–" }), h("td", { class: "num", text: "–" }),
-          h("td", { text: t("irrigated_note", { mm: crop.irrigation_mm_mean }) })));
+          h("td", { class: "only-wide", text: outcome })));
       } else {
         body.appendChild(h("tr", null, name,
           h("td", { class: "num" + (crop.wrsi_median < 50 ? " low" : ""), text: fmt(crop.wrsi_median) + "%" }),
           h("td", { class: "num" + (crop.wrsi_bad_year < 50 ? " low" : ""), text: fmt(crop.wrsi_bad_year) + "%" }),
-          h("td", { text: t("failed_seasons", { failed: crop.failed_seasons, total: crop.seasons_simulated }) })));
+          h("td", { class: "only-wide", text: outcome })));
       }
     });
     table.appendChild(body);
@@ -816,6 +861,16 @@
       if (!document.querySelector(".error")) {
         main.insertBefore(h("p", { class: "error", text: t("load_error") }), main.children[1]);
       }
+    });
+  }
+
+  if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+    var wasNarrow = narrow();
+    window.addEventListener("resize", function () {
+      if (narrow() === wasNarrow) return;
+      wasNarrow = narrow();
+      var data = state.cache[state.place];
+      if (data) { renderClimate(data); renderRanked(); }
     });
   }
 
