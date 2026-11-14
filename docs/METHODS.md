@@ -191,7 +191,18 @@ Limits specific to this mode:
 `app/assistant.js` answers eight fixed questions by tap, typed text or speech, and reads the answer aloud.
 
 - **Answers are never written by a language model.** Each answer is built from the same result files and translated sentences the page displays (rotation scores, share of water need met, failed seasons, the satellite cross-check). The guide cannot produce a figure that is not in the data.
-- **Optional question router.** If an address is set in `app/config.js`, a question that is not one of the listed questions is sent to a small server function (`worker/router.js`), where a Claude model replies with one word: which of the eight questions it matches, or none. The model's reply is checked against that list and anything else is treated as none. The question text (cut to 300 characters) is sent to Anthropic's API; nothing else about the user is sent. If the router is not configured, takes more than six seconds or fails, keyword matching is used. The router's accuracy has not been measured until `KHETSAT_AI_URL=<address> node tests/assistant_eval.js` has been run against a deployed router.
+- **Optional question router.** If an address is set in `app/config.js`, a question that is not one of the listed questions is sent to a small server function (`worker/router.js`), where a Claude model replies with one word: which of the eight questions it matches, or none. The model's reply is checked against that list and anything else is treated as none. The question text (cut to 300 characters) is sent to Anthropic's API; nothing else about the user is sent. If the router is not configured, takes more than six seconds or fails, keyword matching is used. When the model replies none, the keyword lists are tried as well.
+
+  Measured on 14 November 2026 against the deployed router, on the same held-out set of 120 phrasings used for keyword matching below (router alone, without the keyword second look):
+
+  | Language | Right question | Wrong topic | Not recognised | Out-of-scope declined |
+  |---|---|---|---|---|
+  | English | 39 of 40 | 0 | 1 | 4 of 4 |
+  | Telugu | 38 of 40 | 1 | 1 | 4 of 4 |
+  | Hindi | 39 of 40 | 0 | 1 | 4 of 4 |
+  | All | 116 of 120 (97%) | 1 (1%) | 3 (3%) | 12 of 12 |
+
+  Typical response time was about 1.2 seconds, the slowest 3.4 seconds. The instruction given to the model includes example questions from the tuning set only. The same caveats apply as for keyword matching: the phrasings were written by the project author and typed, not spoken. Re-run with `KHETSAT_AI_URL=<address> node tests/assistant_eval.js`.
 - **Suggestion box.** The "Suggestion for your farm" box at the top of the page is built the same way: the best-matching rotation for the current priorities, why it is suggested, how its crops did in a poor-rain year (1 in 4), the range of dates when the rains usually settle (10th to 90th percentile of onset) with a caution against sowing rain-fed crops before then, and the reminder that prices are not included and local advice is needed. It changes when the priorities change.
 - **Recognising a question.** Spoken or typed text is matched against a keyword list for each question in the current language and in English. The best-scoring question is answered and its title is shown and spoken first, so the user can tell which question was understood. Text that matches nothing gets "I did not find that question" and the list of questions.
 - **Speech.** Reading aloud uses the browser's speech synthesis and voice input uses the browser's speech recognition. Nothing is sent to a KhetSat server. In Chrome and Edge, voice input sends audio to the browser vendor's speech service and needs a connection.
