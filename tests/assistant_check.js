@@ -40,7 +40,7 @@ for (const place of ["anantapur", "krishna", "anakapalli"]) {
   state.place = place;
   for (const lang of Object.keys(window.I18N)) {
     state.lang = lang;
-    for (const intent of INTENTS) {
+    for (const intent of INTENTS.concat(["advice"])) {
       const reply = answer(intent);
       const text = [reply.title].concat(reply.lines).join(" ");
       expect(reply.lines.length > 0 && reply.lines.every((line) => line && line.trim().length > 3), `${place}/${lang}/${intent}: empty line`);

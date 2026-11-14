@@ -51,7 +51,7 @@
   function answer(intent) {
     var k = K(), t = k.t, state = k.state;
     var data = state.cache[state.place];
-    var title = t("q_" + intent);
+    var title = intent === "advice" ? t("advice_title") : t("q_" + intent);
     var lines = [];
     function x(code, params) { return k.explain({ code: code, params: params || {} }); }
 
@@ -66,7 +66,26 @@
     var top = order[0].rotation;
     var summary = data.climate.summary;
 
-    if (intent === "best") {
+    if (intent === "advice") {
+      // The short version shown at the top of the page: which rotation, how it does in a
+      // poor-rain year, when the rains settle, and the reminder to check locally.
+      lines.push(t("a_best", { place: k.placeName(state.place), rotation: k.rotationLabel(top), score: order[0].score }));
+      if (top.existing) lines.push(t("a_best_current"));
+      else top.explanation.why_suggested.forEach(function (entry) { lines.push(k.explain(entry)); });
+      lines.push(top.crops.map(function (crop) {
+        var name = k.cropName(crop.crop);
+        return crop.irrigated ? t("a_poor_irrigated", { crop: name })
+          : t("a_poor_crop", { crop: name, bad: crop.wrsi_bad_year, failed: crop.failed_seasons, total: crop.seasons_simulated });
+      }).join(" "));
+      var rainfed = top.crops.some(function (crop) { return !crop.irrigated; });
+      if (rainfed && summary.onset.p10_days_after_jun1 !== null) {
+        lines.push(t("a_rain_onset", {
+          from: k.dateAfterJune1(summary.onset.p10_days_after_jun1),
+          to: k.dateAfterJune1(summary.onset.p90_days_after_jun1)
+        }) + " " + t("a_sow"));
+      }
+      lines.push(x("no_market") + " " + t("disclaimer"));
+    } else if (intent === "best") {
       lines.push(t("a_best", { place: k.placeName(state.place), rotation: k.rotationLabel(top), score: order[0].score }));
       if (top.existing) lines.push(t("a_best_current"));
       else top.explanation.why_suggested.forEach(function (entry) { lines.push(k.explain(entry)); });
@@ -102,6 +121,7 @@
           from: k.dateAfterJune1(summary.onset.p10_days_after_jun1),
           to: k.dateAfterJune1(summary.onset.p90_days_after_jun1)
         }));
+        lines.push(t("a_sow"));
       }
       var trend = rain.trend;
       lines.push(!trend.significant ? t("trend_flat")
@@ -334,6 +354,17 @@
     answer("trust").lines.forEach(function (line) { list.appendChild(h("li", { text: line })); });
   }
 
+  function paintAdvice() {
+    var section = byId("advice");
+    if (!section) return;
+    var data = k.state.cache[k.state.place];
+    section.hidden = !data;
+    if (!data) return;
+    byId("advice-title").textContent = t("advice_title");
+    var list = clear(byId("advice-points"));
+    answer("advice").lines.forEach(function (line) { list.appendChild(h("li", { text: line })); });
+  }
+
   function refresh() {
     document.querySelectorAll("[data-say]").forEach(function (button) {
       setLabel(button, ICON_SPEAKER, t(button.getAttribute("data-label") || "assist_listen"));
@@ -353,6 +384,7 @@
     paintAnswer();
     paintControls();
     paintTrust();
+    paintAdvice();
   }
 
   function sayButton(intent, labelKey, className) {
@@ -374,7 +406,7 @@
 
     // A listen button beside each section heading.
     [["strip-title", "chart"], ["map-title", "map"], ["rotations-title", "best"],
-      ["climate-title", "rain"], ["check-title", "trust"], ["trust-title", "trust"]].forEach(function (pair) {
+      ["climate-title", "rain"], ["check-title", "trust"], ["trust-title", "trust"], ["advice-title", "advice"]].forEach(function (pair) {
       var heading = byId(pair[0]);
       if (heading) heading.parentNode.insertBefore(sayButton(pair[1]), heading.nextSibling);
     });

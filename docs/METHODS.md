@@ -191,6 +191,7 @@ Limits specific to this mode:
 `app/assistant.js` answers eight fixed questions by tap, typed text or speech, and reads the answer aloud.
 
 - **No language model.** Each answer is built from the same result files and translated sentences the page displays (rotation scores, share of water need met, failed seasons, the satellite cross-check). The guide cannot produce a figure that is not in the data.
+- **Suggestion box.** The "Suggestion for your farm" box at the top of the page is built the same way: the best-matching rotation for the current priorities, why it is suggested, how its crops did in a poor-rain year (1 in 4), the range of dates when the rains usually settle (10th to 90th percentile of onset) with a caution against sowing rain-fed crops before then, and the reminder that prices are not included and local advice is needed. It changes when the priorities change.
 - **Recognising a question.** Spoken or typed text is matched against a keyword list for each question in the current language and in English. The best-scoring question is answered and its title is shown and spoken first, so the user can tell which question was understood. Text that matches nothing gets "I did not find that question" and the list of questions.
 - **Speech.** Reading aloud uses the browser's speech synthesis and voice input uses the browser's speech recognition. Nothing is sent to a KhetSat server. In Chrome and Edge, voice input sends audio to the browser vendor's speech service and needs a connection.
 - **Limits.** Which languages can be spoken depends on the voices installed on the device; where there is none, the answer is shown as text with a note. Voice input is not available in Firefox or Safari on some systems, and Odia recognition is not offered by every browser. The keyword lists and the new sentences in the six Indian languages have not been reviewed by a second native speaker.
@@ -204,7 +205,7 @@ Limits specific to this mode:
   | All | 64 of 120 (53%) | 16 (13%) | 40 (33%) | 12 of 12 |
 
   Keyword matching does not generalise well to wording it has not seen. Most misses are declined, not answered wrongly, and the answer always states which question it is answering. The phrasings were written by the project author, typed, not spoken: errors from speech recognition, dialects and farmers' own vocabulary are not measured. Tamil, Kannada, Marathi and Odia have no evaluation set yet.
-- **Checks.** `node tests/assistant_check.js` confirms that all eight questions are recognised from keywords alone in all seven languages, and that every answer for the three locations in every language is complete (571 checks).
+- **Checks.** `node tests/assistant_check.js` confirms that all eight questions are recognised from keywords alone in all seven languages, and that every answer for the three locations in every language is complete (634 checks).
 
 ## Verification status
 

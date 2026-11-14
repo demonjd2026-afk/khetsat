@@ -26,6 +26,8 @@ Three locations (Anantapur, Krishna, Anakapalli) come pre-analysed with sourced 
 
 The farmer sets five priorities with sliders (water in a normal year, holding up in a poor year, using less water, building the soil, breaking pest cycles) and the ranking updates.
 
+A "Suggestion for your farm" box at the top states the result in plain words: the rotation that fits best, how it holds up in a poor-rain year, when the rains usually settle, and what to check before acting.
+
 A voice guide answers eight common questions (which rotation fits, what happens in a poor-rain year, how to read the map and the chart, how accurate the data is, what to check locally) by tap, by typing or by speaking, and reads the answer aloud in the chosen language. It is for people who do not read, or who do not follow the charts. Each answer is assembled from the figures already on the page; no language model is involved, so the guide cannot say anything the data does not support.
 
 KhetSat supports decisions. It does not replace a farmer's judgment or the local agriculture officer.
@@ -71,7 +73,7 @@ Results for crops grown on leftover soil moisture in the delta are flagged as un
 - Figures describe a NASA grid cell about 50 km across, not a field.
 - Soil water storage is assumed, and every result is re-run at four storage values to show how much it matters.
 - The app is available in English, Telugu, Hindi, Tamil, Kannada, Marathi and Odia. The six Indian-language versions were drafted during the hackathon and have not yet been reviewed by a second native speaker; the app says so in each of them. `node tests/i18n_check.js` checks that every language has every string and placeholder.
-- The voice guide is checked without a browser: every question in every language is recognised from its keywords, and every answer for every place and language is complete (`node tests/assistant_check.js`, 571 checks). Reading aloud and voice input use the browser's own speech features, so they depend on the device: a phone or computer without a voice for a language shows the answer as text and says so. Voice input needs Chrome or Edge and an internet connection.
+- The voice guide is checked without a browser: every question in every language is recognised from its keywords, and every answer for every place and language is complete (`node tests/assistant_check.js`, 634 checks). Reading aloud and voice input use the browser's own speech features, so they depend on the device: a phone or computer without a voice for a language shows the answer as text and says so. Voice input needs Chrome or Edge and an internet connection.
 - How well the guide understands free wording was measured on 120 natural phrasings in English, Telugu and Hindi that were not used to build its keyword lists: 53% were routed to the right question, 33% were not recognised (the guide says so and shows the question list) and 13% got an answer on the wrong topic. All 12 out-of-scope questions were declined. The listed questions themselves are always recognised. Free-form voice questions are therefore a convenience, and tapping a question is the dependable route (`node tests/assistant_eval.js`). The phrasings were written by the author, not collected from farmers.
 - Not yet done: local soil data, prices and yields, checks against rain-gauge records, native-speaker review of the translations.
 

@@ -203,6 +203,12 @@ footer p { max-width: 90ch; }
 .say.big svg { width: 28px; height: 28px; }
 .listen-bar { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.2rem; }
 
+.advice { margin-top: 1.4rem; background: var(--paddy-pale); border: 1px solid var(--rule); border-left: 6px solid var(--paddy); border-radius: 6px; padding: 1.1rem 1.3rem; }
+.advice h2 { font-size: 1.35rem; color: var(--paddy); }
+.advice ul { margin: 0; padding-left: 1.1rem; max-width: 80ch; font-size: 1.06rem; }
+.advice li { margin-bottom: 0.35rem; }
+.advice li:first-child { font-weight: 600; }
+
 .trust { background: var(--white); border: 1px solid var(--rule); border-left: 5px solid var(--rain); border-radius: 6px; padding: 1.1rem 1.3rem; }
 .trust h2 { font-size: 1.25rem; }
 .trust ul { margin: 0; padding-left: 1.1rem; max-width: 80ch; }
