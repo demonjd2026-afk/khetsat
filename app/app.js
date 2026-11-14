@@ -461,7 +461,7 @@
     byId("soil-intro").textContent = t("soil_intro");
     byId("glossary-title").textContent = t("glossary_title");
     var glossary = clear(byId("glossary"));
-    ["et", "need", "met", "dep", "sat"].forEach(function (key) {
+    ["et", "need", "met", "poor", "match", "dep", "sat"].forEach(function (key) {
       glossary.appendChild(h("div", null,
         h("dt", { text: t("g_" + key + "_term") }), h("dd", { text: t("g_" + key + "_text") })));
     });

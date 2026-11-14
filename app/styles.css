@@ -88,6 +88,7 @@ details.fold { margin-top: 1rem; border-top: 1px solid var(--rule); padding-top:
 details.fold > summary { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0.4rem 0.8rem; list-style: none; cursor: pointer; }
 details.fold > summary .say { grid-column: 2; justify-self: start; }
 details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary:focus-visible { outline: 2px solid var(--turmeric); outline-offset: 4px; border-radius: 6px; }
 details.fold > summary::before { content: "+"; flex: none; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--paddy-pale); color: var(--paddy); font-weight: 700; font-size: 1.2rem; line-height: 1.7rem; text-align: center; }
 details.fold[open] > summary::before { content: "\2212"; }
 details.fold > summary h2 { margin: 0; font-size: 1.25rem; }
