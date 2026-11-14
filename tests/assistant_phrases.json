@@ -1,0 +1,517 @@
+{
+ "note": "Natural phrasings for evaluating the voice guide's question recognition. 'tuning' phrasings were used to extend the keyword lists; 'heldout' phrasings were written afterwards and never used for tuning, so the held-out score is the one to quote. 'none' lists questions the guide should decline. All phrasings were written by the project author, not collected from farmers; replace or extend them with real phrasings when available.",
+ "tuning": {
+  "en": {
+   "best": [
+    "what should I plant this year",
+    "which one is best for my farm",
+    "what do you recommend for me",
+    "which rotation is good",
+    "tell me the best crop to grow",
+    "which option suits me",
+    "should I keep growing groundnut or change",
+    "what is the top choice",
+    "which crops should I sow",
+    "give me your suggestion"
+   ],
+   "poor": [
+    "what if the rains fail",
+    "what happens in a drought",
+    "how bad is it in a dry year",
+    "what if there is very little rain",
+    "will my crop fail if monsoon is weak",
+    "what about a bad year",
+    "how often does the crop fail",
+    "what if it does not rain enough",
+    "is it safe in a drought year",
+    "what happens when rain is less"
+   ],
+   "water": [
+    "how much water is needed",
+    "which one uses less water",
+    "how much irrigation will I need",
+    "what is the water requirement",
+    "does millet need less water",
+    "water needed for each option",
+    "how much water do these crops take",
+    "will I need a borewell for this",
+    "which rotation saves water",
+    "tell me the water need"
+   ],
+   "rain": [
+    "how much rain do we get here",
+    "when does the monsoon start",
+    "when will the rains come",
+    "what is the average rainfall",
+    "is rainfall going down over the years",
+    "when do rains usually set in",
+    "how much rain can I count on",
+    "tell me about the monsoon here",
+    "what is the rainfall trend",
+    "when should I expect rain"
+   ],
+   "chart": [
+    "explain this chart",
+    "what do the coloured bands mean",
+    "what are the blue bars",
+    "what is the yellow line",
+    "I do not understand the graph",
+    "how to read this graph",
+    "what does this chart show",
+    "what are these colour strips",
+    "explain the bars and the line",
+    "what is this graph about"
+   ],
+   "map": [
+    "explain the map",
+    "what is this map showing",
+    "what are the dots on the map",
+    "I do not understand the map",
+    "what does the green on the map mean",
+    "what is the satellite picture for",
+    "how to use the map",
+    "what does soil moisture on the map mean",
+    "what is this satellite image",
+    "tell me about the map"
+   ],
+   "trust": [
+    "can I trust this",
+    "is this data correct",
+    "how reliable are these numbers",
+    "how accurate is it",
+    "where does this data come from",
+    "is this information true",
+    "how do you know this is right",
+    "should I believe this",
+    "how sure are you",
+    "is the data accurate for my village"
+   ],
+   "check": [
+    "what should I be careful about",
+    "what are the risks",
+    "what should I ask the agriculture officer",
+    "what to verify before changing crops",
+    "anything I should check first",
+    "what do I need to confirm locally",
+    "what should I do before deciding",
+    "what is not included in this",
+    "what are the limitations",
+    "what else should I check"
+   ],
+   "none": [
+    "tell me a joke",
+    "what is the price of groundnut today",
+    "who is the chief minister",
+    "play a song",
+    "what is the weather tomorrow",
+    "how do I get a loan"
+   ]
+  },
+  "te": {
+   "best": [
+    "ఈ సంవత్సరం ఏ పంట వేయాలి",
+    "నా పొలానికి ఏది మంచిది",
+    "మీరు ఏమి సూచిస్తారు",
+    "ఏ పద్ధతి బాగుంటుంది",
+    "ఏ పంట వేస్తే మంచిది",
+    "నాకు ఏది సరిపోతుంది",
+    "వేరుశనగే వేయాలా లేక మార్చాలా",
+    "ఏది ఉత్తమం",
+    "ఏ పంటలు వేయమంటారు",
+    "మీ సలహా చెప్పండి"
+   ],
+   "poor": [
+    "వర్షాలు పడకపోతే ఏమవుతుంది",
+    "కరువు వస్తే ఎలా",
+    "వానలు తక్కువగా పడితే పంట ఏమవుతుంది",
+    "ఎండిన సంవత్సరంలో ఏమి జరుగుతుంది",
+    "వర్షం సరిగా లేకపోతే పంట పోతుందా",
+    "చెడ్డ సంవత్సరంలో ఎలా ఉంటుంది",
+    "పంట ఎన్నిసార్లు విఫలమవుతుంది",
+    "వర్షం తక్కువ పడితే ఏం చేయాలి",
+    "కరువు సంవత్సరంలో ఇది సురక్షితమా",
+    "వానలు రాకపోతే"
+   ],
+   "water": [
+    "ఎంత నీరు అవసరం",
+    "ఏది తక్కువ నీరు వాడుతుంది",
+    "ఎంత సాగునీరు కావాలి",
+    "నీటి అవసరం ఎంత",
+    "సజ్జలకు తక్కువ నీరు చాలా",
+    "ఒక్కో పద్ధతికి నీరు ఎంత",
+    "ఈ పంటలకు ఎంత నీళ్లు కావాలి",
+    "బోరు అవసరమా",
+    "ఏ పద్ధతి నీటిని ఆదా చేస్తుంది",
+    "నీళ్లు ఎంత పడతాయి"
+   ],
+   "rain": [
+    "ఇక్కడ ఎంత వర్షం పడుతుంది",
+    "రుతుపవనాలు ఎప్పుడు మొదలవుతాయి",
+    "వానలు ఎప్పుడు వస్తాయి",
+    "సగటు వర్షపాతం ఎంత",
+    "వర్షం ఏటా తగ్గుతోందా",
+    "వర్షాలు ఎప్పుడు స్థిరపడతాయి",
+    "ఎంత వర్షాన్ని నమ్మవచ్చు",
+    "ఇక్కడి రుతుపవనాల గురించి చెప్పండి",
+    "వర్షపాతం ఎలా మారుతోంది",
+    "వాన ఎప్పుడు పడుతుంది"
+   ],
+   "chart": [
+    "ఈ చార్ట్ వివరించండి",
+    "రంగు పట్టీలు అంటే ఏమిటి",
+    "నీలం గీతలు ఏమిటి",
+    "పసుపు గీత ఏమిటి",
+    "ఈ గ్రాఫ్ నాకు అర్థం కాలేదు",
+    "ఈ గ్రాఫ్ ఎలా చదవాలి",
+    "ఈ చార్ట్ ఏమి చూపిస్తుంది",
+    "ఈ రంగుల పట్టీలు ఏమిటి",
+    "గీతలు ఏమి చెబుతున్నాయి",
+    "ఈ బొమ్మ దేని గురించి"
+   ],
+   "map": [
+    "మ్యాప్ వివరించండి",
+    "ఈ మ్యాప్ ఏమి చూపిస్తుంది",
+    "మ్యాప్‌లో చుక్కలు ఏమిటి",
+    "ఈ మ్యాప్ నాకు అర్థం కాలేదు",
+    "మ్యాప్‌లో పచ్చ రంగు అంటే ఏమిటి",
+    "ఉపగ్రహ చిత్రం ఎందుకు",
+    "మ్యాప్ ఎలా వాడాలి",
+    "మ్యాప్‌లో నేల తేమ అంటే ఏమిటి",
+    "ఈ శాటిలైట్ ఫోటో ఏమిటి",
+    "ఈ పటం గురించి చెప్పండి"
+   ],
+   "trust": [
+    "దీన్ని నమ్మవచ్చా",
+    "ఈ సమాచారం సరైనదేనా",
+    "ఈ అంకెలు ఎంతవరకు నమ్మదగినవి",
+    "ఇది ఎంత ఖచ్చితం",
+    "ఈ సమాచారం ఎక్కడి నుంచి వచ్చింది",
+    "ఇది నిజమేనా",
+    "ఇది సరైనదని మీకెలా తెలుసు",
+    "దీన్ని నమ్మాలా",
+    "మీకు ఎంత నమ్మకం",
+    "మా ఊరికి ఈ డేటా సరిపోతుందా"
+   ],
+   "check": [
+    "నేను దేని గురించి జాగ్రత్త పడాలి",
+    "ఇందులో నష్టభయాలు ఏమిటి",
+    "వ్యవసాయ అధికారిని ఏమి అడగాలి",
+    "పంట మార్చే ముందు ఏమి చూసుకోవాలి",
+    "ముందుగా ఏమైనా సరిచూసుకోవాలా",
+    "స్థానికంగా ఏమి నిర్ధారించుకోవాలి",
+    "నిర్ణయించే ముందు ఏమి చేయాలి",
+    "ఇందులో ఏమి లేవు",
+    "దీని పరిమితులు ఏమిటి",
+    "ఇంకా ఏమి తనిఖీ చేయాలి"
+   ],
+   "none": [
+    "ఒక జోక్ చెప్పు",
+    "ఈరోజు వేరుశనగ ధర ఎంత",
+    "ముఖ్యమంత్రి ఎవరు",
+    "ఒక పాట పాడు",
+    "రేపు వాతావరణం ఎలా ఉంటుంది",
+    "రుణం ఎలా తీసుకోవాలి"
+   ]
+  },
+  "hi": {
+   "best": [
+    "इस साल क्या बोना चाहिए",
+    "मेरे खेत के लिए कौन सा सबसे अच्छा है",
+    "आप क्या सलाह देते हैं",
+    "कौन सा चक्र अच्छा है",
+    "कौन सी फसल उगाना ठीक रहेगा",
+    "मेरे लिए कौन सा विकल्प सही है",
+    "मूंगफली ही बोऊँ या बदल दूँ",
+    "सबसे बढ़िया कौन सा है",
+    "कौन सी फसलें लगाऊँ",
+    "अपना सुझाव बताइए"
+   ],
+   "poor": [
+    "बारिश न हो तो क्या होगा",
+    "सूखा पड़ा तो क्या होगा",
+    "कम बारिश में फसल का क्या होगा",
+    "सूखे साल में क्या होता है",
+    "मानसून कमज़ोर रहा तो फसल खराब होगी क्या",
+    "खराब साल में कैसा रहेगा",
+    "फसल कितनी बार खराब होती है",
+    "बारिश कम हुई तो क्या करें",
+    "सूखे साल में यह सुरक्षित है क्या",
+    "पानी न बरसे तो"
+   ],
+   "water": [
+    "कितना पानी लगेगा",
+    "किसमें कम पानी लगता है",
+    "कितनी सिंचाई करनी पड़ेगी",
+    "पानी की ज़रूरत कितनी है",
+    "बाजरे को कम पानी चाहिए क्या",
+    "हर विकल्प में कितना पानी",
+    "इन फसलों को कितना पानी चाहिए",
+    "क्या बोरवेल चाहिए",
+    "कौन सा चक्र पानी बचाता है",
+    "पानी कितना लगेगा बताइए"
+   ],
+   "rain": [
+    "यहाँ कितनी बारिश होती है",
+    "मानसून कब शुरू होता है",
+    "बारिश कब आएगी",
+    "औसत वर्षा कितनी है",
+    "क्या बारिश साल दर साल घट रही है",
+    "बारिश कब जमती है",
+    "कितनी बारिश का भरोसा कर सकते हैं",
+    "यहाँ के मानसून के बारे में बताइए",
+    "बारिश का रुझान क्या है",
+    "बरसात कब होगी"
+   ],
+   "chart": [
+    "यह चार्ट समझाइए",
+    "रंगीन पट्टियों का क्या मतलब है",
+    "नीली छड़ें क्या हैं",
+    "पीली रेखा क्या है",
+    "यह ग्राफ समझ नहीं आया",
+    "यह ग्राफ कैसे पढ़ें",
+    "यह चार्ट क्या दिखाता है",
+    "ये रंग की पट्टियाँ क्या हैं",
+    "छड़ें और रेखा समझाइए",
+    "यह चित्र किस बारे में है"
+   ],
+   "map": [
+    "नक्शा समझाइए",
+    "यह नक्शा क्या दिखा रहा है",
+    "नक्शे पर बिंदु क्या हैं",
+    "यह नक्शा समझ नहीं आया",
+    "नक्शे में हरा रंग क्या है",
+    "उपग्रह की तस्वीर किसलिए है",
+    "नक्शा कैसे इस्तेमाल करें",
+    "नक्शे में मिट्टी की नमी क्या है",
+    "यह सैटेलाइट फोटो क्या है",
+    "इस मैप के बारे में बताइए"
+   ],
+   "trust": [
+    "क्या इस पर भरोसा कर सकते हैं",
+    "क्या यह जानकारी सही है",
+    "ये आँकड़े कितने भरोसेमंद हैं",
+    "यह कितना सटीक है",
+    "यह डेटा कहाँ से आया",
+    "क्या यह सच है",
+    "आपको कैसे पता यह सही है",
+    "क्या मैं इसे मान लूँ",
+    "आप कितने पक्के हैं",
+    "मेरे गाँव के लिए यह डेटा ठीक है क्या"
+   ],
+   "check": [
+    "मुझे किस बात का ध्यान रखना चाहिए",
+    "इसमें क्या जोखिम हैं",
+    "कृषि अधिकारी से क्या पूछूँ",
+    "फसल बदलने से पहले क्या देखूँ",
+    "पहले कुछ जाँचना है क्या",
+    "स्थानीय स्तर पर क्या पक्का करूँ",
+    "फ़ैसला करने से पहले क्या करूँ",
+    "इसमें क्या शामिल नहीं है",
+    "इसकी सीमाएँ क्या हैं",
+    "और क्या जाँचना चाहिए"
+   ],
+   "none": [
+    "एक चुटकुला सुनाओ",
+    "आज मूंगफली का भाव क्या है",
+    "मुख्यमंत्री कौन है",
+    "एक गाना बजाओ",
+    "कल मौसम कैसा रहेगा",
+    "कर्ज़ कैसे मिलेगा"
+   ]
+  }
+ },
+ "heldout": {
+  "en": {
+   "best": [
+    "which is the right rotation for me",
+    "what would you pick",
+    "is millet better than groundnut for me",
+    "what crop should I go for",
+    "help me choose a rotation"
+   ],
+   "poor": [
+    "what if monsoon fails this year",
+    "how does it do in a dry spell year",
+    "what are my chances in a low rainfall year",
+    "will groundnut survive a drought",
+    "how risky is it when rain is short"
+   ],
+   "water": [
+    "how many millimetres of water does it need",
+    "is this crop thirsty",
+    "can I grow this without irrigation",
+    "how much water will chickpea take",
+    "compare the water use"
+   ],
+   "rain": [
+    "what is the rainfall like here",
+    "does it rain much in june",
+    "by which date do rains begin",
+    "has the monsoon changed over the years",
+    "how dependable is the rain"
+   ],
+   "chart": [
+    "what am I looking at in this chart",
+    "why are some bars dark blue",
+    "what do the green strips show",
+    "help me read the graph",
+    "what does the line with dots mean"
+   ],
+   "map": [
+    "what do the colours on the map mean",
+    "why is the map brown in april",
+    "how do I pick my place on the map",
+    "what is the vegetation layer",
+    "show me how the map works"
+   ],
+   "trust": [
+    "is this reliable",
+    "who checked these numbers",
+    "does this match real rainfall",
+    "how good is NASA data for my area",
+    "could this be wrong"
+   ],
+   "check": [
+    "what should I confirm with the officer",
+    "is there anything missing here",
+    "what should I watch out for",
+    "does this include prices",
+    "before I change crops what should I do"
+   ],
+   "none": [
+    "what is your name",
+    "call my son",
+    "what time is it",
+    "how to control pests in groundnut"
+   ]
+  },
+  "te": {
+   "best": [
+    "నాకు సరైన పంట మార్పిడి ఏది",
+    "మీరైతే ఏది ఎంచుకుంటారు",
+    "వేరుశనగ కంటే సజ్జలు మంచివా",
+    "ఏ పంట వేసుకోవాలి",
+    "పద్ధతి ఎంచుకోవడంలో సహాయం చేయండి"
+   ],
+   "poor": [
+    "ఈ ఏడాది రుతుపవనాలు విఫలమైతే",
+    "వర్షాభావ సంవత్సరంలో ఎలా ఉంటుంది",
+    "వాన తక్కువైన ఏడాది నా పంట నిలుస్తుందా",
+    "కరువులో వేరుశనగ బతుకుతుందా",
+    "వర్షం తగ్గితే ఎంత ప్రమాదం"
+   ],
+   "water": [
+    "దీనికి ఎన్ని మిల్లీమీటర్ల నీరు కావాలి",
+    "ఈ పంటకు నీరు ఎక్కువ కావాలా",
+    "సాగునీరు లేకుండా పండించవచ్చా",
+    "శనగలకు ఎంత నీరు పడుతుంది",
+    "నీటి వాడకాన్ని పోల్చండి"
+   ],
+   "rain": [
+    "ఇక్కడ వర్షపాతం ఎలా ఉంటుంది",
+    "జూన్‌లో వర్షం బాగా పడుతుందా",
+    "వానలు ఏ తేదీకి మొదలవుతాయి",
+    "రుతుపవనాలు ఏళ్లుగా మారాయా",
+    "వర్షం ఎంతవరకు నమ్మదగినది"
+   ],
+   "chart": [
+    "ఈ చార్ట్‌లో నేను ఏమి చూస్తున్నాను",
+    "కొన్ని గీతలు ముదురు నీలంగా ఎందుకున్నాయి",
+    "ఆకుపచ్చ పట్టీలు ఏమి చూపుతాయి",
+    "గ్రాఫ్ చదవడంలో సహాయం చేయండి",
+    "చుక్కలున్న గీత అంటే ఏమిటి"
+   ],
+   "map": [
+    "మ్యాప్‌లో రంగులు అంటే ఏమిటి",
+    "ఏప్రిల్‌లో మ్యాప్ గోధుమ రంగులో ఎందుకుంది",
+    "మ్యాప్‌లో నా ఊరిని ఎలా ఎంచుకోవాలి",
+    "పచ్చదనం లేయర్ అంటే ఏమిటి",
+    "మ్యాప్ ఎలా పనిచేస్తుందో చూపించండి"
+   ],
+   "trust": [
+    "ఇది నమ్మదగినదేనా",
+    "ఈ అంకెలను ఎవరు సరిచూశారు",
+    "ఇది నిజమైన వర్షపాతంతో సరిపోతుందా",
+    "మా ప్రాంతానికి నాసా డేటా ఎంత మంచిది",
+    "ఇది తప్పు కావచ్చా"
+   ],
+   "check": [
+    "అధికారితో ఏమి నిర్ధారించుకోవాలి",
+    "ఇక్కడ ఏమైనా లోపించిందా",
+    "నేను దేనిపై కన్నేసి ఉంచాలి",
+    "ఇందులో ధరలు ఉన్నాయా",
+    "పంట మార్చే ముందు నేను ఏమి చేయాలి"
+   ],
+   "none": [
+    "నీ పేరు ఏమిటి",
+    "మా అబ్బాయికి ఫోన్ చేయి",
+    "ఇప్పుడు టైమ్ ఎంత",
+    "వేరుశనగలో పురుగులను ఎలా నివారించాలి"
+   ]
+  },
+  "hi": {
+   "best": [
+    "मेरे लिए सही फसल चक्र कौन सा है",
+    "आप होते तो क्या चुनते",
+    "क्या बाजरा मूंगफली से बेहतर है",
+    "कौन सी फसल लूँ",
+    "चक्र चुनने में मदद कीजिए"
+   ],
+   "poor": [
+    "इस साल मानसून फेल हुआ तो",
+    "कम वर्षा वाले साल में कैसा रहेगा",
+    "सूखे में मूंगफली बचेगी क्या",
+    "बारिश घटी तो कितना खतरा है",
+    "अकाल पड़ा तो मेरी फसल टिकेगी क्या"
+   ],
+   "water": [
+    "इसे कितने मिलीमीटर पानी चाहिए",
+    "क्या यह फसल ज़्यादा पानी माँगती है",
+    "बिना सिंचाई के उगा सकते हैं क्या",
+    "चने को कितना पानी लगेगा",
+    "पानी की खपत की तुलना कीजिए"
+   ],
+   "rain": [
+    "यहाँ वर्षा कैसी रहती है",
+    "जून में अच्छी बारिश होती है क्या",
+    "बारिश किस तारीख तक शुरू होती है",
+    "क्या मानसून बरसों में बदला है",
+    "बारिश कितनी भरोसेमंद है"
+   ],
+   "chart": [
+    "इस चार्ट में मैं क्या देख रहा हूँ",
+    "कुछ छड़ें गहरी नीली क्यों हैं",
+    "हरी पट्टियाँ क्या दिखाती हैं",
+    "ग्राफ पढ़ने में मदद कीजिए",
+    "बिंदुओं वाली रेखा का क्या मतलब है"
+   ],
+   "map": [
+    "नक्शे के रंगों का क्या मतलब है",
+    "अप्रैल में नक्शा भूरा क्यों है",
+    "नक्शे पर अपनी जगह कैसे चुनूँ",
+    "हरियाली वाली परत क्या है",
+    "नक्शा कैसे काम करता है दिखाइए"
+   ],
+   "trust": [
+    "क्या यह भरोसेमंद है",
+    "इन आँकड़ों को किसने जाँचा",
+    "क्या यह असली बारिश से मेल खाता है",
+    "मेरे इलाके के लिए नासा का डेटा कितना अच्छा है",
+    "क्या यह गलत हो सकता है"
+   ],
+   "check": [
+    "अधिकारी से क्या पक्का करूँ",
+    "यहाँ कुछ छूटा है क्या",
+    "मुझे किस चीज़ पर नज़र रखनी चाहिए",
+    "क्या इसमें दाम शामिल हैं",
+    "फसल बदलने से पहले मुझे क्या करना चाहिए"
+   ],
+   "none": [
+    "तुम्हारा नाम क्या है",
+    "मेरे बेटे को फोन लगाओ",
+    "अभी कितने बजे हैं",
+    "मूंगफली में कीड़े कैसे रोकें"
+   ]
+  }
+ }
+}

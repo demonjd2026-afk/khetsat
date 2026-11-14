@@ -71,6 +71,7 @@ Results for crops grown on leftover soil moisture in the delta are flagged as un
 - Soil water storage is assumed, and every result is re-run at four storage values to show how much it matters.
 - The app is available in English, Telugu, Hindi, Tamil, Kannada, Marathi and Odia. The six Indian-language versions were drafted during the hackathon and have not yet been reviewed by a second native speaker; the app says so in each of them. `node tests/i18n_check.js` checks that every language has every string and placeholder.
 - The voice guide is checked without a browser: every question in every language is recognised from its keywords, and every answer for every place and language is complete (`node tests/assistant_check.js`, 571 checks). Reading aloud and voice input use the browser's own speech features, so they depend on the device: a phone or computer without a voice for a language shows the answer as text and says so. Voice input needs Chrome or Edge and an internet connection.
+- How well the guide understands free wording was measured on 120 natural phrasings in English, Telugu and Hindi that were not used to build its keyword lists: 53% were routed to the right question, 33% were not recognised (the guide says so and shows the question list) and 13% got an answer on the wrong topic. All 12 out-of-scope questions were declined. The listed questions themselves are always recognised. Free-form voice questions are therefore a convenience, and tapping a question is the dependable route (`node tests/assistant_eval.js`). The phrasings were written by the author, not collected from farmers.
 - Not yet done: local soil data, prices and yields, checks against rain-gauge records, native-speaker review of the translations.
 
 ## Run it
@@ -83,6 +84,7 @@ python3 -m unittest discover -s tests
 node tests/engine_parity.js        # in-browser engine against the pipeline
 node tests/i18n_check.js           # every language has every string
 node tests/assistant_check.js      # voice guide: questions recognised, answers complete
+node tests/assistant_eval.js       # voice guide: share of natural phrasings understood
 ```
 
 Python 3.10 or later, standard library only. Results are written to `data/processed/`.

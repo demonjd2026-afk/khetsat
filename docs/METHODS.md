@@ -191,7 +191,17 @@ Limits specific to this mode:
 - **No language model.** Each answer is built from the same result files and translated sentences the page displays (rotation scores, share of water need met, failed seasons, the satellite cross-check). The guide cannot produce a figure that is not in the data.
 - **Recognising a question.** Spoken or typed text is matched against a keyword list for each question in the current language and in English. The best-scoring question is answered and its title is shown and spoken first, so the user can tell which question was understood. Text that matches nothing gets "I did not find that question" and the list of questions.
 - **Speech.** Reading aloud uses the browser's speech synthesis and voice input uses the browser's speech recognition. Nothing is sent to a KhetSat server. In Chrome and Edge, voice input sends audio to the browser vendor's speech service and needs a connection.
-- **Limits.** Which languages can be spoken depends on the voices installed on the device; where there is none, the answer is shown as text with a note. Voice input is not available in Firefox or Safari on some systems, and Odia recognition is not offered by every browser. Recognition accuracy for farm vocabulary and local dialects has not been measured. The keyword lists and the new sentences in the six Indian languages have not been reviewed by a second native speaker.
+- **Limits.** Which languages can be spoken depends on the voices installed on the device; where there is none, the answer is shown as text with a note. Voice input is not available in Firefox or Safari on some systems, and Odia recognition is not offered by every browser. The keyword lists and the new sentences in the six Indian languages have not been reviewed by a second native speaker.
+- **Evaluation of free wording.** `node tests/assistant_eval.js` runs natural phrasings from `tests/assistant_phrases.json` through the matcher. A tuning set (80 phrasings per language in English, Telugu and Hindi) was used to extend the keyword lists; before tuning, 60% of it was recognised. A held-out set written afterwards (40 phrasings per language, never used for tuning) gives the figure to quote:
+
+  | Language | Right question | Wrong topic | Not recognised | Out-of-scope declined |
+  |---|---|---|---|---|
+  | English | 21 of 40 | 7 | 12 | 4 of 4 |
+  | Telugu | 22 of 40 | 5 | 13 | 4 of 4 |
+  | Hindi | 21 of 40 | 4 | 15 | 4 of 4 |
+  | All | 64 of 120 (53%) | 16 (13%) | 40 (33%) | 12 of 12 |
+
+  Keyword matching does not generalise well to wording it has not seen. Most misses are declined, not answered wrongly, and the answer always states which question it is answering. The phrasings were written by the project author, typed, not spoken: errors from speech recognition, dialects and farmers' own vocabulary are not measured. Tamil, Kannada, Marathi and Odia have no evaluation set yet.
 - **Checks.** `node tests/assistant_check.js` confirms that all eight questions are recognised from keywords alone in all seven languages, and that every answer for the three locations in every language is complete (571 checks).
 
 ## Verification status
