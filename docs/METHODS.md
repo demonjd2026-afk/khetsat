@@ -175,6 +175,8 @@ The app can analyse a place the pipeline has not been run for. The browser fetch
 - **Sowing dates.** The monsoon crop is sown on the place's median onset date (Sivakumar criterion), limited to between 1 June and 31 July; 1 July is used if fewer than half the years have an onset. The second crop is sown three days after the first is harvested, and not before 15 October. A pair that does not fit in one year is rejected.
 - **Alternatives.** Every valid combination of a monsoon crop with fallow or a second crop is evaluated, plus two-year alternations of the farmer's monsoon crop with each other monsoon crop (about 70 to 80 candidates). Alternatives use irrigation only in the seasons where the farmer said they have it. The first alternative shown is the best-scoring candidate with equal priorities; the second is the best-scoring one that keeps the farmer's monsoon crop. Crops with borrowed values count as the crop they borrow from, so near-duplicates are not shown.
 
+- **Place name.** When coordinates are set (by "Use my location", a tap on the map or typing), the browser asks OpenStreetMap's Nominatim service for the name of the place at those coordinates, rounded to two decimals (about 1 km), in the selected language where OpenStreetMap has one. The name (mandal or town, district, state) is a label only; the analysis uses the coordinates. If the lookup fails, only the coordinates are shown. Names are © OpenStreetMap contributors.
+
 Limits specific to this mode:
 
 - **India only.** The two-season calendar assumes India's monsoon. Places outside India are refused.

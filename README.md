@@ -58,6 +58,7 @@ Results for crops grown on leftover soil moisture in the delta are flagged as un
 | NASA POWER daily API (MERRA-2 rainfall and temperature, 1981-2025) | Climate indicators and the rotation water balance |
 | GPM IMERG rainfall, served by NASA POWER (2001-2025) | Cross-check of rainfall and of the rotation ranking |
 | NASA GIBS: MODIS NDVI, SMAP L4 root-zone soil moisture, VIIRS true colour | Satellite map in the app (display only) |
+| OpenStreetMap Nominatim | Place name shown for chosen coordinates (label only) |
 | FAO Irrigation and Drainage Paper 56, Tables 11 and 12 | Crop coefficients and growth-stage lengths |
 | Sivakumar (1988) | Definition of monsoon onset |
 | KVK Reddipalli district profile; ICAR-CRIDA contingency plan for Krishna | Current rotations |

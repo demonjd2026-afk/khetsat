@@ -38,6 +38,7 @@
     busy: false,
     formMessage: null,
     crops: null,
+    names: {},
     cache: {}
   };
 
@@ -101,7 +102,10 @@
   function placeName(key) {
     if (key !== "custom") return PLACES[key].names[state.lang] || PLACES[key].names.en;
     var data = state.cache.custom;
-    return data ? t("custom_name", { lat: data.lat.toFixed(2), lon: data.lon.toFixed(2) }) : t("your_place");
+    if (!data) return t("your_place");
+    var coords = t("custom_name", { lat: data.lat.toFixed(2), lon: data.lon.toFixed(2) });
+    var name = state.names[nameKey(data.lat, data.lon)];
+    return name ? name.split(", ")[0] + " (" + coords + ")" : coords;
   }
   function pointName(key) {
     return key === "custom" ? placeName(key) : (PLACES[key].points[state.lang] || PLACES[key].points.en);
@@ -649,6 +653,59 @@
     }).then(function () { state.busy = false; render(); });
   }
 
+  // ---------- place name for a pair of coordinates ----------
+  // Looked up from OpenStreetMap (Nominatim) so the farmer sees a name, not only numbers.
+  // The name is a label; the analysis uses the coordinates. If the lookup fails, nothing is shown.
+
+  function nameKey(lat, lon) {
+    return Number(lat).toFixed(2) + "," + Number(lon).toFixed(2) + "," + state.lang;
+  }
+
+  function formCoords() {
+    var lat = Number(state.form.lat), lon = Number(state.form.lon);
+    var ok = state.form.lat !== "" && state.form.lon !== "" && isFinite(lat) && isFinite(lon) &&
+      lat >= INDIA.latMin && lat <= INDIA.latMax && lon >= INDIA.lonMin && lon <= INDIA.lonMax;
+    return ok ? { lat: lat, lon: lon } : null;
+  }
+
+  function showPlaceName() {
+    var node = byId("place-name");
+    if (!node) return;
+    var at = formCoords();
+    var name = at ? state.names[nameKey(at.lat, at.lon)] : null;
+    clear(node);
+    node.hidden = !name;
+    if (name) {
+      node.appendChild(h("strong", { text: name }));
+      node.appendChild(h("span", { class: "note", text: " © OpenStreetMap" }));
+    }
+  }
+
+  function lookupName(lat, lon) {
+    var key = nameKey(lat, lon);
+    if (key in state.names || typeof fetch !== "function") return;
+    state.names[key] = null;
+    var url = "https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=12&lat=" + Number(lat).toFixed(2) +
+      "&lon=" + Number(lon).toFixed(2) + "&accept-language=" + state.lang;
+    fetch(url).then(function (response) {
+      if (!response.ok) throw new Error("place name: " + response.status);
+      return response.json();
+    }).then(function (json) {
+      var a = json.address || {};
+      var parts = [a.village || a.town || a.city || a.municipality || a.county, a.state_district, a.state]
+        .filter(function (part, index, all) { return part && all.indexOf(part) === index; });
+      if (!parts.length) return;
+      state.names[key] = parts.join(", ");
+      showPlaceName();
+      var shown = state.cache.custom;
+      if (state.place === "custom" && shown && !state.busy && nameKey(shown.lat, shown.lon) === key) {
+        renderClimate(shown);
+        renderRanked();
+        renderMap();
+      }
+    }).catch(function (error) { console.error(error); });
+  }
+
   function renderForm() {
     var section = byId("place-form");
     section.hidden = state.place !== "custom";
@@ -670,7 +727,13 @@
       return h("input", {
         id: id, type: "number", step: "0.01", min: String(min), max: String(max), value: state.form[name], inputmode: "decimal",
         oninput: function (event) { state.form[name] = event.target.value; },
-        onchange: function () { renderMap(); }
+        onchange: function () {
+          renderMap();
+          // The form is not redrawn here, so the field being typed in keeps its focus.
+          var at = formCoords();
+          if (at) lookupName(at.lat, at.lon);
+          showPlaceName();
+        }
       });
     }
     function select(id, name, season, allowNone) {
@@ -706,11 +769,16 @@
     if (state.busy) go.disabled = true;
     [field("f-lat", "form_lat", number("f-lat", "lat", INDIA.latMin, INDIA.latMax)),
       field("f-lon", "form_lon", number("f-lon", "lon", INDIA.lonMin, INDIA.lonMax)),
-      h("div", { class: "action" }, locate), kharif, rabi, h("div", { class: "action" }, go)
+      h("div", { class: "action" }, locate), h("p", { id: "place-name", class: "place-name", role: "status", hidden: "" }),
+      kharif, rabi, h("div", { class: "action" }, go)
     ].forEach(function (node) { form.appendChild(node); });
     var status = byId("form-status");
     status.textContent = state.formMessage ? t(state.formMessage.key) : "";
     status.className = "note" + (state.formMessage && state.formMessage.bad ? " bad" : "");
+    var at = formCoords();
+    if (at) lookupName(at.lat, at.lon);
+    if (state.cache.custom) lookupName(state.cache.custom.lat, state.cache.custom.lon);
+    showPlaceName();
     if (!state.crops) loadCrops().then(renderForm).catch(function (error) { console.error(error); });
   }
 
