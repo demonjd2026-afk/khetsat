@@ -313,6 +313,7 @@
   function listen() {
     if (!Recognition) { ui.status = { key: "assist_no_mic", bad: true }; paintControls(); return; }
     if (ui.listening && ui.rec) { ui.rec.stop(); return; }
+    if (ui.rec) { try { ui.rec.onresult = null; ui.rec.abort(); } catch (error) { /* already ended */ } }
     stopSpeaking();
     var rec = new Recognition();
     ui.rec = rec;
@@ -388,6 +389,13 @@
   // The person's own words, typed or spoken. If the question is already known (speech matched
   // on the device), it is passed in; otherwise it is worked out here.
   function askFree(text, known) {
+    // Ignore a repeat of the same words within a few seconds (a double report from the
+    // microphone, or a double press), and never answer one question twice.
+    var now = Date.now();
+    if (ui.lastFree && ui.lastFree.text === text && now - ui.lastFree.at < 4000) return;
+    ui.lastFree = { text: text, at: now };
+    var answered = false;
+    function once(intent) { if (!answered) { answered = true; respond(intent, true); } }
     ui.status = null;
     stopSpeaking();
     openPanel();
@@ -395,8 +403,8 @@
     ui.typing = true;
     paintThread();
     prime();
-    if (known !== undefined) { window.setTimeout(function () { respond(known, true); }, 450); return; }
-    route(text, k.state.lang, function (found) { respond(found, true); });
+    if (known !== undefined) { window.setTimeout(function () { once(known); }, 450); return; }
+    route(text, k.state.lang, once);
   }
 
   function openPanel() {
