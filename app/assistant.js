@@ -573,17 +573,13 @@
   }
 
   function build() {
-    // Large listen and ask buttons under the list of places, for people who do not read.
-    var bar = h("div", { class: "listen-bar" });
-    bar.appendChild(sayButton("advice", "listen_summary", "say big"));
-    var places = byId("places");
-    places.parentNode.insertBefore(bar, places.nextSibling);
-
     // A listen button beside each section heading.
     [["strip-title", "chart"], ["map-title", "map"], ["rotations-title", "best"],
       ["climate-title", "rain"], ["check-title", "trust"], ["trust-title", "trust"], ["advice-title", "advice"]].forEach(function (pair) {
       var heading = byId(pair[0]);
-      if (heading) heading.parentNode.insertBefore(sayButton(pair[1]), heading.nextSibling);
+      // The suggestion gets one large button, for people who do not read.
+      var button = pair[1] === "advice" ? sayButton("advice", "listen_summary", "say big") : sayButton(pair[1]);
+      if (heading) heading.parentNode.insertBefore(button, heading.nextSibling);
     });
 
     var fab = iconButton("assist-fab", ICON_MIC, "", function () { if (ui.open) closePanel(); else { openPanel(); paintControls(); } });

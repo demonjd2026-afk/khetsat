@@ -81,7 +81,27 @@ main { padding: 0 clamp(1rem, 4vw, 3rem) 3rem; max-width: 1280px; margin: 0 auto
 }
 .places button[aria-current="true"] { color: var(--soil); font-weight: 600; border-bottom-color: var(--turmeric); }
 
+.tabs {
+  position: sticky; top: 0; z-index: 1050; display: flex; gap: 0.45rem; overflow-x: auto;
+  padding: 0.7rem 0; background: var(--chalk); border-bottom: 1px solid var(--rule); scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button {
+  font: inherit; font-weight: 500; white-space: nowrap; flex: 0 0 auto; cursor: pointer;
+  padding: 0.45rem 1rem; border-radius: 999px; border: 1px solid var(--rule);
+  background: var(--white); color: var(--soil-soft);
+}
+.tabs button[aria-current="true"] { background: var(--paddy); border-color: var(--paddy); color: var(--white); font-weight: 600; }
+body[data-tab="advice"] main > [data-view]:not([data-view="advice"]),
+body[data-tab="rotations"] main > [data-view]:not([data-view="rotations"]),
+body[data-tab="rain"] main > [data-view]:not([data-view="rain"]),
+body[data-tab="map"] main > [data-view]:not([data-view="map"]),
+body[data-tab="proof"] main > [data-view]:not([data-view="proof"]) { display: none; }
+main { min-height: 70vh; }
+
 section, .work { margin-top: 2.6rem; }
+body:not([data-tab="all"]) main > [data-view] { margin-top: 1.6rem; }
+body:not([data-tab="all"]) main > details[data-view] { margin-top: 0; }
 
 /* Sections that open on a click, so the page starts short. */
 details.fold { margin-top: 1rem; border-top: 1px solid var(--rule); padding-top: 0.9rem; }
@@ -253,7 +273,8 @@ footer p { max-width: 90ch; }
 
 .advice { margin-top: 1.4rem; background: var(--paddy-pale); border: 1px solid var(--rule); border-left: 6px solid var(--paddy); border-radius: 6px; padding: 1.1rem 1.3rem; }
 .advice h2 { font-size: 1.35rem; color: var(--paddy); }
-.advice ul { margin: 0; padding-left: 1.1rem; max-width: 80ch; font-size: 1.06rem; }
+.advice .say.big { margin: 0.2rem 0 0.9rem; }
+.advice ul { margin: 0; padding-left: 1.1rem; max-width: 100ch; font-size: 1.06rem; }
 .advice li { margin-bottom: 0.35rem; }
 .advice .lead { font-weight: 600; font-size: 1.12rem; margin-bottom: 0.5rem; max-width: 80ch; }
 .advice .points { margin-bottom: 0.5rem; }
@@ -336,3 +357,5 @@ footer { padding-bottom: 5rem; }
   .rotation { grid-template-columns: 2.2rem 1fr; }
   .rank { font-size: 1.9rem; }
 }
+
+@media (max-width: 640px) { .tabs button { padding: 0.4rem 0.7rem; font-size: 0.92rem; } .tabs { gap: 0.3rem; } }

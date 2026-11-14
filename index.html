@@ -43,12 +43,14 @@
     <p class="note" id="form-status" role="status"></p>
   </section>
 
-  <section class="advice" id="advice" aria-labelledby="advice-title" hidden>
+  <nav class="tabs" id="tabs" aria-label="Sections" hidden></nav>
+
+  <section class="advice" id="advice" data-view="advice" aria-labelledby="advice-title" hidden>
     <h2 id="advice-title"></h2>
     <div id="advice-points"></div>
   </section>
 
-  <section class="strip" id="strip" aria-labelledby="strip-title">
+  <section class="strip" id="strip" data-view="rain" aria-labelledby="strip-title">
     <h1 id="strip-title"></h1>
     <p class="lede" id="strip-intro"></p>
     <div class="scroll"><div id="strip-chart"></div></div>
@@ -56,17 +58,17 @@
     <p class="note" id="grid-note"></p>
   </section>
 
-  <details class="trust fold" id="trust" hidden>
+  <details class="trust fold" id="trust" data-view="proof" hidden>
     <summary><h2 id="trust-title"></h2></summary>
     <ul id="trust-points"></ul>
   </details>
 
-  <details class="change fold" id="change" hidden>
+  <details class="change fold" id="change" data-view="rain" hidden>
     <summary><h2 id="change-title"></h2></summary>
     <ul id="change-points"></ul>
   </details>
 
-  <section class="map" id="map-section" aria-labelledby="map-title" hidden>
+  <section class="map" id="map-section" data-view="map" aria-labelledby="map-title" hidden>
     <h2 id="map-title"></h2>
     <p class="lede" id="map-intro"></p>
     <div class="map-controls">
@@ -77,7 +79,7 @@
     <p class="note" id="map-key"></p>
   </section>
 
-  <div class="work" id="work">
+  <div class="work" id="work" data-view="rotations">
     <aside class="priorities" aria-labelledby="priorities-title">
       <h2 id="priorities-title"></h2>
       <p id="priorities-intro"></p>
@@ -90,14 +92,14 @@
     </section>
   </div>
 
-  <details class="soil fold" id="soil">
+  <details class="soil fold" id="soil" data-view="rotations">
     <summary><h2 id="soil-title"></h2></summary>
     <p class="lede" id="soil-intro"></p>
     <div class="segments" id="soil-choices" role="group"></div>
     <div class="scroll"><table id="soil-table"></table></div>
   </details>
 
-  <details class="climate fold" id="climate">
+  <details class="climate fold" id="climate" data-view="rain">
     <summary><h2 id="climate-title"></h2></summary>
     <dl class="stats" id="stats"></dl>
     <h3 id="years-title"></h3>
@@ -106,14 +108,14 @@
     <p id="trend"></p>
   </details>
 
-  <details class="check fold" id="check" hidden>
+  <details class="check fold" id="check" data-view="proof" hidden>
     <summary><h2 id="check-title"></h2></summary>
     <p class="lede" id="check-intro"></p>
     <ul id="check-points"></ul>
     <div class="scroll"><table id="check-table"></table></div>
   </details>
 
-  <details class="glossary fold">
+  <details class="glossary fold" data-view="proof">
     <summary><h2 id="glossary-title"></h2></summary>
     <dl id="glossary"></dl>
   </details>

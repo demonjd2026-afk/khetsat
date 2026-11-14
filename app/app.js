@@ -40,6 +40,7 @@
     formMessage: null,
     crops: null,
     names: {},
+    tab: "advice",      // which group of sections is on screen
     soilChoice: {},     // per place: { mm, note } once the farmer picks a soil or uses the soil map
     soilBusy: false,
     soilMessage: null,
@@ -329,6 +330,8 @@
   function renderMap() {
     var section = byId("map-section");
     if (!window.L) { section.hidden = true; return; }
+    // The map is drawn only while it is on screen: Leaflet cannot size itself in a hidden tab.
+    if (tabsOn() && state.tab !== "map") return;
     if (!mapState || mapState.loaded) section.hidden = false;
     byId("map-title").textContent = t("map_title");
     byId("map-intro").textContent = t("map_intro");
@@ -1056,7 +1059,40 @@
     if (!state.crops) loadCrops().then(renderForm).catch(function (error) { console.error(error); });
   }
 
+  // ---------- sections ----------
+  // The page shows one group of sections at a time, so a farmer sees the suggestion first and
+  // the charts, map and evidence are one tap away instead of one long scroll.
+  var TABS = ["advice", "rotations", "rain", "map", "proof"];
+
+  function tabsOn() { return !(state.place === "custom" && !state.cache.custom); }
+
+  function renderTabs() {
+    var nav = byId("tabs");
+    if (!nav) return;
+    var on = tabsOn();
+    document.body.setAttribute("data-tab", on ? state.tab : "all");
+    nav.hidden = !on;
+    clear(nav);
+    TABS.forEach(function (id) {
+      nav.appendChild(h("button", {
+        type: "button", "aria-current": String(id === state.tab), text: t("tab_" + id),
+        onclick: function () { showTab(id); }
+      }));
+    });
+  }
+
+  function showTab(id) {
+    if (TABS.indexOf(id) < 0) return;
+    state.tab = id;
+    renderTabs();
+    if (id === "map") { renderMap(); if (mapState) mapState.map.invalidateSize(); }
+    if (id === "proof" && byId("trust")) byId("trust").open = true;
+    var top = byId("places").getBoundingClientRect().bottom + window.scrollY;
+    if (window.scrollY > top) window.scrollTo(0, top);
+  }
+
   function showResults(visible) {
+    renderTabs();
     ["strip", "work", "soil", "climate"].forEach(function (id) { byId(id).hidden = !visible; });
     if (!visible) { byId("check").hidden = true; byId("change").hidden = true; }
   }
@@ -1069,6 +1105,7 @@
   function render() {
     if (!state.soilBusy) state.soilMessage = null;
     renderChrome();
+    renderTabs();
     renderMap();
     renderForm();
     notify();
@@ -1104,7 +1141,7 @@
     state: state, score: score, ranked: ranked, fill: fill, fmt: fmt,
     t: t, explain: explain, cropName: cropName, placeName: placeName, pointName: pointName,
     rotationLabel: rotationLabel, dateAfterJune1: dateAfterJune1, h: h, byId: byId, clear: clear,
-    soilNow: soilNow,
+    soilNow: soilNow, showTab: showTab,
     hooks: []
   };
   if (typeof document !== "undefined" && document.getElementById) render();
