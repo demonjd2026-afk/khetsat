@@ -269,6 +269,10 @@ footer p { max-width: 90ch; }
 .msg p:last-child { margin: 0; }
 .msg.user { align-self: flex-end; background: var(--paddy); color: var(--white); border-bottom-right-radius: 4px; }
 .msg.bot { align-self: flex-start; background: var(--paddy-pale); border-bottom-left-radius: 4px; }
+.msg .lead { font-weight: 600; }
+.msg .points { margin: 0 0 0.4rem; padding-left: 1.1rem; }
+.msg .points li { margin-bottom: 0.3rem; }
+.msg .fine { font-size: 0.82rem; color: var(--soil-soft); }
 .msg .matched { font-size: 0.8rem; font-style: italic; color: var(--soil-soft); margin-bottom: 0.3rem; }
 .msg.typing { display: flex; gap: 0.3rem; padding: 0.7rem 0.8rem; }
 .msg.typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--paddy); opacity: 0.35; animation: assist-dot 1s infinite; }

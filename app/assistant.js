@@ -65,12 +65,13 @@
     var data = state.cache[state.place];
     var title = intent === "advice" ? t("advice_title") : t("q_" + intent);
     var lines = [];
+    var heads = {};   // line number -> the opening words to show in bold
     function x(code, params) { return k.explain({ code: code, params: params || {} }); }
 
     if (intent === "map") {
       lines.push(t("a_map"));
       lines.push(t("map_key_" + state.mapLayer));
-      return { title: title, lines: lines };
+      return { title: title, lines: lines, heads: heads };
     }
     if (!data) return { title: title, lines: [t("form_intro")] };
 
@@ -115,6 +116,7 @@
           return crop.irrigated ? t("a_poor_irrigated", { crop: name })
             : t("a_poor_crop", { crop: name, bad: crop.wrsi_bad_year, failed: crop.failed_seasons, total: crop.seasons_simulated });
         });
+        heads[lines.length] = k.rotationLabel(entry.rotation) + ".";
         lines.push(k.rotationLabel(entry.rotation) + ". " + parts.join(" "));
       });
     } else if (intent === "water") {
@@ -122,6 +124,7 @@
         var r = entry.rotation;
         var line = t("a_water_line", { rotation: k.rotationLabel(r), mm: Math.round(r.crop_water_need_mm_per_year) });
         if (r.irrigation_mm_per_year > 0) line += " " + t("a_water_irr", { mm: Math.round(r.irrigation_mm_per_year) });
+        heads[lines.length] = k.rotationLabel(r);
         lines.push(line);
       });
       lines.push(x("soil_assumed", { mm: state.soil }));
@@ -166,7 +169,7 @@
       });
       lines.push(t("disclaimer"));
     }
-    return { title: title, lines: lines };
+    return { title: title, lines: lines, heads: heads };
   }
 
   // Text as it should be spoken: units written out, one sentence per chunk.
@@ -391,6 +394,29 @@
 
   // ---------- drawing ----------
 
+  // Lays an answer out as a lead sentence, a list of points and small-print caveats.
+  function structure(bubble, reply) {
+    var caveats = [t("disclaimer"), k.explain({ code: "no_market", params: {} })];
+    var lines = reply.lines.slice(), notes = [];
+    while (lines.length > 1 && caveats.indexOf(lines[lines.length - 1]) >= 0) notes.unshift(lines.pop());
+    if (lines.length === 1 && !notes.length) { bubble.appendChild(h("p", { text: lines[0] })); return; }
+    bubble.appendChild(h("p", { class: "lead", text: lines[0] }));
+    if (lines.length > 1) {
+      var list = h("ul", { class: "points" });
+      lines.slice(1).forEach(function (line, offset) {
+        var head = (reply.heads || {})[offset + 1];
+        if (!head) {
+          var colon = line.indexOf(":");
+          if (colon > 0 && colon <= 30 && line.slice(0, colon).indexOf(".") < 0) head = line.slice(0, colon + 1);
+        }
+        if (head && line.indexOf(head) === 0) list.appendChild(h("li", null, h("strong", { text: head }), line.slice(head.length)));
+        else list.appendChild(h("li", { text: line }));
+      });
+      bubble.appendChild(list);
+    }
+    notes.forEach(function (note) { bubble.appendChild(h("p", { class: "fine", text: note })); });
+  }
+
   function paintThread() {
     var box = clear(byId("assist-answer"));
     box.appendChild(h("div", { class: "msg bot" }, h("p", { text: t("assist_intro") })));
@@ -408,7 +434,7 @@
       } else {
         var reply = answer(message.intent);
         if (message.free) bubble.appendChild(h("div", { class: "matched", text: reply.title }));
-        reply.lines.forEach(function (line) { bubble.appendChild(h("p", { text: line })); });
+        structure(bubble, reply);
       }
       box.appendChild(bubble);
     });
