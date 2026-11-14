@@ -28,7 +28,7 @@ The farmer sets five priorities with sliders (water in a normal year, holding up
 
 A "Suggestion for your farm" box at the top states the result in plain words: the rotation that fits best, how it holds up in a poor-rain year, when the rains usually settle, and what to check before acting.
 
-A voice guide answers eight common questions (which rotation fits, what happens in a poor-rain year, how to read the map and the chart, how accurate the data is, what to check locally) by tap, by typing or by speaking, and reads the answer aloud in the chosen language. It is for people who do not read, or who do not follow the charts. Each answer is assembled from the figures already on the page; no language model is involved, so the guide cannot say anything the data does not support.
+A voice guide answers eight common questions (which rotation fits, what happens in a poor-rain year, how to read the map and the chart, how accurate the data is, what to check locally) by tap, by typing or by speaking, and reads the answer aloud in the chosen language. It is for people who do not read, or who do not follow the charts. Each answer is assembled from the figures already on the page and is never written by a language model, so the guide cannot say anything the data does not support. An optional question router (`worker/`) lets a Claude model decide which of the eight questions a free-form question matches; it is off unless its address is set in `app/config.js`, and the app falls back to keyword matching if it is unreachable.
 
 KhetSat supports decisions. It does not replace a farmer's judgment or the local agriculture officer.
 
@@ -109,6 +109,7 @@ Then visit http://localhost:8000. The app is plain HTML, CSS and JavaScript with
 | `data/reference/` | Crop table and candidate rotations, with their sources |
 | `data/processed/` | Result files read by the app |
 | `app/`, `index.html` | The web app; `app/engine.js` is the in-browser engine, `app/assistant.js` the voice guide |
+| `worker/` | Optional question router (Cloudflare Worker) for the voice guide |
 | `docs/` | Methods and the architecture diagram |
 
 ## Licence

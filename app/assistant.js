@@ -19,6 +19,18 @@
       .replace(/[?.,!;:।—–\-'"’()]/g, " ").replace(/\s+/g, " ").trim();
   }
 
+  // The listed question itself, word for word, in the current language or in English.
+  function exact(text, lang) {
+    var said = norm(text);
+    var dicts = [window.I18N[lang], window.I18N.en].filter(Boolean);
+    for (var d = 0; d < dicts.length; d++) {
+      for (var i = 0; i < INTENTS.length; i++) {
+        if (norm(dicts[d]["q_" + INTENTS[i]]) === said) return INTENTS[i];
+      }
+    }
+    return null;
+  }
+
   function match(text, lang, options) {
     var said = norm(text);
     if (!said) return null;
@@ -173,7 +185,32 @@
     return chunks;
   }
 
-  window.KhetAssist = { INTENTS: INTENTS, match: match, answer: answer, spoken: spoken, norm: norm };
+  // Decides which question was asked. A listed question is recognised directly. Otherwise,
+  // if a question router is configured (app/config.js), a language model picks the question;
+  // if it is not configured, is slow or fails, keyword matching is used. The model only
+  // chooses among the fixed questions; it never writes the answer.
+  function route(text, lang, done) {
+    var listed = exact(text, lang);
+    var url = (window.KHETSAT_CONFIG || {}).aiUrl;
+    if (listed || !url || typeof fetch !== "function") { done(listed || match(text, lang), "local"); return; }
+    var finished = false;
+    function finish(intent, how) { if (!finished) { finished = true; done(intent, how); } }
+    var timer = setTimeout(function () { finish(match(text, lang), "local"); }, 6000);
+    fetch(url, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: String(text).slice(0, 300), lang: lang })
+    }).then(function (response) {
+      if (!response.ok) throw new Error("router: " + response.status);
+      return response.json();
+    }).then(function (json) {
+      clearTimeout(timer);
+      if (INTENTS.indexOf(json.intent) >= 0) finish(json.intent, "model");
+      else if (json.intent === "none") finish(null, "model");
+      else finish(match(text, lang), "local");
+    }).catch(function () { clearTimeout(timer); finish(match(text, lang), "local"); });
+  }
+
+  window.KhetAssist = { INTENTS: INTENTS, match: match, exact: exact, route: route, answer: answer, spoken: spoken, norm: norm };
   if (typeof document === "undefined" || !document.getElementById || !K()) return;
 
   // ---------- page ----------
@@ -273,11 +310,16 @@
     };
     rec.onresult = function (event) {
       var options = event.results[0], heard = options[0].transcript, intent = null;
+      ui.status = null;
+      if ((window.KHETSAT_CONFIG || {}).aiUrl) {
+        byId("assist-heard").textContent = t("assist_heard", { text: heard });
+        route(heard, k.state.lang, function (found) { ask(found, heard); });
+        return;
+      }
       for (var i = 0; i < options.length && !intent; i++) {
         intent = match(options[i].transcript, k.state.lang);
         if (intent) heard = options[i].transcript;
       }
-      ui.status = null;
       ask(intent, heard);
     };
     try { rec.start(); } catch (error) { ui.status = { key: "assist_mic_error", bad: true }; paintControls(); }
@@ -426,8 +468,9 @@
       var text = input.value.trim();
       if (!text) return;
       ui.status = null;
-      ask(match(text, k.state.lang), text);
       input.value = "";
+      byId("assist-heard").textContent = t("assist_heard", { text: text });
+      route(text, k.state.lang, function (found) { ask(found, text); });
     });
     var speakButton = iconButton("assist-speak", ICON_SPEAKER, "", function () {
       if (ui.speaking) { stopSpeaking(); return; }

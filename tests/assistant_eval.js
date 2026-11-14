@@ -43,3 +43,43 @@ for (const set of ["tuning", "heldout"]) {
   console.log(`  overall: ${allRight} of ${allTotal} recognised (${pct(allRight, allTotal)}), ` +
     `${allWrong} wrong topic (${pct(allWrong, allTotal)}), ${allTotal - allRight - allWrong} not recognised (${pct(allTotal - allRight - allWrong, allTotal)})`);
 }
+
+// Optional: the same held-out phrasings through the question router.
+//   KHETSAT_AI_URL=https://<your-worker>.workers.dev node tests/assistant_eval.js --quiet
+const aiUrl = process.env.KHETSAT_AI_URL;
+if (aiUrl) {
+  (async () => {
+    console.log("\nHeld-out set through the question router (language model)");
+    let allRight = 0, allTotal = 0, allWrong = 0, failed = 0;
+    for (const lang of Object.keys(phrases.heldout)) {
+      let right = 0, total = 0, wrong = 0, declined = 0;
+      const misses = [];
+      const ask = async (text) => {
+        try {
+          const response = await fetch(aiUrl, { method: "POST", headers: { "Content-Type": "application/json", Origin: "http://localhost:8000" }, body: JSON.stringify({ text, lang }) });
+          if (!response.ok) throw new Error(String(response.status));
+          const intent = (await response.json()).intent;
+          return intent === "none" ? null : intent;
+        } catch (error) { failed++; return undefined; }
+      };
+      for (const intent of INTENTS) {
+        for (const text of phrases.heldout[lang][intent]) {
+          const got = await ask(text);
+          total++;
+          if (got === intent) right++;
+          else { if (got) wrong++; misses.push(`    ${intent} <- "${text}" was read as ${got === undefined ? "request failed" : got || "nothing"}`); }
+        }
+      }
+      const outside = phrases.heldout[lang].none || [];
+      for (const text of outside) {
+        const got = await ask(text);
+        if (got === null) declined++; else misses.push(`    (should decline) "${text}" was read as ${got}`);
+      }
+      allRight += right; allTotal += total; allWrong += wrong;
+      console.log(`  ${lang}: ${right} of ${total} phrasings recognised (${pct(right, total)}), ${wrong} answered with the wrong topic; ` +
+        `${declined} of ${outside.length} out-of-scope questions declined`);
+      if (!quiet) misses.forEach((line) => console.log(line));
+    }
+    console.log(`  overall: ${allRight} of ${allTotal} recognised (${pct(allRight, allTotal)}), ${allWrong} wrong topic (${pct(allWrong, allTotal)}); ${failed} requests failed`);
+  })();
+}
