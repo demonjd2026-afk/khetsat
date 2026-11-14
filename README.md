@@ -4,6 +4,8 @@
 
 Compare crop rotations using 45 years of NASA weather data, for Andhra Pradesh and any other place in India, in seven languages.
 
+**Live app: https://demonjd2026-afk.github.io/khetsat/**
+
 Entry for the **2026 NASA Space Apps Challenge**, challenge *Field Shift: Adapting Farms with NASA Data* (Visakhapatnam local event, 14-15 November 2026).
 
 ## The problem
