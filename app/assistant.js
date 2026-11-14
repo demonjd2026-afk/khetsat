@@ -86,7 +86,8 @@
       // "about 1 year in 9". The exact figures stay in the rotation cards below.
       lines.push(t("adv_pick", { place: k.placeName(state.place), rotation: k.rotationLabel(top) }));
       if (top.existing) lines.push(t("a_best_current"));
-      else top.explanation.why_suggested.forEach(function (entry) { lines.push(k.explain(entry)); });
+      // One reason is enough here; the full list is on the Rotations tab.
+      else if (top.explanation.why_suggested.length) lines.push(k.explain(top.explanation.why_suggested[0]));
       top.crops.forEach(function (crop) {
         var name = k.cropName(crop.crop);
         if (crop.irrigated) { lines.push(t("a_poor_irrigated", { crop: name })); return; }
