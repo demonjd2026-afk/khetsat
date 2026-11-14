@@ -33,7 +33,7 @@
     weights: { water_fit: 3, resilience: 3, water_saving: 3, soil: 3, diversity: 3 },
     soil: 100,
     mapLayer: "ndvi",
-    mapMoment: "wet",
+    mapMonth: 9,
     form: { lat: "", lon: "", kharif: "rice", rabi: "", kharifIrrigated: false, rabiIrrigated: false },
     busy: false,
     formMessage: null,
@@ -271,7 +271,11 @@
   // ---------- satellite map ----------
 
   var GIBS = "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/";
-  var MAP_DATES = { dry: "2026-04-23", wet: "2026-10-16" };
+  // One date per month of 2026, January to October. The 15th is used, except August, where the
+  // soil-moisture layer has no imagery from the 10th to the 15th. For the 16-day vegetation
+  // composite the imagery service returns the composite that contains the date.
+  var MAP_DATES = ["2026-01-15", "2026-02-15", "2026-03-15", "2026-04-15", "2026-05-15",
+    "2026-06-15", "2026-07-15", "2026-08-16", "2026-09-15", "2026-10-15"];
   var MAP_LAYERS = {
     ndvi: { id: "MODIS_Terra_L3_NDVI_16Day", set: "GoogleMapsCompatible_Level9", zoom: 9, ext: "png" },
     smap: { id: "SMAP_L4_Analyzed_Root_Zone_Soil_Moisture", set: "GoogleMapsCompatible_Level6", zoom: 6, ext: "png" },
@@ -291,21 +295,24 @@
     if (!mapState || mapState.loaded) section.hidden = false;
     byId("map-title").textContent = t("map_title");
     byId("map-intro").textContent = t("map_intro");
-    byId("map-key").textContent = t("map_key_" + state.mapLayer) + " " + t("map_credit");
+    var shown = MAP_DATES[state.mapMonth].split("-");
+    byId("map-key").textContent = Number(shown[2]) + " " + t("months")[Number(shown[1]) - 1] + " " + shown[0] + ". " +
+      t("map_key_" + state.mapLayer) + " " + t("map_credit");
 
     function buttons(id, options, current, onPick) {
       var box = clear(byId(id));
       options.forEach(function (option) {
         box.appendChild(h("button", {
-          type: "button", "aria-pressed": String(option[0] === current), text: t(option[1]),
+          type: "button", "aria-pressed": String(option[0] === current), text: option[2] || t(option[1]),
           onclick: function () { onPick(option[0]); renderMap(); }
         }));
       });
     }
     buttons("map-layers", [["ndvi", "map_layer_ndvi"], ["smap", "map_layer_smap"], ["true", "map_layer_true"]],
       state.mapLayer, function (value) { state.mapLayer = value; });
-    buttons("map-moments", [["dry", "map_dry"], ["wet", "map_wet"]],
-      state.mapMoment, function (value) { state.mapMoment = value; });
+    buttons("map-moments", MAP_DATES.map(function (date, index) {
+      return [index, null, t("months")[Number(date.split("-")[1]) - 1]];
+    }), state.mapMonth, function (value) { state.mapMonth = value; });
 
     if (!mapState) {
       var map = window.L.map("map", {
@@ -332,10 +339,10 @@
         }).addTo(map).on("click", function () { state.place = key; render(); });
       });
     }
-    var key = state.mapLayer + state.mapMoment;
+    var key = state.mapLayer + state.mapMonth;
     if (key !== mapState.key) {
       if (mapState.data) mapState.map.removeLayer(mapState.data);
-      mapState.data = gibsLayer(MAP_LAYERS[state.mapLayer], MAP_DATES[state.mapMoment]);
+      mapState.data = gibsLayer(MAP_LAYERS[state.mapLayer], MAP_DATES[state.mapMonth]);
       mapState.data.on("tileload", function () { mapState.loaded = true; });
       mapState.data.addTo(mapState.map);
       mapState.key = key;

@@ -156,15 +156,15 @@ The map in the app shows imagery served by NASA Global Imagery Browse Services (
 
 | Layer | GIBS identifier | Dates shown |
 |---|---|---|
-| Vegetation greenness | `MODIS_Terra_L3_NDVI_16Day` | 16-day composites starting 23 April 2026 and 16 October 2026 |
-| Root-zone soil moisture | `SMAP_L4_Analyzed_Root_Zone_Soil_Moisture` | 23 April 2026 and 16 October 2026 |
-| True colour | `VIIRS_NOAA20_CorrectedReflectance_TrueColor` | Same two days |
+| Vegetation greenness | `MODIS_Terra_L3_NDVI_16Day` | The 16-day composite containing the 15th of each month, January to October 2026 (16 August for August) |
+| Root-zone soil moisture | `SMAP_L4_Analyzed_Root_Zone_Soil_Moisture` | The 15th of each month, January to October 2026 (16 August for August: no imagery is served for 10 to 15 August) |
+| True colour | `VIIRS_NOAA20_CorrectedReflectance_TrueColor` | Same days |
 | Borders and coastlines | `Reference_Features` | - |
 
-- The two dates are one dry-season and one post-monsoon example from a single year. They illustrate the seasonal cycle; they are not a climatology.
+- The ten dates are one day per month from a single year, 2026. They illustrate the seasonal cycle; they are not a climatology. True colour is a single day, so monsoon months are often cloud-covered.
 - SMAP L4 is a model product that assimilates SMAP observations, on a grid of about 9 km.
 - The colour descriptions in the app come from inspecting the tiles. The official colour bars are not embedded.
-- Layer identifiers and dates were checked against the GIBS capabilities document on 14 November 2026.
+- Layer identifiers were checked against the GIBS capabilities document on 14 November 2026. Every date was checked by requesting tiles over Andhra Pradesh for each layer on the same day.
 
 ## Any place in India ("Your place")
 
