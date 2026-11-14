@@ -186,6 +186,24 @@ Limits specific to this mode:
 - **No satellite cross-check or year types** are computed for these places.
 - Sowing dates in this mode come from the onset rule; the three pipeline locations use fixed dates. Results for the same place can therefore differ slightly between the two modes.
 
+## Checked against drought records and rain-gauge normals
+
+Done on 14 November 2026, for Anantapur only. This is a comparison with published reports, not a statistical validation against yield data.
+
+**Failed seasons.** For groundnut grown every year the model counts five failed seasons in 1981 to 2025 (water need met below 50%): 2018 (38%), 2003 (41%), 2016 (47%), 2023 (47%) and 2002 (48%). Each is a reported drought year for the district:
+
+| Year | What was reported | Source |
+|---|---|---|
+| 2002 | Severe drought in 2002-03; most of the groundnut crop failed | [Drought in Anantapur: An Overview](https://www.academia.edu/33186153/Drought_in_Anantapur_An_Overview) |
+| 2003 | Mandal rain-gauge data for 2000 to 2009 show 2003 about 36% below normal; satellite greenness contrasts 2003 with the good year 2005 (the model gives 2005 100%) | [CGIAR study of groundnut and rainfall in Anantapur](https://mel.cgiar.org/reporting/download/hash/XyFc88Tl) |
+| 2016 | Dry spell in August and September; crop-cutting gave 213 kg per hectare against a normal 1,000; drought declared in November 2016 | [PTI, 5 Dec 2016](https://www.business-standard.com/amp/article/pti-stories/ap-s-war-on-drought-fails-to-save-crop-116120500446_1.html), [fact-finding report, May 2017](https://kisanswaraj.in/?p=1991) |
+| 2018 | All 63 mandals declared drought-affected; groundnut lost on 5.4 lakh acres | [Down To Earth](https://www.downtoearth.org.in/agriculture/drought-but-why-area-under-cultivation-has-halved-in-andhra-pradesh-s-ananthapuramu-63361) |
+| 2023 | 28 mandals declared severely drought-hit; groundnut damage put at Rs 800 crore | [Deccan Chronicle, 2 Nov 2023](https://www.deccanchronicle.com/lifestyle/environment/021123/drought-hit-rayalaseema-again-in-deep-trouble-crops-badly-affected.html) |
+
+**What this does not show.** The check runs one way. Anantapur had other declared drought years, for example the run from 2011 to 2015 described in the 2017 fact-finding report, that the model scores as below normal (62% to 73%) but not as failed. So the 50% line picks out the worst seasons; it is not a detector of every declared drought. Declarations also depend on sowing dates, dry spells within the season and administrative rules that the model does not represent.
+
+**Rain-gauge normals.** NASA POWER averages 603 mm a year and 353 mm for June to September at the Anantapur grid cell (1981 to 2025). Published gauge-based normals for the district are 552 mm a year and about 318 mm for the monsoon months ([The Hindu, via inkl](https://www.inkl.com/news/anantapur-sees-69-excess-rainfall-in-four-months)), and 530 mm a year with 310 mm in kharif from IMD data for 1971 to 2015 ([IJBSM study](https://ojs.pphouse.org/index.php/IJBSM/article/download/5202/2880/13364)). POWER is therefore roughly 9% to 14% wetter than the gauge normals. The periods and areas differ (one 50 km cell against a district average), so this is an order-of-size check only.
+
 ## Local soil
 
 The stored results assume the soil holds 100 mm of water for the crop. Under the priority sliders the farmer can replace that assumption for the place being shown, and the 45 years are run again in the browser (`app/engine.js`) with the new storage. For the three pre-analysed locations the browser downloads the same NASA POWER series the pipeline used; at 100 mm the browser result is identical to the stored one (see the parity test).
