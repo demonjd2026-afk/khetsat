@@ -259,28 +259,29 @@
   }
 
   function stopSpeaking() {
-    if (synth) synth.cancel();
+    speechRun++;
+    if (synth && (synth.speaking || synth.pending)) { synth.cancel(); lastCancel = Date.now(); }
     ui.speaking = false;
     paintControls();
   }
 
-  // Browsers only let a page speak in response to a tap or key press. A silent utterance sent
-  // during that press keeps speech allowed for the answer that arrives a moment later.
-  function prime() {
-    if (!synth) return;
-    try {
-      var quiet = new window.SpeechSynthesisUtterance(" ");
-      quiet.volume = 0;
-      synth.speak(quiet);
-    } catch (error) { /* speech not available */ }
-  }
+  // Speaking. Three things are guarded against, all seen in Chrome:
+  //  - an utterance queued straight after cancel() can be dropped, so after a cancel the new
+  //    speech is queued a moment later;
+  //  - the browser's speech engine can stop responding altogether (it is shared by every tab);
+  //    if nothing starts within a few seconds the person is told to restart the browser;
+  //  - utterances that nothing refers to can be discarded mid-queue, so they are kept in a list.
+  var speechRun = 0;
+  var lastCancel = 0;
 
   function speak(lines) {
     if (!synth) return;
-    if (synth.speaking || synth.pending) synth.cancel();
-    if (synth.paused) synth.resume();
+    var run = ++speechRun;
     var lang = k.state.lang;
     var pick = voiceFor(lang);
+    var wasBusy = synth.speaking || synth.pending || Date.now() - lastCancel < 200;
+    if (synth.speaking || synth.pending) synth.cancel();
+    if (synth.paused) synth.resume();
     if (!pick.ok) {
       ui.status = { key: "assist_no_voice", params: { lang: (window.I18N[lang] || {}).lang_name || lang }, bad: true };
       ui.speaking = false;
@@ -288,23 +289,39 @@
       return;
     }
     var chunks = spoken(lines, lang);
+    var started = false;
     ui.speaking = true;
-    chunks.forEach(function (chunk, index) {
-      var utterance = new window.SpeechSynthesisUtterance(chunk);
-      utterance.lang = pick.tag;
-      if (pick.voice) utterance.voice = pick.voice;
-      utterance.rate = 0.92;
-      if (index === chunks.length - 1) {
-        utterance.onend = function () { ui.speaking = false; paintControls(); };
-      }
-      utterance.onerror = function (event) {
-        if (event.error === "interrupted" || event.error === "canceled") return;
+    ui.utterances = [];
+    function queue() {
+      if (run !== speechRun) return;
+      chunks.forEach(function (chunk, index) {
+        var utterance = new window.SpeechSynthesisUtterance(chunk);
+        utterance.lang = pick.tag;
+        if (pick.voice) utterance.voice = pick.voice;
+        utterance.rate = 0.92;
+        utterance.onstart = function () { started = true; };
+        if (index === chunks.length - 1) {
+          utterance.onend = function () { if (run === speechRun) { ui.speaking = false; paintControls(); } };
+        }
+        utterance.onerror = function (event) {
+          if (event.error === "interrupted" || event.error === "canceled" || run !== speechRun) return;
+          ui.speaking = false;
+          ui.status = { key: event.error === "not-allowed" ? "assist_voice_stuck" : "assist_no_voice",
+            params: { lang: (window.I18N[lang] || {}).lang_name || lang }, bad: true };
+          paintControls();
+        };
+        ui.utterances.push(utterance);
+        synth.speak(utterance);
+      });
+      window.setTimeout(function () {
+        if (run !== speechRun || started || !ui.speaking) return;
+        synth.cancel();
         ui.speaking = false;
-        ui.status = { key: "assist_no_voice", params: { lang: (window.I18N[lang] || {}).lang_name || lang }, bad: true };
+        ui.status = { key: "assist_voice_stuck", bad: true };
         paintControls();
-      };
-      synth.speak(utterance);
-    });
+      }, 4000);
+    }
+    if (wasBusy) window.setTimeout(queue, 120); else queue();
     paintControls();
   }
 
@@ -406,7 +423,6 @@
     say({ role: "user", text: text });
     ui.typing = true;
     paintThread();
-    prime();
     if (known !== undefined) { window.setTimeout(function () { once(known); }, 450); return; }
     route(text, k.state.lang, once);
   }
