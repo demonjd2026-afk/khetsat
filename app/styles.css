@@ -373,3 +373,4 @@ details.fold > summary .say { flex: none; margin: 0 0 0 0.6rem; }
 .glossary dl > div { background: var(--white); border: 1px solid var(--rule); border-top: 4px solid var(--paddy); border-radius: 8px; padding: 0.9rem 1rem; }
 .glossary dt { color: var(--paddy); margin-bottom: 0.3rem; }
 .glossary dd { font-size: 0.95rem; line-height: 1.45; }
+main > details.glossary { margin-top: 2.2rem; }
