@@ -264,9 +264,21 @@
     paintControls();
   }
 
+  // Browsers only let a page speak in response to a tap or key press. A silent utterance sent
+  // during that press keeps speech allowed for the answer that arrives a moment later.
+  function prime() {
+    if (!synth) return;
+    try {
+      var quiet = new window.SpeechSynthesisUtterance(" ");
+      quiet.volume = 0;
+      synth.speak(quiet);
+    } catch (error) { /* speech not available */ }
+  }
+
   function speak(lines) {
     if (!synth) return;
-    synth.cancel();
+    if (synth.speaking || synth.pending) synth.cancel();
+    if (synth.paused) synth.resume();
     var lang = k.state.lang;
     var pick = voiceFor(lang);
     if (!pick.ok) {
@@ -350,14 +362,14 @@
     if (ui.thread.length > 30) ui.thread = ui.thread.slice(-30);
   }
 
-  function respond(intent, free) {
+  function respond(intent, free, alreadySpeaking) {
     ui.typing = false;
     var message = { role: "bot", intent: intent || "unknown", free: Boolean(free) };
     say(message);
     ui.current = message;
     paintThread();
     paintControls();
-    speak(linesFor(message));
+    if (!alreadySpeaking) speak(linesFor(message));
   }
 
   // A tapped question or a section's Listen button.
@@ -368,7 +380,9 @@
     say({ role: "user", intent: intent });
     ui.typing = true;
     paintThread();
-    window.setTimeout(function () { respond(intent, false); }, 450);
+    // Start speaking during the tap itself; the written answer follows after the typing dots.
+    speak(linesFor({ intent: intent, free: false }));
+    window.setTimeout(function () { respond(intent, false, true); }, 450);
   }
 
   // The person's own words, typed or spoken. If the question is already known (speech matched
@@ -380,6 +394,7 @@
     say({ role: "user", text: text });
     ui.typing = true;
     paintThread();
+    prime();
     if (known !== undefined) { window.setTimeout(function () { respond(known, true); }, 450); return; }
     route(text, k.state.lang, function (found) { respond(found, true); });
   }
