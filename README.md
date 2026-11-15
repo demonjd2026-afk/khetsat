@@ -1,12 +1,40 @@
-<img src="app/logo.svg" alt="KhetSat logo" width="72">
+<p align="center">
+  <a href="https://demonjd2026-afk.github.io/khetsat/"><img src="docs/img/banner.jpg" alt="KhetSat: crop rotations for uncertain rains, spoken in the farmer's language" width="820"></a>
+</p>
 
-# KhetSat
+<h1 align="center"><img src="app/logo.svg" alt="" width="36"> KhetSat</h1>
 
+<p align="center">
 Compare crop rotations using 45 years of NASA weather data, for Andhra Pradesh and any other place in India, in seven languages.
+</p>
 
-**Live app: https://demonjd2026-afk.github.io/khetsat/**
+<p align="center">
+  <a href="https://demonjd2026-afk.github.io/khetsat/"><b>Live app</b></a> ·
+  <a href="https://youtu.be/L0wsDUCh27w"><b>30-second demo</b></a> ·
+  <a href="https://youtu.be/NaSWAxlDzoc"><b>Full demo (5 min)</b></a> ·
+  <a href="docs/METHODS.md"><b>Methods</b></a>
+</p>
 
-Entry for the **2026 NASA Space Apps Challenge**, challenge *Field Shift: Adapting Farms with NASA Data* (Visakhapatnam local event, 14-15 November 2026).
+Entry for the **2026 NASA Space Apps Challenge**, challenge *Field Shift: Adapting Farms with NASA Data* (Visakhapatnam local event, 14-15 November 2026). Team **KhetSat**: [Jayanth Dolai](https://www.linkedin.com/in/jayanth-dolai-7b115213a/).
+
+## Contents
+
+| Start here | Go deeper | For developers |
+|---|---|---|
+| [Demo videos](#demo-videos) | [What the data shows](#what-the-data-shows) | [Run it](#run-it) |
+| [The problem](#the-problem) | [How it works](#how-it-works) | [Repository layout](#repository-layout) |
+| [What KhetSat does](#what-khetsat-does) | [NASA data and other sources](#nasa-data-and-other-sources) | [Use of AI](#use-of-ai) |
+| | [What is checked, and what is not](#what-is-checked-and-what-is-not) | [Licence](#licence) |
+
+## Demo videos
+
+| 30-second demo (the NASA submission) | Full demo (4:53) |
+|---|---|
+| [![Watch the 30-second KhetSat demo on YouTube](docs/img/demo-30s.jpg)](https://youtu.be/L0wsDUCh27w) | [![Watch the full KhetSat demo on YouTube](docs/img/demo-full.jpg)](https://youtu.be/NaSWAxlDzoc) |
+| [youtu.be/L0wsDUCh27w](https://youtu.be/L0wsDUCh27w) | [youtu.be/NaSWAxlDzoc](https://youtu.be/NaSWAxlDzoc) |
+| The problem, the app answering a spoken Telugu question, and what comes next. | The problem, the suggestion, Telugu and Hindi voice, rotations, rain, the satellite map, accuracy, a live run for a new place, the architecture and the conclusion. |
+
+Both videos show the real web app. The narration and the English, Telugu and Hindi voices in them are AI-generated (Piper open-source text-to-speech).
 
 ## The problem
 
@@ -91,6 +119,13 @@ Results for crops grown on leftover soil moisture in the delta are flagged as un
 - How well the guide understands free wording was measured on 120 natural phrasings in English, Telugu and Hindi that were not used to build its keyword lists: 53% were routed to the right question, 33% were not recognised (the guide says so and shows the question list) and 13% got an answer on the wrong topic. All 12 out-of-scope questions were declined. The listed questions themselves are always recognised. With the question router, the same 120 phrasings scored 97% right (116 of 120), 1 on the wrong topic and 3 not recognised, with all 12 out-of-scope questions declined (`node tests/assistant_eval.js`). The phrasings were written by the author, not collected from farmers.
 - Not yet done: field soil tests, prices and yields, a statistical comparison with crop-yield or daily rain-gauge records, native-speaker review of the translations.
 
+## Use of AI
+
+- **In the app:** the optional question router (`worker/`) calls a Claude model to decide which of the eight listed questions a free-form question matches. It returns only the name of a question. It never sees the data and never writes an answer.
+- **In building it:** Claude (Anthropic) was used as a coding and drafting assistant for the code, the documentation, the demo deck and the demo videos. The translations were drafted and then machine-reviewed with it; no native speaker has reviewed them yet.
+- **In the videos and images:** the voices in the demo videos are AI-generated (Piper text-to-speech). The banner and video thumbnails were drawn with AI assistance.
+- The crop and water calculations use no AI. They are the published formulas listed in [docs/METHODS.md](docs/METHODS.md).
+
 ## Run it
 
 ```
@@ -124,7 +159,7 @@ Then visit http://localhost:8000. The app is plain HTML, CSS and JavaScript with
 | `data/processed/` | Result files read by the app |
 | `app/`, `index.html` | The web app; `app/engine.js` is the in-browser engine, `app/assistant.js` the voice guide, `app/i18n*.js` the text in seven languages, `app/config.js` the question router's address |
 | `worker/` | Optional question router (Cloudflare Worker) for the voice guide |
-| `docs/` | Methods and the architecture diagram |
+| `docs/` | Methods, the architecture diagram, and the README images (`docs/img/`) |
 
 ## Licence
 
