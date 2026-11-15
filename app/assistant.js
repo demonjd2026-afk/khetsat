@@ -398,9 +398,10 @@
     if (ui.thread.length > 30) ui.thread = ui.thread.slice(-30);
   }
 
-  function respond(intent, free, alreadySpeaking) {
+  function respond(intent, free, alreadySpeaking, how) {
     ui.typing = false;
-    var message = { role: "bot", intent: intent || "unknown", free: Boolean(free) };
+    // "how" records whether the AI router or the keyword lists worked out the question.
+    var message = { role: "bot", intent: intent || "unknown", free: Boolean(free), via: how || "" };
     say(message);
     ui.current = message;
     paintThread();
@@ -430,7 +431,7 @@
     if (ui.lastFree && ui.lastFree.text === text && now - ui.lastFree.at < 4000) return;
     ui.lastFree = { text: text, at: now };
     var answered = false;
-    function once(intent) { if (!answered) { answered = true; respond(intent, true); } }
+    function once(intent, how) { if (!answered) { answered = true; respond(intent, true, false, how); } }
     ui.status = null;
     stopSpeaking();
     openPanel();
@@ -498,13 +499,16 @@
       } else {
         var reply = answer(message.intent);
         if (message.free) bubble.appendChild(h("div", { class: "matched", text: reply.title }));
+        if (message.free && message.via === "model") bubble.appendChild(h("div", { class: "via", text: t("assist_via_ai") }));
         structure(bubble, reply);
       }
       box.appendChild(bubble);
     });
     if (ui.typing) box.appendChild(h("div", { class: "msg bot typing", "aria-hidden": "true" }, h("i"), h("i"), h("i")));
     // Keep the latest question at the top of the view so its answer is read from the start.
-    box.scrollTop = lastQuestion ? Math.max(0, lastQuestion.offsetTop - 6) : 0;
+    if (lastQuestion && lastQuestion.getBoundingClientRect) {
+      box.scrollTop = Math.max(0, box.scrollTop + lastQuestion.getBoundingClientRect().top - box.getBoundingClientRect().top - 6);
+    } else box.scrollTop = 0;
   }
 
   function paintControls() {
